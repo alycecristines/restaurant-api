@@ -11,5 +11,6 @@ namespace Restaurant.Core.Interfaces
         Task<IEnumerable<Company>> GetAsync();
         Task<IEnumerable<Company>> GetAsync(string nameOrRegistrationNumber);
         Task<Company> GetAsync(Guid id);
+        Task Delete(Guid id);
     }
 }

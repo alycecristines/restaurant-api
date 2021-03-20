@@ -37,5 +37,16 @@ namespace Restaurant.Core.Services
         {
             return await _repository.GetAsync(id);
         }
+
+        public async Task Delete(Guid id)
+        {
+            var entity = await _repository.GetAsync(id);
+
+            if (entity is null) throw new InvalidOperationException($"Company not found with id '{id}'.");
+            if (entity.DeletedAt.HasValue) throw new InvalidOperationException("This company has already been deleted.");
+
+            _repository.Delete(entity);
+            await _repository.SaveChangesAsync();
+        }
     }
 }

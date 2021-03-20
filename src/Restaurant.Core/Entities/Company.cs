@@ -19,5 +19,10 @@ namespace Restaurant.Core.Entities
         {
             CreatedAt = DateTime.UtcNow;
         }
+
+        public void Delete(DateTime deletedAt)
+        {
+            DeletedAt = deletedAt;
+        }
     }
 }

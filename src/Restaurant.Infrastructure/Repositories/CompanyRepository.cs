@@ -45,6 +45,11 @@ namespace Restaurant.Infrastructure.Repositories
             return await _dbContext.Companies.FindAsync(id);
         }
 
+        public void Delete(Company entity)
+        {
+            entity.Delete(DateTime.UtcNow);
+        }
+
         public async Task SaveChangesAsync()
         {
             await _dbContext.SaveChangesAsync();
