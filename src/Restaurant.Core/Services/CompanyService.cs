@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Restaurant.Core.Entities;
 using Restaurant.Core.Interfaces;
@@ -19,6 +21,21 @@ namespace Restaurant.Core.Services
             var inserted = _repository.Insert(entity);
             await _repository.SaveChangesAsync();
             return inserted;
+        }
+
+        public async Task<IEnumerable<Company>> GetAsync()
+        {
+            return await _repository.GetAsync();
+        }
+
+        public async Task<IEnumerable<Company>> GetAsync(string nameOrRegistrationNumber)
+        {
+            return await _repository.GetAsync(nameOrRegistrationNumber);
+        }
+
+        public async Task<Company> GetAsync(Guid id)
+        {
+            return await _repository.GetAsync(id);
         }
     }
 }

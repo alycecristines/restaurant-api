@@ -30,5 +30,47 @@ namespace Restaurant.Api.Controllers
                 return BadRequest(exception.Message);
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            try
+            {
+                var entities = await _service.GetAsync();
+                return Ok(entities);
+            }
+            catch (InvalidOperationException exception)
+            {
+                return BadRequest(exception.Message);
+            }
+        }
+
+        [HttpGet("{nameOrRegistrationNumber}")]
+        public async Task<IActionResult> Get(string nameOrRegistrationNumber)
+        {
+            try
+            {
+                var entities = await _service.GetAsync(nameOrRegistrationNumber);
+                return Ok(entities);
+            }
+            catch (InvalidOperationException exception)
+            {
+                return BadRequest(exception.Message);
+            }
+        }
+
+        [HttpGet("{id:Guid}")]
+        public async Task<IActionResult> Get(Guid id)
+        {
+            try
+            {
+                var entity = await _service.GetAsync(id);
+                return Ok(entity);
+            }
+            catch (InvalidOperationException exception)
+            {
+                return BadRequest(exception.Message);
+            }
+        }
     }
 }
