@@ -18,9 +18,9 @@ namespace Restaurant.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public Company Insert(Company entity)
+        public void Insert(Company entity)
         {
-            return _dbContext.Companies.Add(entity).Entity;
+            _dbContext.Companies.Add(entity);
         }
 
         public async Task<IEnumerable<Company>> GetAsync()
@@ -48,6 +48,11 @@ namespace Restaurant.Infrastructure.Repositories
         public void Delete(Company entity)
         {
             entity.Delete(DateTime.UtcNow);
+        }
+
+        public void Update(Company entity)
+        {
+            entity.Update(DateTime.UtcNow);
         }
 
         public async Task SaveChangesAsync()

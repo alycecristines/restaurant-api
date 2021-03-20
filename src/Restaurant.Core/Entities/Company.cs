@@ -20,6 +20,11 @@ namespace Restaurant.Core.Entities
             CreatedAt = DateTime.UtcNow;
         }
 
+        public void Update(DateTime updatedAt)
+        {
+            UpdatedAt = updatedAt;
+        }
+
         public void Delete(DateTime deletedAt)
         {
             DeletedAt = deletedAt;

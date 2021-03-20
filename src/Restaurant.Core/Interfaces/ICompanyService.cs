@@ -7,10 +7,11 @@ namespace Restaurant.Core.Interfaces
 {
     public interface ICompanyService
     {
-        Task<Company> Insert(Company entity);
+        Task Insert(Company newEntity);
         Task<IEnumerable<Company>> GetAsync();
         Task<IEnumerable<Company>> GetAsync(string nameOrRegistrationNumber);
         Task<Company> GetAsync(Guid id);
+        Task Update(Company updatedEntity);
         Task Delete(Guid id);
     }
 }

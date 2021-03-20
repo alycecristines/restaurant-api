@@ -22,8 +22,8 @@ namespace Restaurant.Api.Controllers
         {
             try
             {
-                var inserted = await _service.Insert(entity);
-                return Ok(inserted);
+                await _service.Insert(entity);
+                return Ok(true);
             }
             catch (InvalidOperationException exception)
             {
@@ -66,6 +66,20 @@ namespace Restaurant.Api.Controllers
             {
                 var entity = await _service.GetAsync(id);
                 return Ok(entity);
+            }
+            catch (InvalidOperationException exception)
+            {
+                return BadRequest(exception.Message);
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Put(Company company)
+        {
+            try
+            {
+                await _service.Update(company);
+                return Ok(true);
             }
             catch (InvalidOperationException exception)
             {
