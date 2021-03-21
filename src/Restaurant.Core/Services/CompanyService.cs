@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Restaurant.Core.Entities;
 using Restaurant.Core.Exceptions;
@@ -18,7 +19,13 @@ namespace Restaurant.Core.Services
 
         public async Task Insert(Company entity)
         {
-            // TODO: Check if there is no registration with the same RegistrationNumber
+            var currentEntity = await GetAsync(entity.RegistrationNumber);
+
+            if (currentEntity.Any())
+            {
+                throw new BusinessException($"There is already a company registered with registration number '{entity.RegistrationNumber}'.");
+            }
+
             _repository.Insert(entity);
             await _repository.SaveChangesAsync();
         }
