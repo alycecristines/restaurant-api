@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Restaurant.Core.Exceptions;
 using Restaurant.Application.Wrappers;
+using Restaurant.Application.Options;
 
 namespace Restaurant.Application.Middlewares
 {
@@ -48,7 +49,7 @@ namespace Restaurant.Application.Middlewares
         private string GetResponseJson(string message)
         {
             var response = new ApiErrorResponse(message);
-            return JsonSerializer.Serialize(response);
+            return JsonSerializer.Serialize(response, JsonOptions.Create());
         }
     }
 }

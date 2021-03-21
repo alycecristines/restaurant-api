@@ -12,6 +12,7 @@ using Restaurant.Infrastructure.Repositories;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.Filters;
 using Restaurant.Application.Middlewares;
+using Restaurant.Application.Options;
 
 namespace Restaurant.Api
 {
@@ -34,7 +35,11 @@ namespace Restaurant.Api
             {
                 options.SuppressModelStateInvalidFilter = true;
             }
-            );
+            ).AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonOptions.NamingPolicy;
+                options.JsonSerializerOptions.IgnoreNullValues = JsonOptions.IgnoreNullValues;
+            });
 
             services.AddSwaggerGen(c =>
             {
