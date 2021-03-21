@@ -1,6 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Restaurant.Core.DTOs.Request;
+using Restaurant.Core.DTOs.Response;
 using Restaurant.Core.Entities;
 using Restaurant.Core.Interfaces;
 
@@ -11,17 +15,20 @@ namespace Restaurant.Api.Controllers
     public class CompanyController : ControllerBase
     {
         private readonly ICompanyService _service;
+        private readonly IMapper _mapper;
 
-        public CompanyController(ICompanyService service)
+        public CompanyController(ICompanyService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Company entity)
+        public async Task<IActionResult> Post(CompanyPostDTO dto)
         {
             try
             {
+                var entity = _mapper.Map<Company>(dto);
                 await _service.Insert(entity);
                 return Ok(true);
             }
@@ -37,7 +44,8 @@ namespace Restaurant.Api.Controllers
             try
             {
                 var entities = await _service.GetAsync();
-                return Ok(entities);
+                var dtos = _mapper.Map<IEnumerable<CompanyResponseDTO>>(entities);
+                return Ok(dtos);
             }
             catch (InvalidOperationException exception)
             {
@@ -51,7 +59,8 @@ namespace Restaurant.Api.Controllers
             try
             {
                 var entities = await _service.GetAsync(nameOrRegistrationNumber);
-                return Ok(entities);
+                var dtos = _mapper.Map<IEnumerable<CompanyResponseDTO>>(entities);
+                return Ok(dtos);
             }
             catch (InvalidOperationException exception)
             {
@@ -65,7 +74,8 @@ namespace Restaurant.Api.Controllers
             try
             {
                 var entity = await _service.GetAsync(id);
-                return Ok(entity);
+                var dto = _mapper.Map<CompanyResponseDTO>(entity);
+                return Ok(dto);
             }
             catch (InvalidOperationException exception)
             {
@@ -74,11 +84,12 @@ namespace Restaurant.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put(Company company)
+        public async Task<IActionResult> Put(CompanyPutDTO dto)
         {
             try
             {
-                await _service.Update(company);
+                var entity = _mapper.Map<Company>(dto);
+                await _service.Update(entity);
                 return Ok(true);
             }
             catch (InvalidOperationException exception)

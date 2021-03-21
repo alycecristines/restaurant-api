@@ -9,6 +9,7 @@ namespace Restaurant.Core.Entities
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
+        public bool Deleted => DeletedAt.HasValue;
         public string CorporateName { get; set; }
         public string BusinessName { get; set; }
         public string RegistrationNumber { get; set; }

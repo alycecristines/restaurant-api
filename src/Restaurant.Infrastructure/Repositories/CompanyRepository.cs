@@ -53,6 +53,7 @@ namespace Restaurant.Infrastructure.Repositories
         public void Update(Company entity)
         {
             entity.Update(DateTime.UtcNow);
+            _dbContext.Companies.Update(entity);
         }
 
         public async Task SaveChangesAsync()

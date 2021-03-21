@@ -15,10 +15,10 @@ namespace Restaurant.Core.Services
             _repository = repository;
         }
 
-        public async Task Insert(Company newEntity)
+        public async Task Insert(Company entity)
         {
             // TODO: Check if there is no registration with the same RegistrationNumber
-            _repository.Insert(newEntity);
+            _repository.Insert(entity);
             await _repository.SaveChangesAsync();
         }
 
@@ -37,24 +37,14 @@ namespace Restaurant.Core.Services
             return await _repository.GetAsync(id);
         }
 
-        public async Task Update(Company updatedEntity)
+        public async Task Update(Company entity)
         {
-            var entity = await _repository.GetAsync(updatedEntity.Id);
+            var currentEntity = await _repository.GetAsync(entity.Id);
 
-            if (entity is null) throw new InvalidOperationException($"Company not found with id '{updatedEntity.Id}'.");
-
-            entity.CorporateName = updatedEntity.CorporateName;
-            entity.BusinessName = updatedEntity.BusinessName;
-            entity.Phone.AreaCode = updatedEntity.Phone.AreaCode;
-            entity.Phone.Number = updatedEntity.Phone.Number;
-            entity.Address.Street = updatedEntity.Address.Street;
-            entity.Address.Secondary = updatedEntity.Address.Secondary;
-            entity.Address.BuildingNumber = updatedEntity.Address.BuildingNumber;
-            entity.Address.District = updatedEntity.Address.District;
-            entity.Address.City = updatedEntity.Address.City;
-            entity.Address.State = updatedEntity.Address.State;
-            entity.Address.Country = updatedEntity.Address.Country;
-            entity.Address.ZipCode = updatedEntity.Address.ZipCode;
+            if (currentEntity != null)
+            {
+                throw new InvalidOperationException($"Company not found with id '{entity.Id}'.");
+            }
 
             _repository.Update(entity);
             await _repository.SaveChangesAsync();
@@ -64,8 +54,15 @@ namespace Restaurant.Core.Services
         {
             var entity = await _repository.GetAsync(id);
 
-            if (entity is null) throw new InvalidOperationException($"Company not found with id '{id}'.");
-            if (entity.DeletedAt.HasValue) throw new InvalidOperationException("This company has already been deleted.");
+            if (entity is null)
+            {
+                throw new InvalidOperationException($"Company not found with id '{id}'.");
+            }
+
+            if (entity.DeletedAt.HasValue)
+            {
+                throw new InvalidOperationException("This company has already been deleted.");
+            }
 
             _repository.Delete(entity);
             await _repository.SaveChangesAsync();
