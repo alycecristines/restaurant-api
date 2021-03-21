@@ -6,9 +6,9 @@ namespace Restaurant.Core.Wrappers
     {
         public bool Success { get; private set; }
         public string Title { get; private set; }
-        public IEnumerable<string> Errors { get; private set; }
+        public object Errors { get; private set; }
 
-        public ApiErrorResponse(string title, IEnumerable<string> errors = null)
+        public ApiErrorResponse(string title, object errors = null)
         {
             Success = false;
             Title = title;

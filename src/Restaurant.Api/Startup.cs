@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using Restaurant.Core.Interfaces;
 using Restaurant.Core.Services;
 using Restaurant.Infrastructure.Data;
+using Restaurant.Infrastructure.Filters;
 using Restaurant.Infrastructure.Middlewares;
 using Restaurant.Infrastructure.Repositories;
 
@@ -24,7 +25,15 @@ namespace Restaurant.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                options.Filters.Add<ValidationFilterAttribute>();
+            }
+            ).ConfigureApiBehaviorOptions(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            }
+            );
 
             services.AddSwaggerGen(c =>
             {
