@@ -26,90 +26,48 @@ namespace Restaurant.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(CompanyPostDTO dto)
         {
-            try
-            {
-                var entity = _mapper.Map<Company>(dto);
-                await _service.Insert(entity);
-                return Ok(true);
-            }
-            catch (InvalidOperationException exception)
-            {
-                return BadRequest(exception.Message);
-            }
+            var entity = _mapper.Map<Company>(dto);
+            await _service.Insert(entity);
+            return Ok(true);
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            try
-            {
-                var entities = await _service.GetAsync();
-                var dtos = _mapper.Map<IEnumerable<CompanyResponseDTO>>(entities);
-                return Ok(dtos);
-            }
-            catch (InvalidOperationException exception)
-            {
-                return BadRequest(exception.Message);
-            }
+            var entities = await _service.GetAsync();
+            var dtos = _mapper.Map<IEnumerable<CompanyResponseDTO>>(entities);
+            return Ok(dtos);
         }
 
         [HttpGet("{nameOrRegistrationNumber}")]
         public async Task<IActionResult> Get(string nameOrRegistrationNumber)
         {
-            try
-            {
-                var entities = await _service.GetAsync(nameOrRegistrationNumber);
-                var dtos = _mapper.Map<IEnumerable<CompanyResponseDTO>>(entities);
-                return Ok(dtos);
-            }
-            catch (InvalidOperationException exception)
-            {
-                return BadRequest(exception.Message);
-            }
+            var entities = await _service.GetAsync(nameOrRegistrationNumber);
+            var dtos = _mapper.Map<IEnumerable<CompanyResponseDTO>>(entities);
+            return Ok(dtos);
         }
 
         [HttpGet("{id:Guid}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            try
-            {
-                var entity = await _service.GetAsync(id);
-                var dto = _mapper.Map<CompanyResponseDTO>(entity);
-                return Ok(dto);
-            }
-            catch (InvalidOperationException exception)
-            {
-                return BadRequest(exception.Message);
-            }
+            var entity = await _service.GetAsync(id);
+            var dto = _mapper.Map<CompanyResponseDTO>(entity);
+            return Ok(dto);
         }
 
         [HttpPut]
         public async Task<IActionResult> Put(CompanyPutDTO dto)
         {
-            try
-            {
-                var entity = _mapper.Map<Company>(dto);
-                await _service.Update(entity);
-                return Ok(true);
-            }
-            catch (InvalidOperationException exception)
-            {
-                return BadRequest(exception.Message);
-            }
+            var entity = _mapper.Map<Company>(dto);
+            await _service.Update(entity);
+            return Ok(true);
         }
 
         [HttpDelete("{id:Guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            try
-            {
-                await _service.Delete(id);
-                return Ok(true);
-            }
-            catch (InvalidOperationException exception)
-            {
-                return BadRequest(exception.Message);
-            }
+            await _service.Delete(id);
+            return Ok(true);
         }
     }
 }

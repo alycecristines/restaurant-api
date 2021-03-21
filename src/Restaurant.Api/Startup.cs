@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using Restaurant.Core.Interfaces;
 using Restaurant.Core.Services;
 using Restaurant.Infrastructure.Data;
+using Restaurant.Infrastructure.Middlewares;
 using Restaurant.Infrastructure.Repositories;
 
 namespace Restaurant.Api
@@ -44,6 +45,8 @@ namespace Restaurant.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Restaurant.Api v1"));
             }
+
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseHttpsRedirection();
 

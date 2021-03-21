@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Restaurant.Core.Entities;
+using Restaurant.Core.Exceptions;
 using Restaurant.Core.Interfaces;
 
 namespace Restaurant.Core.Services
@@ -43,7 +44,7 @@ namespace Restaurant.Core.Services
 
             if (currentEntity != null)
             {
-                throw new InvalidOperationException($"Company not found with id '{entity.Id}'.");
+                throw new BusinessException($"Company not found with id '{entity.Id}'.");
             }
 
             _repository.Update(entity);
@@ -56,12 +57,12 @@ namespace Restaurant.Core.Services
 
             if (entity is null)
             {
-                throw new InvalidOperationException($"Company not found with id '{id}'.");
+                throw new BusinessException($"Company not found with id '{id}'.");
             }
 
             if (entity.DeletedAt.HasValue)
             {
-                throw new InvalidOperationException("This company has already been deleted.");
+                throw new BusinessException("This company has already been deleted.");
             }
 
             _repository.Delete(entity);
