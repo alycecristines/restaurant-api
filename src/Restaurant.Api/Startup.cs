@@ -6,11 +6,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Restaurant.Core.Interfaces;
-using Restaurant.Core.Services;
+using Restaurant.Application.Services;
 using Restaurant.Infrastructure.Data;
-using Restaurant.Infrastructure.Filters;
-using Restaurant.Infrastructure.Middlewares;
 using Restaurant.Infrastructure.Repositories;
+using Restaurant.Application.Interfaces;
+using Restaurant.Application.Filters;
+using Restaurant.Application.Middlewares;
 
 namespace Restaurant.Api
 {
@@ -51,11 +52,14 @@ namespace Restaurant.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Restaurant.Api v1"));
+            }
+            else
+            {
+                app.UseMiddleware<ErrorHandlerMiddleware>();
             }
 
-            app.UseMiddleware<ErrorHandlerMiddleware>();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Restaurant.Api v1"));
 
             app.UseHttpsRedirection();
 

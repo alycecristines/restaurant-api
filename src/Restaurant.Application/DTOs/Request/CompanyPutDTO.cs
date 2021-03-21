@@ -1,18 +1,19 @@
+using System;
 using System.ComponentModel.DataAnnotations;
-using Restaurant.Core.DTOs.Common;
+using Restaurant.Application.DTOs.Common;
 
-namespace Restaurant.Core.DTOs.Request
+namespace Restaurant.Application.DTOs.Request
 {
-    public class CompanyPostDTO
+    public class CompanyPutDTO
     {
+        [Required]
+        public Guid Id { get; set; }
+
         [Required, StringLength(150)]
         public string CorporateName { get; set; }
 
         [Required, StringLength(150)]
         public string BusinessName { get; set; }
-
-        [Required, StringLength(14, MinimumLength = 14), RegularExpression(@"^\d*$")]
-        public string RegistrationNumber { get; set; }
 
         [Required]
         public PhoneDTO Phone { get; set; }

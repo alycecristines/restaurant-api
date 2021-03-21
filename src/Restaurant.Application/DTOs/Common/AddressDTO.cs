@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Restaurant.Core.DTOs.Common
+namespace Restaurant.Application.DTOs.Common
 {
     public class AddressDTO
     {

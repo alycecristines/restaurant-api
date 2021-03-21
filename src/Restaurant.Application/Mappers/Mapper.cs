@@ -1,11 +1,11 @@
 using AutoMapper;
-using Restaurant.Core.DTOs.Common;
-using Restaurant.Core.DTOs.Request;
-using Restaurant.Core.DTOs.Response;
+using Restaurant.Application.DTOs.Common;
+using Restaurant.Application.DTOs.Request;
+using Restaurant.Application.DTOs.Response;
 using Restaurant.Core.Entities;
 using Restaurant.Core.ValueObjects;
 
-namespace Restaurant.Infrastructure.Mappers
+namespace Restaurant.Application.Mappers
 {
     public class Mapper : Profile
     {
@@ -14,8 +14,8 @@ namespace Restaurant.Infrastructure.Mappers
             CreateMap<CompanyPostDTO, Company>();
             CreateMap<CompanyPutDTO, Company>();
             CreateMap<Company, CompanyResponseDTO>();
-            CreateMap<PhoneDTO, Phone>();
-            CreateMap<AddressDTO, Address>();
+            CreateMap<PhoneDTO, Phone>().ReverseMap();
+            CreateMap<AddressDTO, Address>().ReverseMap();
         }
     }
 }

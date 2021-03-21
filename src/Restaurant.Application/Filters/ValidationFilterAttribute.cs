@@ -1,9 +1,9 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Restaurant.Core.Wrappers;
+using Restaurant.Application.Wrappers;
 
-namespace Restaurant.Infrastructure.Filters
+namespace Restaurant.Application.Filters
 {
     public class ValidationFilterAttribute : ActionFilterAttribute
     {

@@ -4,9 +4,9 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Restaurant.Core.Exceptions;
-using Restaurant.Core.Wrappers;
+using Restaurant.Application.Wrappers;
 
-namespace Restaurant.Infrastructure.Middlewares
+namespace Restaurant.Application.Middlewares
 {
     public class ErrorHandlerMiddleware
     {

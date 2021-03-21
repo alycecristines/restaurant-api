@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-namespace Restaurant.Core.Wrappers
+namespace Restaurant.Application.Wrappers
 {
     public class ApiErrorResponse
     {
