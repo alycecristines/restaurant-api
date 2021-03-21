@@ -10,7 +10,7 @@ namespace Restaurant.Core.DTOs.Common
         [Required, MaxLength(100)]
         public string Secondary { get; set; }
 
-        [Required, StringLength(3, MinimumLength = 3)]
+        [Required, StringLength(4, MinimumLength = 1)]
         public string BuildingNumber { get; set; }
 
         [Required, MaxLength(50)]
