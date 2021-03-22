@@ -34,7 +34,7 @@ namespace Restaurant.Application.Services
 
             if (currentEntity.Any())
             {
-                throw new BusinessException($"There is already a company registered with registration number '{dto.RegistrationNumber}'.");
+                throw new BusinessException($"There is already a {nameof(Company)} registered with {nameof(Company.RegistrationNumber)} '{dto.RegistrationNumber}'.");
             }
 
             var newEntity = _mapper.Map<Company>(dto);
@@ -75,6 +75,11 @@ namespace Restaurant.Application.Services
         {
             var entity = _repository.Get(id);
 
+            if (entity == null)
+            {
+                throw new BusinessException($"{nameof(Company)} not found with {nameof(Company.Id)} '{id}'.");
+            }
+
             return _mapper.Map<CompanyResponseDTO>(entity);
         }
 
@@ -84,12 +89,12 @@ namespace Restaurant.Application.Services
 
             if (currentEntity == null)
             {
-                throw new BusinessException($"Company not found with id '{id}'.");
+                throw new BusinessException($"{nameof(Company)} not found with {nameof(Company.Id)} '{id}'.");
             }
 
             if (currentEntity.Deleted)
             {
-                throw new BusinessException($"The company with the id '{id}' has been deleted.");
+                throw new BusinessException($"The {nameof(Company)} with the {nameof(Company.Id)} '{id}' has been deleted.");
             }
 
             var updatedEntity = _mapper.Map(dto, currentEntity);
@@ -106,12 +111,12 @@ namespace Restaurant.Application.Services
 
             if (entity == null)
             {
-                throw new BusinessException($"Company not found with id '{id}'.");
+                throw new BusinessException($"{nameof(Company)} not found with {nameof(Company.Id)} '{id}'.");
             }
 
             if (entity.Deleted)
             {
-                throw new BusinessException("This company has already been deleted.");
+                throw new BusinessException($"This {nameof(Company)} has already been deleted.");
             }
 
             entity.Delete(DateTime.UtcNow);

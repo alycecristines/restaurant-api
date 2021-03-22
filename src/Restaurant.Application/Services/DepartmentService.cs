@@ -32,7 +32,7 @@ namespace Restaurant.Application.Services
 
             if (company == null)
             {
-                throw new BusinessException($"Company not found with id '{dto.CompanyId.Value}'.");
+                throw new BusinessException($"{nameof(Company)} not found with {nameof(Company.Id)} '{dto.CompanyId.Value}'.");
             }
 
             var newEntity = _mapper.Map<Department>(dto);
@@ -66,6 +66,11 @@ namespace Restaurant.Application.Services
         public DepartmentResponseDTO Get(Guid id)
         {
             var entity = _departmentRepository.Get(id);
+
+            if (entity == null)
+            {
+                throw new BusinessException($"{nameof(Department)} not found with {nameof(Department.Id)} '{id}'.");
+            }
 
             return _mapper.Map<DepartmentResponseDTO>(entity);
         }
