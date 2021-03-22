@@ -15,6 +15,7 @@ namespace Restaurant.Application.Mappers
             CreateMap<DepartmentRequestDTO, Department>();
             CreateMap<CompanyPutDTO, Company>();
             CreateMap<Company, CompanyResponseDTO>();
+            CreateMap<Department, DepartmentResponseDTO>();
             CreateMap<PhoneDTO, Phone>().ReverseMap();
             CreateMap<AddressDTO, Address>().ReverseMap();
         }

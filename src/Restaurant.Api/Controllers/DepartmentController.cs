@@ -6,7 +6,7 @@ using Restaurant.Application.Wrappers;
 namespace Restaurant.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/departments")]
     public class DepartmentController : ControllerBase
     {
         private readonly IDepartmentService _service;
@@ -19,9 +19,14 @@ namespace Restaurant.Api.Controllers
         [HttpPost]
         public IActionResult Post(DepartmentRequestDTO dto)
         {
-            _service.Insert(dto);
-            var response = new ApiSuccessResponse();
-            return Ok(response);
+            var insertedDto = _service.Insert(dto);
+            var response = new ApiResponse(insertedDto);
+            var param = new { insertedDto.Id };
+
+            // TODO: Inform the get action when implemented
+            var actionName = nameof(Post);
+
+            return CreatedAtAction(actionName, param, response);
         }
     }
 }

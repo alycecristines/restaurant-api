@@ -5,6 +5,7 @@ using AutoMapper;
 using Restaurant.Application.DTOs.Request;
 using Restaurant.Application.DTOs.Response;
 using Restaurant.Application.Interfaces;
+using Restaurant.Application.QueryParams;
 using Restaurant.Core.Entities;
 using Restaurant.Core.Exceptions;
 using Restaurant.Core.Interfaces;
@@ -22,9 +23,14 @@ namespace Restaurant.Application.Services
             _mapper = mapper;
         }
 
-        public void Insert(CompanyPostDTO dto)
+        public CompanyResponseDTO Insert(CompanyPostDTO dto)
         {
-            var currentEntity = GetAll(dto.RegistrationNumber);
+            var queryParams = new CompanyQueryParams
+            {
+                RegistrationNumber = dto.RegistrationNumber
+            };
+
+            var currentEntity = GetAll(queryParams);
 
             if (currentEntity.Any())
             {
@@ -32,26 +38,35 @@ namespace Restaurant.Application.Services
             }
 
             var newEntity = _mapper.Map<Company>(dto);
+
             _repository.Insert(newEntity);
             _repository.SaveChanges();
+
+            return _mapper.Map<CompanyResponseDTO>(newEntity);
         }
 
-        public IEnumerable<CompanyResponseDTO> GetAll()
+        public IEnumerable<CompanyResponseDTO> GetAll(CompanyQueryParams queryParams)
         {
-            var entities = _repository.GetAll().Where(entity =>
-                !entity.DeletedAt.HasValue).ToList();
+            var query = _repository.GetAll();
 
-            return _mapper.Map<IEnumerable<CompanyResponseDTO>>(entities);
-        }
+            if (!queryParams.IncludeInactive)
+            {
+                query = query.Where(entity => !entity.DeletedAt.HasValue);
+            }
 
-        public IEnumerable<CompanyResponseDTO> GetAll(string nameOrRegistrationNumber)
-        {
-            var entities = _repository.GetAll().Where(entity =>
-                (entity.CorporateName.Contains(nameOrRegistrationNumber) ||
-                entity.BusinessName.Contains(nameOrRegistrationNumber) ||
-                entity.RegistrationNumber.Contains(nameOrRegistrationNumber)) &&
-                !entity.DeletedAt.HasValue
-            ).ToList();
+            if (!string.IsNullOrWhiteSpace(queryParams.Name))
+            {
+                query = query.Where(entity =>
+                    entity.CorporateName.Contains(queryParams.Name) ||
+                    entity.BusinessName.Contains(queryParams.Name));
+            }
+
+            if (!string.IsNullOrWhiteSpace(queryParams.RegistrationNumber))
+            {
+                query = query.Where(entity => entity.RegistrationNumber.Contains(queryParams.RegistrationNumber));
+            }
+
+            var entities = query.ToList();
 
             return _mapper.Map<IEnumerable<CompanyResponseDTO>>(entities);
         }
@@ -59,10 +74,11 @@ namespace Restaurant.Application.Services
         public CompanyResponseDTO Get(Guid id)
         {
             var entity = _repository.Get(id);
+
             return _mapper.Map<CompanyResponseDTO>(entity);
         }
 
-        public void Update(Guid id, CompanyPutDTO dto)
+        public CompanyResponseDTO Update(Guid id, CompanyPutDTO dto)
         {
             var currentEntity = _repository.Get(id);
 
@@ -77,8 +93,11 @@ namespace Restaurant.Application.Services
             }
 
             var updatedEntity = _mapper.Map(dto, currentEntity);
+
             updatedEntity.Update(DateTime.UtcNow);
             _repository.SaveChanges();
+
+            return _mapper.Map<CompanyResponseDTO>(updatedEntity);
         }
 
         public void Delete(Guid id)

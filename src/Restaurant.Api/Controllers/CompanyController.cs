@@ -2,12 +2,13 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Application.DTOs.Request;
 using Restaurant.Application.Interfaces;
+using Restaurant.Application.QueryParams;
 using Restaurant.Application.Wrappers;
 
 namespace Restaurant.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/companies")]
     public class CompanyController : ControllerBase
     {
         private readonly ICompanyService _service;
@@ -20,24 +21,20 @@ namespace Restaurant.Api.Controllers
         [HttpPost]
         public IActionResult Post(CompanyPostDTO dto)
         {
-            _service.Insert(dto);
-            var response = new ApiSuccessResponse();
-            return Ok(response);
+            var insertedDto = _service.Insert(dto);
+            var response = new ApiResponse(insertedDto);
+            var param = new { insertedDto.Id };
+            var actionName = nameof(Get);
+
+            return CreatedAtAction(actionName, param, response);
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get([FromQuery] CompanyQueryParams queryParams)
         {
-            var dtos = _service.GetAll();
-            var response = new ApiSuccessResponse(dtos);
-            return Ok(response);
-        }
+            var dtos = _service.GetAll(queryParams);
+            var response = new ApiResponse(dtos);
 
-        [HttpGet("{nameOrRegistrationNumber}")]
-        public IActionResult Get(string nameOrRegistrationNumber)
-        {
-            var dtos = _service.GetAll(nameOrRegistrationNumber);
-            var response = new ApiSuccessResponse(dtos);
             return Ok(response);
         }
 
@@ -45,15 +42,17 @@ namespace Restaurant.Api.Controllers
         public IActionResult Get(Guid id)
         {
             var dto = _service.Get(id);
-            var response = new ApiSuccessResponse(dto);
+            var response = new ApiResponse(dto);
+
             return Ok(response);
         }
 
         [HttpPut("{id:Guid}")]
         public IActionResult Put(Guid id, CompanyPutDTO dto)
         {
-            _service.Update(id, dto);
-            var response = new ApiSuccessResponse();
+            var updatedDto = _service.Update(id, dto);
+            var response = new ApiResponse(updatedDto);
+
             return Ok(response);
         }
 
@@ -61,8 +60,8 @@ namespace Restaurant.Api.Controllers
         public IActionResult Delete(Guid id)
         {
             _service.Delete(id);
-            var response = new ApiSuccessResponse();
-            return Ok(response);
+
+            return NoContent();
         }
     }
 }

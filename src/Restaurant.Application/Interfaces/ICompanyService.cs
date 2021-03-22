@@ -2,16 +2,16 @@ using System;
 using System.Collections.Generic;
 using Restaurant.Application.DTOs.Request;
 using Restaurant.Application.DTOs.Response;
+using Restaurant.Application.QueryParams;
 
 namespace Restaurant.Application.Interfaces
 {
     public interface ICompanyService
     {
-        void Insert(CompanyPostDTO dto);
-        IEnumerable<CompanyResponseDTO> GetAll();
-        IEnumerable<CompanyResponseDTO> GetAll(string nameOrRegistrationNumber);
+        CompanyResponseDTO Insert(CompanyPostDTO dto);
+        IEnumerable<CompanyResponseDTO> GetAll(CompanyQueryParams queryParams);
         CompanyResponseDTO Get(Guid id);
-        void Update(Guid id, CompanyPutDTO dto);
+        CompanyResponseDTO Update(Guid id, CompanyPutDTO dto);
         void Delete(Guid id);
     }
 }

@@ -1,5 +1,6 @@
 using AutoMapper;
 using Restaurant.Application.DTOs.Request;
+using Restaurant.Application.DTOs.Response;
 using Restaurant.Application.Interfaces;
 using Restaurant.Core.Entities;
 using Restaurant.Core.Exceptions;
@@ -21,7 +22,7 @@ namespace Restaurant.Application.Services
             _mapper = mapper;
         }
 
-        public void Insert(DepartmentRequestDTO dto)
+        public DepartmentResponseDTO Insert(DepartmentRequestDTO dto)
         {
             var company = _companyRepository.Get(dto.CompanyId.Value);
 
@@ -31,8 +32,11 @@ namespace Restaurant.Application.Services
             }
 
             var newEntity = _mapper.Map<Department>(dto);
+
             _departmentRepository.Insert(newEntity);
             _departmentRepository.SaveChanges();
+
+            return _mapper.Map<DepartmentResponseDTO>(newEntity);
         }
     }
 }
