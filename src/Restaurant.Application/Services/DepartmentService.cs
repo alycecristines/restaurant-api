@@ -1,7 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using Restaurant.Application.DTOs.Request;
 using Restaurant.Application.DTOs.Response;
 using Restaurant.Application.Interfaces;
+using Restaurant.Application.QueryParams;
 using Restaurant.Core.Entities;
 using Restaurant.Core.Exceptions;
 using Restaurant.Core.Interfaces;
@@ -37,6 +41,33 @@ namespace Restaurant.Application.Services
             _departmentRepository.SaveChanges();
 
             return _mapper.Map<DepartmentResponseDTO>(newEntity);
+        }
+
+        public IEnumerable<DepartmentResponseDTO> GetAll(DepartmentQueryParams queryParams)
+        {
+            var query = _departmentRepository.GetAll();
+
+            if (!queryParams.IncludeInactive)
+            {
+                query = query.Where(entity => !entity.DeletedAt.HasValue);
+            }
+
+            if (!string.IsNullOrWhiteSpace(queryParams.Description))
+            {
+                query = query.Where(entity =>
+                    entity.Description.Contains(queryParams.Description));
+            }
+
+            var entities = query.ToList();
+
+            return _mapper.Map<IEnumerable<DepartmentResponseDTO>>(entities);
+        }
+
+        public DepartmentResponseDTO Get(Guid id)
+        {
+            var entity = _departmentRepository.Get(id);
+
+            return _mapper.Map<DepartmentResponseDTO>(entity);
         }
     }
 }
