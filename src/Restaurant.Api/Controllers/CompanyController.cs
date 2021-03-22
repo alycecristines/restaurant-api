@@ -49,10 +49,10 @@ namespace Restaurant.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPut]
-        public IActionResult Put(CompanyPutDTO dto)
+        [HttpPut("{id:Guid}")]
+        public IActionResult Put(Guid id, CompanyPutDTO dto)
         {
-            _service.Update(dto);
+            _service.Update(id, dto);
             var response = new ApiSuccessResponse();
             return Ok(response);
         }

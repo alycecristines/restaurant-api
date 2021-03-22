@@ -11,7 +11,7 @@ namespace Restaurant.Application.Interfaces
         IEnumerable<CompanyResponseDTO> GetAll();
         IEnumerable<CompanyResponseDTO> GetAll(string nameOrRegistrationNumber);
         CompanyResponseDTO Get(Guid id);
-        void Update(CompanyPutDTO dto);
+        void Update(Guid id, CompanyPutDTO dto);
         void Delete(Guid id);
     }
 }

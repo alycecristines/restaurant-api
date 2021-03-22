@@ -6,9 +6,6 @@ namespace Restaurant.Application.DTOs.Request
 {
     public class CompanyPutDTO
     {
-        [Required]
-        public Guid Id { get; set; }
-
         [Required, StringLength(150)]
         public string CorporateName { get; set; }
 

@@ -62,18 +62,18 @@ namespace Restaurant.Application.Services
             return _mapper.Map<CompanyResponseDTO>(entity);
         }
 
-        public void Update(CompanyPutDTO dto)
+        public void Update(Guid id, CompanyPutDTO dto)
         {
-            var currentEntity = _repository.Get(dto.Id);
+            var currentEntity = _repository.Get(id);
 
             if (currentEntity == null)
             {
-                throw new BusinessException($"Company not found with id '{dto.Id}'.");
+                throw new BusinessException($"Company not found with id '{id}'.");
             }
 
             if (currentEntity.Deleted)
             {
-                throw new BusinessException($"The company with the id '{dto.Id}' has been deleted.");
+                throw new BusinessException($"The company with the id '{id}' has been deleted.");
             }
 
             var updatedEntity = _mapper.Map(dto, currentEntity);
