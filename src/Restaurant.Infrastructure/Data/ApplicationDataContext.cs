@@ -6,6 +6,7 @@ namespace Restaurant.Infrastructure.Data
     public class ApplicationDataContext : DbContext
     {
         public DbSet<Company> Companies { get; set; }
+        public DbSet<Department> Departments { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

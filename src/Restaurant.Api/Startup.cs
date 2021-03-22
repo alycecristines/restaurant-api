@@ -48,7 +48,9 @@ namespace Restaurant.Api
 
             services.AddDbContext<ApplicationDataContext>();
             services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
+            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
