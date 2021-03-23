@@ -8,9 +8,10 @@ namespace Restaurant.Application.Interfaces
 {
     public interface IEmployeeService
     {
-        EmployeeResponseDTO Insert(EmployeePostDTO dto);
+        EmployeeResponseDTO Insert(EmployeePostPutDTO dto);
         IEnumerable<EmployeeResponseDTO> GetAll(EmployeeQueryParams queryParams);
         EmployeeResponseDTO Get(Guid id);
+        EmployeeResponseDTO Update(Guid id, EmployeePostPutDTO dto);
         void Delete(Guid id);
     }
 }

@@ -19,7 +19,7 @@ namespace Restaurant.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(EmployeePostDTO dto)
+        public IActionResult Post(EmployeePostPutDTO dto)
         {
             var insertedDto = _service.Insert(dto);
             var response = new ApiResponse(insertedDto);
@@ -45,6 +45,15 @@ namespace Restaurant.Api.Controllers
         {
             var dto = _service.Get(id);
             var response = new ApiResponse(dto);
+
+            return Ok(response);
+        }
+
+        [HttpPut("{id:Guid}")]
+        public IActionResult Put(Guid id, EmployeePostPutDTO dto)
+        {
+            var updatedDto = _service.Update(id, dto);
+            var response = new ApiResponse(updatedDto);
 
             return Ok(response);
         }

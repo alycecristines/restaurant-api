@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Restaurant.Application.DTOs.Request
 {
-    public class EmployeePostDTO
+    public class EmployeePostPutDTO
     {
         [Required, StringLength(100)]
         public string Name { get; set; }

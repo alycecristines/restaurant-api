@@ -12,11 +12,12 @@ namespace Restaurant.Application.Mappers
         public Mapper()
         {
             CreateMap<CompanyPostDTO, Company>();
-            CreateMap<DepartmentPostDTO, Department>();
-            CreateMap<EmployeePostDTO, Employee>();
-
             CreateMap<CompanyPutDTO, Company>();
+
+            CreateMap<DepartmentPostDTO, Department>();
             CreateMap<DepartmentPutDTO, Department>();
+
+            CreateMap<EmployeePostPutDTO, Employee>();
 
             CreateMap<Company, CompanyResponseDTO>();
             CreateMap<Department, DepartmentResponseDTO>();

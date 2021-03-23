@@ -27,7 +27,7 @@ namespace Restaurant.Application.Services
             _mapper = mapper;
         }
 
-        public EmployeeResponseDTO Insert(EmployeePostDTO dto)
+        public EmployeeResponseDTO Insert(EmployeePostPutDTO dto)
         {
             var department = _departmentRepository.Get(dto.DepartmentId.Value);
 
@@ -80,6 +80,35 @@ namespace Restaurant.Application.Services
             }
 
             return _mapper.Map<EmployeeResponseDTO>(entity);
+        }
+
+        public EmployeeResponseDTO Update(Guid id, EmployeePostPutDTO dto)
+        {
+            var department = _departmentRepository.Get(dto.DepartmentId.Value);
+
+            if (department == null)
+            {
+                throw new BusinessException($"{nameof(Department)} not found with {nameof(Department.Id)} '{dto.DepartmentId.Value}'.");
+            }
+
+            var currentEntity = _employeeRepository.Get(id);
+
+            if (currentEntity == null)
+            {
+                throw new BusinessException($"{nameof(Employee)} not found with {nameof(Employee.Id)} '{id}'.");
+            }
+
+            if (currentEntity.Deleted)
+            {
+                throw new BusinessException($"The {nameof(Employee)} with the {nameof(Employee.Id)} '{id}' has been deleted.");
+            }
+
+            var updatedEntity = _mapper.Map(dto, currentEntity);
+
+            updatedEntity.Update(DateTime.UtcNow);
+            _employeeRepository.SaveChanges();
+
+            return _mapper.Map<EmployeeResponseDTO>(updatedEntity);
         }
 
         public void Delete(Guid id)
