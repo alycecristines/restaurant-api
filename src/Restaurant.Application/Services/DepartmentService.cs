@@ -27,7 +27,7 @@ namespace Restaurant.Application.Services
             _mapper = mapper;
         }
 
-        public DepartmentResponseDTO Insert(DepartmentRequestDTO dto)
+        public DepartmentResponseDTO Insert(DepartmentPostDTO dto)
         {
             var company = _companyRepository.Get(dto.CompanyId.Value);
 
@@ -74,6 +74,28 @@ namespace Restaurant.Application.Services
             }
 
             return _mapper.Map<DepartmentResponseDTO>(entity);
+        }
+
+        public DepartmentResponseDTO Update(Guid id, DepartmentPutDTO dto)
+        {
+            var currentEntity = _departmentRepository.Get(id);
+
+            if (currentEntity == null)
+            {
+                throw new BusinessException($"{nameof(Department)} not found with {nameof(Department.Id)} '{id}'.");
+            }
+
+            if (currentEntity.Deleted)
+            {
+                throw new BusinessException($"The {nameof(Department)} with the {nameof(Department.Id)} '{id}' has been deleted.");
+            }
+
+            var updatedEntity = _mapper.Map(dto, currentEntity);
+
+            updatedEntity.Update(DateTime.UtcNow);
+            _departmentRepository.SaveChanges();
+
+            return _mapper.Map<DepartmentResponseDTO>(updatedEntity);
         }
 
         public void Delete(Guid id)

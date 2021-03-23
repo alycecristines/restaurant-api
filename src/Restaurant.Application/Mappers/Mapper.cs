@@ -12,10 +12,14 @@ namespace Restaurant.Application.Mappers
         public Mapper()
         {
             CreateMap<CompanyPostDTO, Company>();
-            CreateMap<DepartmentRequestDTO, Department>();
+            CreateMap<DepartmentPostDTO, Department>();
+
             CreateMap<CompanyPutDTO, Company>();
+            CreateMap<DepartmentPutDTO, Department>();
+
             CreateMap<Company, CompanyResponseDTO>();
             CreateMap<Department, DepartmentResponseDTO>();
+
             CreateMap<PhoneDTO, Phone>().ReverseMap();
             CreateMap<AddressDTO, Address>().ReverseMap();
         }
