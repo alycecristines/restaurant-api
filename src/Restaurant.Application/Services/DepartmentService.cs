@@ -75,5 +75,23 @@ namespace Restaurant.Application.Services
 
             return _mapper.Map<DepartmentResponseDTO>(entity);
         }
+
+        public void Delete(Guid id)
+        {
+            var entity = _departmentRepository.Get(id);
+
+            if (entity == null)
+            {
+                throw new BusinessException($"{nameof(Department)} not found with {nameof(Department.Id)} '{id}'.");
+            }
+
+            if (entity.Deleted)
+            {
+                throw new BusinessException($"This {nameof(Department)} has already been deleted.");
+            }
+
+            entity.Delete(DateTime.UtcNow);
+            _departmentRepository.SaveChanges();
+        }
     }
 }
