@@ -1,21 +1,20 @@
 using System;
-using System.Collections.Generic;
 
 namespace Restaurant.Core.Entities
 {
-    public class Department
+    public class Employee
     {
         public Guid Id { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
         public bool Deleted => DeletedAt.HasValue;
-        public string Description { get; set; }
-        public Guid CompanyId { get; set; }
-        public Company Company { get; set; }
-        public IEnumerable<Employee> Employees { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public Guid DepartmentId { get; set; }
+        public Department Department { get; set; }
 
-        public Department()
+        public Employee()
         {
             CreatedAt = DateTime.UtcNow;
         }
