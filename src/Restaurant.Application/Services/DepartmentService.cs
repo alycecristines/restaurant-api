@@ -4,6 +4,7 @@ using System.Linq;
 using AutoMapper;
 using Restaurant.Application.DTOs.Request;
 using Restaurant.Application.DTOs.Response;
+using Restaurant.Application.Extensions;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
 using Restaurant.Core.Entities;
@@ -55,7 +56,7 @@ namespace Restaurant.Application.Services
             if (!string.IsNullOrWhiteSpace(queryParams.Description))
             {
                 query = query.Where(entity =>
-                    entity.Description.Contains(queryParams.Description));
+                    entity.Description.ContainsResearch(queryParams.Description));
             }
 
             var entities = query.ToList();
