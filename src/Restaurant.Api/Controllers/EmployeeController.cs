@@ -1,6 +1,8 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Application.DTOs.Request;
 using Restaurant.Application.Interfaces;
+using Restaurant.Application.QueryParams;
 using Restaurant.Application.Wrappers;
 
 namespace Restaurant.Api.Controllers
@@ -27,6 +29,24 @@ namespace Restaurant.Api.Controllers
             var actionName = nameof(Post);
 
             return CreatedAtAction(actionName, param, response);
+        }
+
+        [HttpGet]
+        public IActionResult Get([FromQuery] EmployeeQueryParams queryParams)
+        {
+            var dtos = _service.GetAll(queryParams);
+            var response = new ApiResponse(dtos);
+
+            return Ok(response);
+        }
+
+        [HttpGet("{id:Guid}")]
+        public IActionResult Get(Guid id)
+        {
+            var dto = _service.Get(id);
+            var response = new ApiResponse(dto);
+
+            return Ok(response);
         }
     }
 }
