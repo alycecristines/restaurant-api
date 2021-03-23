@@ -81,5 +81,23 @@ namespace Restaurant.Application.Services
 
             return _mapper.Map<EmployeeResponseDTO>(entity);
         }
+
+        public void Delete(Guid id)
+        {
+            var entity = _employeeRepository.Get(id);
+
+            if (entity == null)
+            {
+                throw new BusinessException($"{nameof(Employee)} not found with {nameof(Employee.Id)} '{id}'.");
+            }
+
+            if (entity.Deleted)
+            {
+                throw new BusinessException($"This {nameof(Employee)} has already been deleted.");
+            }
+
+            entity.Delete(DateTime.UtcNow);
+            _employeeRepository.SaveChanges();
+        }
     }
 }
