@@ -1,36 +1,17 @@
-using System;
 using System.Collections.Generic;
+using Restaurant.Core.Common;
 using Restaurant.Core.ValueObjects;
 
 namespace Restaurant.Core.Entities
 {
-    public class Company
+    public class Company : Entity
     {
-        public Guid Id { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
-        public DateTime? DeletedAt { get; set; }
-        public bool Deleted => DeletedAt.HasValue;
-        public string CorporateName { get; set; }
-        public string BusinessName { get; set; }
-        public string RegistrationNumber { get; set; }
-        public Phone Phone { get; set; }
-        public Address Address { get; set; }
-        public IEnumerable<Department> Departments { get; set; }
+        public string CorporateName { get; private set; }
+        public string BusinessName { get; private set; }
+        public string RegistrationNumber { get; private set; }
+        public Phone Phone { get; private set; }
+        public Address Address { get; private set; }
 
-        public Company()
-        {
-            CreatedAt = DateTime.UtcNow;
-        }
-
-        public void Update(DateTime updatedAt)
-        {
-            UpdatedAt = updatedAt;
-        }
-
-        public void Delete(DateTime deletedAt)
-        {
-            DeletedAt = deletedAt;
-        }
+        public IEnumerable<Department> Departments { get; private set; }
     }
 }
