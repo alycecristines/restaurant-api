@@ -52,10 +52,7 @@ namespace Restaurant.Api
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
 
-            services.AddScoped<ICompanyRepository, CompanyRepository>();
-            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 

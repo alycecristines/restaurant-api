@@ -15,12 +15,12 @@ namespace Restaurant.Application.Services
 {
     public class DepartmentService : IDepartmentService
     {
-        private readonly IDepartmentRepository _departmentRepository;
-        private readonly ICompanyRepository _companyRepository;
+        private readonly IRepository<Department> _departmentRepository;
+        private readonly IRepository<Company> _companyRepository;
         private readonly IMapper _mapper;
 
-        public DepartmentService(IDepartmentRepository departmentRepository,
-            ICompanyRepository companyRepository, IMapper mapper)
+        public DepartmentService(IRepository<Department> departmentRepository,
+            IRepository<Company> companyRepository, IMapper mapper)
         {
             _departmentRepository = departmentRepository;
             _companyRepository = companyRepository;
