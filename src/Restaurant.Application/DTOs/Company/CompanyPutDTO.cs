@@ -1,21 +1,15 @@
-using System;
-using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Restaurant.Application.DTOs.Common;
+using Entity = Restaurant.Core.Entities;
 
-namespace Restaurant.Application.DTOs.Request
+namespace Restaurant.Application.DTOs.Company
 {
+    [ModelMetadataType(typeof(Entity.Company))]
     public class CompanyPutDTO
     {
-        [Required, StringLength(150)]
         public string CorporateName { get; set; }
-
-        [Required, StringLength(150)]
         public string BusinessName { get; set; }
-
-        [Required]
         public PhoneDTO Phone { get; set; }
-
-        [Required]
         public AddressDTO Address { get; set; }
     }
 }

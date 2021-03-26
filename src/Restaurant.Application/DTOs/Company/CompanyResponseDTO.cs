@@ -1,6 +1,6 @@
 using Restaurant.Application.DTOs.Common;
 
-namespace Restaurant.Application.DTOs.Response
+namespace Restaurant.Application.DTOs.Company
 {
     public class CompanyResponseDTO
     {

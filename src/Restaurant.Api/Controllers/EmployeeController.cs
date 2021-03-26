@@ -1,6 +1,6 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using Restaurant.Application.DTOs.Request;
+using Restaurant.Application.DTOs.Employee;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
 using Restaurant.Application.Wrappers;
@@ -19,7 +19,7 @@ namespace Restaurant.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(EmployeePostPutDTO dto)
+        public IActionResult Post(EmployeePostDTO dto)
         {
             var insertedDto = _service.Insert(dto);
             var response = new ApiResponse(insertedDto);
@@ -50,7 +50,7 @@ namespace Restaurant.Api.Controllers
         }
 
         [HttpPut("{id:Guid}")]
-        public IActionResult Put(Guid id, EmployeePostPutDTO dto)
+        public IActionResult Put(Guid id, EmployeePutDTO dto)
         {
             var updatedDto = _service.Update(id, dto);
             var response = new ApiResponse(updatedDto);

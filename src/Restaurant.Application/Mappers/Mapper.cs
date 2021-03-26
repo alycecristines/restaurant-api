@@ -1,7 +1,8 @@
 using AutoMapper;
 using Restaurant.Application.DTOs.Common;
-using Restaurant.Application.DTOs.Request;
-using Restaurant.Application.DTOs.Response;
+using Restaurant.Application.DTOs.Company;
+using Restaurant.Application.DTOs.Department;
+using Restaurant.Application.DTOs.Employee;
 using Restaurant.Core.Entities;
 using Restaurant.Core.ValueObjects;
 
@@ -13,14 +14,14 @@ namespace Restaurant.Application.Mappers
         {
             CreateMap<CompanyPostDTO, Company>();
             CreateMap<CompanyPutDTO, Company>();
+            CreateMap<Company, CompanyResponseDTO>();
 
             CreateMap<DepartmentPostDTO, Department>();
             CreateMap<DepartmentPutDTO, Department>();
-
-            CreateMap<EmployeePostPutDTO, Employee>();
-
-            CreateMap<Company, CompanyResponseDTO>();
             CreateMap<Department, DepartmentResponseDTO>();
+
+            CreateMap<EmployeePostDTO, Employee>();
+            CreateMap<EmployeePutDTO, Employee>();
             CreateMap<Employee, EmployeeResponseDTO>();
 
             CreateMap<PhoneDTO, Phone>().ReverseMap();

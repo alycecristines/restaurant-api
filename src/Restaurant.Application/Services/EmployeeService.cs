@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using Restaurant.Application.DTOs.Request;
-using Restaurant.Application.DTOs.Response;
+using Restaurant.Application.DTOs.Employee;
 using Restaurant.Application.Extensions;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
@@ -27,7 +26,7 @@ namespace Restaurant.Application.Services
             _mapper = mapper;
         }
 
-        public EmployeeResponseDTO Insert(EmployeePostPutDTO dto)
+        public EmployeeResponseDTO Insert(EmployeePostDTO dto)
         {
             var department = _departmentRepository.Get(dto.DepartmentId.Value);
 
@@ -82,7 +81,7 @@ namespace Restaurant.Application.Services
             return _mapper.Map<EmployeeResponseDTO>(entity);
         }
 
-        public EmployeeResponseDTO Update(Guid id, EmployeePostPutDTO dto)
+        public EmployeeResponseDTO Update(Guid id, EmployeePutDTO dto)
         {
             var department = _departmentRepository.Get(dto.DepartmentId.Value);
 

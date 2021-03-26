@@ -1,13 +1,12 @@
-using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using Restaurant.Core.ValueObjects;
 
 namespace Restaurant.Application.DTOs.Common
 {
+    [ModelMetadataType(typeof(Phone))]
     public class PhoneDTO
     {
-        [Required, StringLength(2, MinimumLength = 2), RegularExpression(@"^\d*$")]
         public string AreaCode { get; set; }
-
-        [Required, StringLength(9, MinimumLength = 8), RegularExpression(@"^\d*$")]
         public string Number { get; set; }
     }
 }
