@@ -8,15 +8,15 @@ namespace Restaurant.Core.Entities
     {
         [Required]
         [StringLength(100)]
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
         [Required]
         [EmailAddress]
         [StringLength(100)]
-        public string Email { get; private set; }
+        public string Email { get; set; }
 
         [Required]
-        public Guid DepartmentId { get; private set; }
-        public Department Department { get; private set; }
+        public Guid DepartmentId { get; set; }
+        public Department Department { get; set; }
     }
 }

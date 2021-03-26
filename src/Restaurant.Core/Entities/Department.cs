@@ -9,12 +9,12 @@ namespace Restaurant.Core.Entities
     {
         [Required]
         [StringLength(50)]
-        public string Description { get; private set; }
+        public string Description { get; set; }
 
         [Required]
-        public Guid CompanyId { get; private set; }
-        public Company Company { get; private set; }
+        public Guid CompanyId { get; set; }
+        public Company Company { get; set; }
 
-        public IEnumerable<Employee> Employees { get; private set; }
+        public IEnumerable<Employee> Employees { get; set; }
     }
 }

@@ -9,23 +9,23 @@ namespace Restaurant.Core.Entities
     {
         [Required]
         [StringLength(150)]
-        public string CorporateName { get; private set; }
+        public string CorporateName { get; set; }
 
         [Required]
         [StringLength(150)]
-        public string BusinessName { get; private set; }
+        public string BusinessName { get; set; }
 
         [Required]
         [StringLength(14, MinimumLength = 14)]
         [RegularExpression(@"^\d*$")]
-        public string RegistrationNumber { get; private set; }
+        public string RegistrationNumber { get; set; }
 
         [Required]
-        public Phone Phone { get; private set; }
+        public Phone Phone { get; set; }
 
         [Required]
-        public Address Address { get; private set; }
+        public Address Address { get; set; }
 
-        public IEnumerable<Department> Departments { get; private set; }
+        public IEnumerable<Department> Departments { get; set; }
     }
 }
