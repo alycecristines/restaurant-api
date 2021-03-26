@@ -35,6 +35,11 @@ namespace Restaurant.Application.Services
                 throw new BusinessException($"{nameof(Department)} not found with {nameof(Department.Id)} '{dto.DepartmentId.Value}'.");
             }
 
+            if (department.Deleted)
+            {
+                throw new BusinessException($"The {nameof(Department)} with the {nameof(Department.Id)} '{dto.DepartmentId.Value}' has been deleted.");
+            }
+
             var newEntity = _mapper.Map<Employee>(dto);
 
             _employeeRepository.Insert(newEntity);
@@ -88,6 +93,11 @@ namespace Restaurant.Application.Services
             if (department == null)
             {
                 throw new BusinessException($"{nameof(Department)} not found with {nameof(Department.Id)} '{dto.DepartmentId.Value}'.");
+            }
+
+            if (department.Deleted)
+            {
+                throw new BusinessException($"The {nameof(Department)} with the {nameof(Department.Id)} '{dto.DepartmentId.Value}' has been deleted.");
             }
 
             var currentEntity = _employeeRepository.Get(id);

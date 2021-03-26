@@ -35,6 +35,11 @@ namespace Restaurant.Application.Services
                 throw new BusinessException($"{nameof(Company)} not found with {nameof(Company.Id)} '{dto.CompanyId.Value}'.");
             }
 
+            if (company.Deleted)
+            {
+                throw new BusinessException($"The {nameof(Company)} with the {nameof(Company.Id)} '{dto.CompanyId.Value}' has been deleted.");
+            }
+
             var newEntity = _mapper.Map<Department>(dto);
 
             _departmentRepository.Insert(newEntity);
