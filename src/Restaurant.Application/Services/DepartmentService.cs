@@ -17,13 +17,15 @@ namespace Restaurant.Application.Services
     {
         private readonly IRepository<Department> _departmentRepository;
         private readonly IRepository<Company> _companyRepository;
+        private readonly IEmployeeService _employeeService;
         private readonly IMapper _mapper;
 
         public DepartmentService(IRepository<Department> departmentRepository,
-            IRepository<Company> companyRepository, IMapper mapper)
+            IRepository<Company> companyRepository, IEmployeeService employeeService, IMapper mapper)
         {
             _departmentRepository = departmentRepository;
             _companyRepository = companyRepository;
+            _employeeService = employeeService;
             _mapper = mapper;
         }
 
@@ -121,6 +123,18 @@ namespace Restaurant.Application.Services
             if (entity.Deleted)
             {
                 throw new BusinessException($"This {nameof(Department)} has already been deleted.");
+            }
+
+            var queryParams = new EmployeeQueryParams
+            {
+                DepartmentId = id
+            };
+
+            var employees = _employeeService.GetAll(queryParams);
+
+            if (employees.Any())
+            {
+                throw new BusinessException($"There are related {nameof(Employee)}s.");
             }
 
             entity.Delete(DateTime.UtcNow);
