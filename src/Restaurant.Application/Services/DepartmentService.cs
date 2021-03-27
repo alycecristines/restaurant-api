@@ -64,6 +64,12 @@ namespace Restaurant.Application.Services
                     entity.Description.ContainsResearch(queryParams.Description));
             }
 
+            if (queryParams.CompanyId.HasValue)
+            {
+                query = query.Where(entity =>
+                    entity.CompanyId == queryParams.CompanyId);
+            }
+
             var entities = query.ToList();
 
             return _mapper.Map<IEnumerable<DepartmentResponseDTO>>(entities);
