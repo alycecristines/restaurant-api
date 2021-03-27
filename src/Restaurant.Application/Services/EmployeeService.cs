@@ -51,12 +51,7 @@ namespace Restaurant.Application.Services
 
         public IEnumerable<EmployeeResponseDTO> GetAll(EmployeeQueryParams queryParams)
         {
-            var query = _employeeRepository.GetAll();
-
-            if (!queryParams.IncludeInactive)
-            {
-                query = query.Where(entity => !entity.DeletedAt.HasValue);
-            }
+            var query = _employeeRepository.GetAll(queryParams.IncludeInactive);
 
             if (!string.IsNullOrWhiteSpace(queryParams.Name))
             {

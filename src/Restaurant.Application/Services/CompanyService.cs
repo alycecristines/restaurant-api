@@ -15,15 +15,15 @@ namespace Restaurant.Application.Services
     // TODO: Refactor
     public class CompanyService : ICompanyService
     {
-        private readonly IRepository<Company> _repository;
-        private readonly IDepartmentService _departmentService;
+        private readonly IRepository<Company> _companyRepository;
+        private readonly IRepository<Department> _departmentRepository;
         private readonly IMapper _mapper;
 
-        public CompanyService(IRepository<Company> repository,
-            IDepartmentService departmentService, IMapper mapper)
+        public CompanyService(IRepository<Company> companyRepository,
+            IRepository<Department> departmentRepository, IMapper mapper)
         {
-            _repository = repository;
-            _departmentService = departmentService;
+            _companyRepository = companyRepository;
+            _departmentRepository = departmentRepository;
             _mapper = mapper;
         }
 
@@ -43,20 +43,15 @@ namespace Restaurant.Application.Services
 
             var newEntity = _mapper.Map<Company>(dto);
 
-            _repository.Insert(newEntity);
-            _repository.SaveChanges();
+            _companyRepository.Insert(newEntity);
+            _companyRepository.SaveChanges();
 
             return _mapper.Map<CompanyResponseDTO>(newEntity);
         }
 
         public IEnumerable<CompanyResponseDTO> GetAll(CompanyQueryParams queryParams)
         {
-            var query = _repository.GetAll();
-
-            if (!queryParams.IncludeInactive)
-            {
-                query = query.Where(entity => !entity.DeletedAt.HasValue);
-            }
+            var query = _companyRepository.GetAll(queryParams.IncludeInactive);
 
             if (!string.IsNullOrWhiteSpace(queryParams.Name))
             {
@@ -77,7 +72,7 @@ namespace Restaurant.Application.Services
 
         public CompanyResponseDTO Get(Guid id)
         {
-            var entity = _repository.Get(id);
+            var entity = _companyRepository.Get(id);
 
             if (entity == null)
             {
@@ -89,7 +84,7 @@ namespace Restaurant.Application.Services
 
         public CompanyResponseDTO Update(Guid id, CompanyPutDTO dto)
         {
-            var currentEntity = _repository.Get(id);
+            var currentEntity = _companyRepository.Get(id);
 
             if (currentEntity == null)
             {
@@ -104,14 +99,14 @@ namespace Restaurant.Application.Services
             var updatedEntity = _mapper.Map(dto, currentEntity);
 
             updatedEntity.Update(DateTime.UtcNow);
-            _repository.SaveChanges();
+            _companyRepository.SaveChanges();
 
             return _mapper.Map<CompanyResponseDTO>(updatedEntity);
         }
 
         public void Delete(Guid id)
         {
-            var entity = _repository.Get(id);
+            var entity = _companyRepository.Get(id);
 
             if (entity == null)
             {
@@ -123,20 +118,16 @@ namespace Restaurant.Application.Services
                 throw new BusinessException($"This {nameof(Company)} has already been deleted.");
             }
 
-            var queryParams = new DepartmentQueryParams
-            {
-                CompanyId = id
-            };
+            var relatedDepartments = _departmentRepository.GetAll()
+                .Any(entity => entity.CompanyId == id);
 
-            var departments = _departmentService.GetAll(queryParams);
-
-            if (departments.Any())
+            if (relatedDepartments)
             {
                 throw new BusinessException($"There are related {nameof(Department)}s.");
             }
 
             entity.Delete(DateTime.UtcNow);
-            _repository.SaveChanges();
+            _companyRepository.SaveChanges();
         }
     }
 }

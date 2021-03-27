@@ -23,9 +23,16 @@ namespace Restaurant.Infrastructure.Repositories
             _dbEntities.Add(entity);
         }
 
-        public IQueryable<TEntity> GetAll()
+        public IQueryable<TEntity> GetAll(bool includeInactive = false)
         {
-            return _dbEntities.AsQueryable();
+            var query = _dbEntities.AsQueryable();
+
+            if (!includeInactive)
+            {
+                query = query.Where(entity => !entity.DeletedAt.HasValue);
+            }
+
+            return query;
         }
 
         public TEntity Get(Guid id)

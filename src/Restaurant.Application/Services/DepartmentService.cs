@@ -17,15 +17,16 @@ namespace Restaurant.Application.Services
     {
         private readonly IRepository<Department> _departmentRepository;
         private readonly IRepository<Company> _companyRepository;
-        private readonly IEmployeeService _employeeService;
+        private readonly IRepository<Employee> _employeeRepository;
         private readonly IMapper _mapper;
 
         public DepartmentService(IRepository<Department> departmentRepository,
-            IRepository<Company> companyRepository, IEmployeeService employeeService, IMapper mapper)
+            IRepository<Company> companyRepository, IRepository<Employee> employeeRepository,
+            IMapper mapper)
         {
             _departmentRepository = departmentRepository;
             _companyRepository = companyRepository;
-            _employeeService = employeeService;
+            _employeeRepository = employeeRepository;
             _mapper = mapper;
         }
 
@@ -53,12 +54,7 @@ namespace Restaurant.Application.Services
 
         public IEnumerable<DepartmentResponseDTO> GetAll(DepartmentQueryParams queryParams)
         {
-            var query = _departmentRepository.GetAll();
-
-            if (!queryParams.IncludeInactive)
-            {
-                query = query.Where(entity => !entity.DeletedAt.HasValue);
-            }
+            var query = _departmentRepository.GetAll(queryParams.IncludeInactive);
 
             if (!string.IsNullOrWhiteSpace(queryParams.Description))
             {
@@ -125,14 +121,10 @@ namespace Restaurant.Application.Services
                 throw new BusinessException($"This {nameof(Department)} has already been deleted.");
             }
 
-            var queryParams = new EmployeeQueryParams
-            {
-                DepartmentId = id
-            };
+            var relatedEmployees = _employeeRepository.GetAll()
+                .Any(entity => entity.DepartmentId == id);
 
-            var employees = _employeeService.GetAll(queryParams);
-
-            if (employees.Any())
+            if (relatedEmployees)
             {
                 throw new BusinessException($"There are related {nameof(Employee)}s.");
             }
