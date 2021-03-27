@@ -70,6 +70,12 @@ namespace Restaurant.Application.Services
                     entity.Email.ContainsResearch(queryParams.Email));
             }
 
+            if (queryParams.DepartmentId.HasValue)
+            {
+                query = query.Where(entity =>
+                    entity.DepartmentId == queryParams.DepartmentId);
+            }
+
             var entities = query.ToList();
 
             return _mapper.Map<IEnumerable<EmployeeResponseDTO>>(entities);
