@@ -12,6 +12,7 @@ using Restaurant.Core.Interfaces;
 
 namespace Restaurant.Application.Services
 {
+    // TODO: Refactor
     public class DepartmentService : IDepartmentService
     {
         private readonly IRepository<Department> _departmentRepository;

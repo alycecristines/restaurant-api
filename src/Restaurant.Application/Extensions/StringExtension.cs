@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Restaurant.Application.Extensions
 {
+    // TODO: Refactor
     public static class StringExtension
     {
         public static bool ContainsResearch(this string source, string value)
