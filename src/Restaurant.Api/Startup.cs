@@ -51,6 +51,7 @@ namespace Restaurant.Api
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<IProductService, ProductService>();
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
