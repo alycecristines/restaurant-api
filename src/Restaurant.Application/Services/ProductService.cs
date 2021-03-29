@@ -54,10 +54,28 @@ namespace Restaurant.Application.Services
 
             if (entity == null)
             {
-                throw new BusinessException($"{nameof(Department)} not found with {nameof(Department.Id)} '{id}'.");
+                throw new BusinessException($"{nameof(Product)} not found with {nameof(Product.Id)} '{id}'.");
             }
 
             return _mapper.Map<ProductResponseDTO>(entity);
+        }
+
+        public void Delete(Guid id)
+        {
+            var entity = _repository.Get(id);
+
+            if (entity == null)
+            {
+                throw new BusinessException($"{nameof(Product)} not found with {nameof(Product.Id)} '{id}'.");
+            }
+
+            if (entity.Deleted)
+            {
+                throw new BusinessException($"This {nameof(Product)} has already been deleted.");
+            }
+
+            entity.Delete(DateTime.UtcNow);
+            _repository.SaveChanges();
         }
     }
 }

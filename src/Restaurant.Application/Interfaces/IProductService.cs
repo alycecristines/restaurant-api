@@ -10,5 +10,6 @@ namespace Restaurant.Application.Interfaces
         ProductResponseDTO Insert(ProductPostDTO dto);
         IEnumerable<ProductResponseDTO> GetAll(ProductQueryParams queryParams);
         ProductResponseDTO Get(Guid id);
+        void Delete(Guid id);
     }
 }
