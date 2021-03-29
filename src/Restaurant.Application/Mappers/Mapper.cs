@@ -26,6 +26,7 @@ namespace Restaurant.Application.Mappers
             CreateMap<Employee, EmployeeResponseDTO>();
 
             CreateMap<ProductPostDTO, Product>();
+            CreateMap<ProductPutDTO, Product>();
             CreateMap<Product, ProductResponseDTO>();
 
             CreateMap<PhoneDTO, Phone>().ReverseMap();

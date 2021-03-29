@@ -60,6 +60,28 @@ namespace Restaurant.Application.Services
             return _mapper.Map<ProductResponseDTO>(entity);
         }
 
+        public ProductResponseDTO Update(Guid id, ProductPutDTO dto)
+        {
+            var currentEntity = _repository.Get(id);
+
+            if (currentEntity == null)
+            {
+                throw new BusinessException($"{nameof(Product)} not found with {nameof(Product.Id)} '{id}'.");
+            }
+
+            if (currentEntity.Deleted)
+            {
+                throw new BusinessException($"The {nameof(Product)} with the {nameof(Product.Id)} '{id}' has been deleted.");
+            }
+
+            var updatedEntity = _mapper.Map(dto, currentEntity);
+
+            updatedEntity.Update(DateTime.UtcNow);
+            _repository.SaveChanges();
+
+            return _mapper.Map<ProductResponseDTO>(updatedEntity);
+        }
+
         public void Delete(Guid id)
         {
             var entity = _repository.Get(id);

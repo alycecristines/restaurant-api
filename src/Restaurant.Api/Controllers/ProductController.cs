@@ -49,6 +49,15 @@ namespace Restaurant.Api.Controllers
             return Ok(response);
         }
 
+        [HttpPut("{id:Guid}")]
+        public IActionResult Put(Guid id, ProductPutDTO dto)
+        {
+            var updatedDto = _service.Update(id, dto);
+            var response = new ApiResponse(updatedDto);
+
+            return Ok(response);
+        }
+
         [HttpDelete("{id:Guid}")]
         public IActionResult Delete(Guid id)
         {
