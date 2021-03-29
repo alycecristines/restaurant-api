@@ -7,7 +7,6 @@ using Restaurant.Application.Extensions;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
 using Restaurant.Core.Entities;
-using Restaurant.Core.Exceptions;
 using Restaurant.Core.Interfaces;
 
 namespace Restaurant.Application.Services
@@ -15,11 +14,13 @@ namespace Restaurant.Application.Services
     public class ProductService : IProductService
     {
         private readonly IRepository<Product> _repository;
+        private readonly IServiceValidator _validator;
         private readonly IMapper _mapper;
 
-        public ProductService(IRepository<Product> repository, IMapper mapper)
+        public ProductService(IRepository<Product> repository, IServiceValidator validator, IMapper mapper)
         {
             _repository = repository;
+            _validator = validator;
             _mapper = mapper;
         }
 
@@ -52,10 +53,7 @@ namespace Restaurant.Application.Services
         {
             var entity = _repository.Get(id);
 
-            if (entity == null)
-            {
-                throw new BusinessException($"{nameof(Product)} not found with {nameof(Product.Id)} '{id}'.");
-            }
+            _validator.Found(entity);
 
             return _mapper.Map<ProductResponseDTO>(entity);
         }
@@ -64,15 +62,8 @@ namespace Restaurant.Application.Services
         {
             var currentEntity = _repository.Get(id);
 
-            if (currentEntity == null)
-            {
-                throw new BusinessException($"{nameof(Product)} not found with {nameof(Product.Id)} '{id}'.");
-            }
-
-            if (currentEntity.Deleted)
-            {
-                throw new BusinessException($"The {nameof(Product)} with the {nameof(Product.Id)} '{id}' has been deleted.");
-            }
+            _validator.Found(currentEntity);
+            _validator.NotDeleted(currentEntity);
 
             var updatedEntity = _mapper.Map(dto, currentEntity);
 
@@ -86,15 +77,8 @@ namespace Restaurant.Application.Services
         {
             var entity = _repository.Get(id);
 
-            if (entity == null)
-            {
-                throw new BusinessException($"{nameof(Product)} not found with {nameof(Product.Id)} '{id}'.");
-            }
-
-            if (entity.Deleted)
-            {
-                throw new BusinessException($"This {nameof(Product)} has already been deleted.");
-            }
+            _validator.Found(entity);
+            _validator.NotDeleted(entity);
 
             entity.Delete(DateTime.UtcNow);
             _repository.SaveChanges();

@@ -13,6 +13,7 @@ using Restaurant.Application.Interfaces;
 using Restaurant.Application.Filters;
 using Restaurant.Application.Middlewares;
 using Restaurant.Application.Options;
+using Restaurant.Application.Validators;
 
 namespace Restaurant.Api
 {
@@ -48,6 +49,7 @@ namespace Restaurant.Api
 
             services.AddDbContext<ApplicationDataContext>();
 
+            services.AddScoped<IServiceValidator, ServiceValidator>();
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IEmployeeService, EmployeeService>();

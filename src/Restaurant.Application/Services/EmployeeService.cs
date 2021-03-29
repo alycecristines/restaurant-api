@@ -7,7 +7,6 @@ using Restaurant.Application.Extensions;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
 using Restaurant.Core.Entities;
-using Restaurant.Core.Exceptions;
 using Restaurant.Core.Interfaces;
 
 namespace Restaurant.Application.Services
@@ -17,13 +16,15 @@ namespace Restaurant.Application.Services
     {
         private readonly IRepository<Employee> _employeeRepository;
         private readonly IRepository<Department> _departmentRepository;
+        private readonly IServiceValidator _validator;
         private readonly IMapper _mapper;
 
         public EmployeeService(IRepository<Employee> employeeRepository,
-            IRepository<Department> departmentRepository, IMapper mapper)
+            IRepository<Department> departmentRepository, IServiceValidator validator, IMapper mapper)
         {
             _employeeRepository = employeeRepository;
             _departmentRepository = departmentRepository;
+            _validator = validator;
             _mapper = mapper;
         }
 
@@ -31,15 +32,8 @@ namespace Restaurant.Application.Services
         {
             var department = _departmentRepository.Get(dto.DepartmentId.Value);
 
-            if (department == null)
-            {
-                throw new BusinessException($"{nameof(Department)} not found with {nameof(Department.Id)} '{dto.DepartmentId.Value}'.");
-            }
-
-            if (department.Deleted)
-            {
-                throw new BusinessException($"The {nameof(Department)} with the {nameof(Department.Id)} '{dto.DepartmentId.Value}' has been deleted.");
-            }
+            _validator.Found(department);
+            _validator.NotDeleted(department);
 
             var newEntity = _mapper.Map<Employee>(dto);
 
@@ -80,10 +74,7 @@ namespace Restaurant.Application.Services
         {
             var entity = _employeeRepository.Get(id);
 
-            if (entity == null)
-            {
-                throw new BusinessException($"{nameof(Employee)} not found with {nameof(Employee.Id)} '{id}'.");
-            }
+            _validator.Found(entity);
 
             return _mapper.Map<EmployeeResponseDTO>(entity);
         }
@@ -92,27 +83,13 @@ namespace Restaurant.Application.Services
         {
             var department = _departmentRepository.Get(dto.DepartmentId.Value);
 
-            if (department == null)
-            {
-                throw new BusinessException($"{nameof(Department)} not found with {nameof(Department.Id)} '{dto.DepartmentId.Value}'.");
-            }
-
-            if (department.Deleted)
-            {
-                throw new BusinessException($"The {nameof(Department)} with the {nameof(Department.Id)} '{dto.DepartmentId.Value}' has been deleted.");
-            }
+            _validator.Found(department);
+            _validator.NotDeleted(department);
 
             var currentEntity = _employeeRepository.Get(id);
 
-            if (currentEntity == null)
-            {
-                throw new BusinessException($"{nameof(Employee)} not found with {nameof(Employee.Id)} '{id}'.");
-            }
-
-            if (currentEntity.Deleted)
-            {
-                throw new BusinessException($"The {nameof(Employee)} with the {nameof(Employee.Id)} '{id}' has been deleted.");
-            }
+            _validator.Found(currentEntity);
+            _validator.NotDeleted(currentEntity);
 
             var updatedEntity = _mapper.Map(dto, currentEntity);
 
@@ -126,15 +103,8 @@ namespace Restaurant.Application.Services
         {
             var entity = _employeeRepository.Get(id);
 
-            if (entity == null)
-            {
-                throw new BusinessException($"{nameof(Employee)} not found with {nameof(Employee.Id)} '{id}'.");
-            }
-
-            if (entity.Deleted)
-            {
-                throw new BusinessException($"This {nameof(Employee)} has already been deleted.");
-            }
+            _validator.Found(entity);
+            _validator.NotDeleted(entity);
 
             entity.Delete(DateTime.UtcNow);
             _employeeRepository.SaveChanges();

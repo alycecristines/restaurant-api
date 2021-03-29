@@ -7,7 +7,6 @@ using Restaurant.Application.Extensions;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
 using Restaurant.Core.Entities;
-using Restaurant.Core.Exceptions;
 using Restaurant.Core.Interfaces;
 
 namespace Restaurant.Application.Services
@@ -18,15 +17,17 @@ namespace Restaurant.Application.Services
         private readonly IRepository<Department> _departmentRepository;
         private readonly IRepository<Company> _companyRepository;
         private readonly IRepository<Employee> _employeeRepository;
+        private readonly IServiceValidator _validator;
         private readonly IMapper _mapper;
 
         public DepartmentService(IRepository<Department> departmentRepository,
             IRepository<Company> companyRepository, IRepository<Employee> employeeRepository,
-            IMapper mapper)
+            IServiceValidator validator, IMapper mapper)
         {
             _departmentRepository = departmentRepository;
             _companyRepository = companyRepository;
             _employeeRepository = employeeRepository;
+            _validator = validator;
             _mapper = mapper;
         }
 
@@ -34,15 +35,8 @@ namespace Restaurant.Application.Services
         {
             var company = _companyRepository.Get(dto.CompanyId.Value);
 
-            if (company == null)
-            {
-                throw new BusinessException($"{nameof(Company)} not found with {nameof(Company.Id)} '{dto.CompanyId.Value}'.");
-            }
-
-            if (company.Deleted)
-            {
-                throw new BusinessException($"The {nameof(Company)} with the {nameof(Company.Id)} '{dto.CompanyId.Value}' has been deleted.");
-            }
+            _validator.Found(company);
+            _validator.NotDeleted(company);
 
             var newEntity = _mapper.Map<Department>(dto);
 
@@ -77,10 +71,7 @@ namespace Restaurant.Application.Services
         {
             var entity = _departmentRepository.Get(id);
 
-            if (entity == null)
-            {
-                throw new BusinessException($"{nameof(Department)} not found with {nameof(Department.Id)} '{id}'.");
-            }
+            _validator.Found(entity);
 
             return _mapper.Map<DepartmentResponseDTO>(entity);
         }
@@ -89,15 +80,8 @@ namespace Restaurant.Application.Services
         {
             var currentEntity = _departmentRepository.Get(id);
 
-            if (currentEntity == null)
-            {
-                throw new BusinessException($"{nameof(Department)} not found with {nameof(Department.Id)} '{id}'.");
-            }
-
-            if (currentEntity.Deleted)
-            {
-                throw new BusinessException($"The {nameof(Department)} with the {nameof(Department.Id)} '{id}' has been deleted.");
-            }
+            _validator.Found(currentEntity);
+            _validator.NotDeleted(currentEntity);
 
             var updatedEntity = _mapper.Map(dto, currentEntity);
 
@@ -111,23 +95,13 @@ namespace Restaurant.Application.Services
         {
             var entity = _departmentRepository.Get(id);
 
-            if (entity == null)
-            {
-                throw new BusinessException($"{nameof(Department)} not found with {nameof(Department.Id)} '{id}'.");
-            }
+            _validator.Found(entity);
+            _validator.NotDeleted(entity);
 
-            if (entity.Deleted)
-            {
-                throw new BusinessException($"This {nameof(Department)} has already been deleted.");
-            }
+            var relatedEmployee = _employeeRepository.GetAll()
+                .FirstOrDefault(entity => entity.DepartmentId == id);
 
-            var relatedEmployees = _employeeRepository.GetAll()
-                .Any(entity => entity.DepartmentId == id);
-
-            if (relatedEmployees)
-            {
-                throw new BusinessException($"There are related {nameof(Employee)}s.");
-            }
+            _validator.NotRelated(relatedEmployee);
 
             entity.Delete(DateTime.UtcNow);
             _departmentRepository.SaveChanges();
