@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
-using Restaurant.Application.DTOs.Employee;
 using Restaurant.Application.Extensions;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
@@ -17,33 +15,29 @@ namespace Restaurant.Application.Services
         private readonly IRepository<Employee> _employeeRepository;
         private readonly IRepository<Department> _departmentRepository;
         private readonly IServiceValidator _validator;
-        private readonly IMapper _mapper;
 
         public EmployeeService(IRepository<Employee> employeeRepository,
-            IRepository<Department> departmentRepository, IServiceValidator validator, IMapper mapper)
+            IRepository<Department> departmentRepository, IServiceValidator validator)
         {
             _employeeRepository = employeeRepository;
             _departmentRepository = departmentRepository;
             _validator = validator;
-            _mapper = mapper;
         }
 
-        public EmployeeResponseDTO Insert(EmployeePostDTO dto)
+        public Employee Insert(Employee newEmployee)
         {
-            var department = _departmentRepository.Get(dto.DepartmentId.Value);
+            var existingDepartment = _departmentRepository.Get(newEmployee.DepartmentId);
 
-            _validator.Found(department);
-            _validator.NotDeleted(department);
+            _validator.Found(existingDepartment);
+            _validator.NotDeleted(existingDepartment);
 
-            var newEntity = _mapper.Map<Employee>(dto);
-
-            _employeeRepository.Insert(newEntity);
+            _employeeRepository.Insert(newEmployee);
             _employeeRepository.SaveChanges();
 
-            return _mapper.Map<EmployeeResponseDTO>(newEntity);
+            return newEmployee;
         }
 
-        public IEnumerable<EmployeeResponseDTO> GetAll(EmployeeQueryParams queryParams)
+        public IEnumerable<Employee> GetAll(EmployeeQueryParams queryParams)
         {
             var query = _employeeRepository.GetAll(queryParams.IncludeInactive);
 
@@ -65,48 +59,49 @@ namespace Restaurant.Application.Services
                     entity.DepartmentId == queryParams.DepartmentId);
             }
 
-            var entities = query.ToList();
-
-            return _mapper.Map<IEnumerable<EmployeeResponseDTO>>(entities);
+            return query.ToList();
         }
 
-        public EmployeeResponseDTO Get(Guid id)
+        public Employee Get(Guid id)
         {
-            var entity = _employeeRepository.Get(id);
+            var employee = _employeeRepository.Get(id);
 
-            _validator.Found(entity);
+            _validator.Found(employee);
 
-            return _mapper.Map<EmployeeResponseDTO>(entity);
+            return employee;
         }
 
-        public EmployeeResponseDTO Update(Guid id, EmployeePutDTO dto)
+        public Employee Update(Guid id, Employee newEmployee)
         {
-            var department = _departmentRepository.Get(dto.DepartmentId.Value);
+            var existingDepartment = _departmentRepository.Get(newEmployee.DepartmentId);
 
-            _validator.Found(department);
-            _validator.NotDeleted(department);
+            _validator.Found(existingDepartment);
+            _validator.NotDeleted(existingDepartment);
 
-            var currentEntity = _employeeRepository.Get(id);
+            var currentEmployee = _employeeRepository.Get(id);
 
-            _validator.Found(currentEntity);
-            _validator.NotDeleted(currentEntity);
+            _validator.Found(currentEmployee);
+            _validator.NotDeleted(currentEmployee);
 
-            var updatedEntity = _mapper.Map(dto, currentEntity);
+            currentEmployee.Name = newEmployee.Name;
+            currentEmployee.Email = newEmployee.Email;
+            currentEmployee.DepartmentId = newEmployee.DepartmentId;
+            currentEmployee.Update(DateTime.UtcNow);
 
-            updatedEntity.Update(DateTime.UtcNow);
             _employeeRepository.SaveChanges();
 
-            return _mapper.Map<EmployeeResponseDTO>(updatedEntity);
+            return currentEmployee;
         }
 
         public void Delete(Guid id)
         {
-            var entity = _employeeRepository.Get(id);
+            var employee = _employeeRepository.Get(id);
 
-            _validator.Found(entity);
-            _validator.NotDeleted(entity);
+            _validator.Found(employee);
+            _validator.NotDeleted(employee);
 
-            entity.Delete(DateTime.UtcNow);
+            employee.Delete(DateTime.UtcNow);
+
             _employeeRepository.SaveChanges();
         }
     }

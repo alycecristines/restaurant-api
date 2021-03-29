@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Restaurant.Application.DTOs.Common;
+using Restaurant.Api.DTOs.Common;
 using Entity = Restaurant.Core.Entities;
 
-namespace Restaurant.Application.DTOs.Company
+namespace Restaurant.Api.DTOs.Company
 {
     [ModelMetadataType(typeof(Entity.Company))]
     public class CompanyPutDTO

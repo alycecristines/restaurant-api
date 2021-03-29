@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Restaurant.Application.DTOs.Employee;
+using Restaurant.Api.DTOs.Employee;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
 using Restaurant.Application.Wrappers;
+using Restaurant.Core.Entities;
 
 namespace Restaurant.Api.Controllers
 {
@@ -12,50 +15,62 @@ namespace Restaurant.Api.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeService _service;
+        private readonly IMapper _mapper;
 
-        public EmployeeController(IEmployeeService service)
+        public EmployeeController(IEmployeeService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         [HttpPost]
         public IActionResult Post(EmployeePostDTO dto)
         {
-            var insertedDto = _service.Insert(dto);
-            var response = new ApiResponse(insertedDto);
-            var param = new { insertedDto.Id };
+            var newEmployee = _mapper.Map<Employee>(dto);
+            var insertedEmployee = _service.Insert(newEmployee);
+
+            var insertedEmployeeDto = _mapper.Map<EmployeeResponseDTO>(insertedEmployee);
+            var apiResponse = new ApiResponse(insertedEmployeeDto);
+            var getParams = new { insertedEmployeeDto.Id };
 
             // TODO: Inform the get action when implemented
-            var actionName = nameof(Post);
+            var getActionName = nameof(Post);
 
-            return CreatedAtAction(actionName, param, response);
+            return CreatedAtAction(getActionName, getParams, apiResponse);
         }
 
         [HttpGet]
         public IActionResult Get([FromQuery] EmployeeQueryParams queryParams)
         {
-            var dtos = _service.GetAll(queryParams);
-            var response = new ApiResponse(dtos);
+            var employees = _service.GetAll(queryParams);
 
-            return Ok(response);
+            var employeesDto = _mapper.Map<IEnumerable<EmployeeResponseDTO>>(employees);
+            var apiResponse = new ApiResponse(employeesDto);
+
+            return Ok(apiResponse);
         }
 
         [HttpGet("{id:Guid}")]
         public IActionResult Get(Guid id)
         {
-            var dto = _service.Get(id);
-            var response = new ApiResponse(dto);
+            var employee = _service.Get(id);
 
-            return Ok(response);
+            var employeeDto = _mapper.Map<EmployeeResponseDTO>(employee);
+            var apiResponse = new ApiResponse(employeeDto);
+
+            return Ok(apiResponse);
         }
 
         [HttpPut("{id:Guid}")]
         public IActionResult Put(Guid id, EmployeePutDTO dto)
         {
-            var updatedDto = _service.Update(id, dto);
-            var response = new ApiResponse(updatedDto);
+            var newEmployee = _mapper.Map<Employee>(dto);
+            var updatedEmployee = _service.Update(id, newEmployee);
 
-            return Ok(response);
+            var updatedEmployeeDto = _mapper.Map<EmployeeResponseDTO>(updatedEmployee);
+            var apiResponse = new ApiResponse(updatedEmployeeDto);
+
+            return Ok(apiResponse);
         }
 
         [HttpDelete("{id:Guid}")]

@@ -2,10 +2,10 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Entity = Restaurant.Core.Entities;
 
-namespace Restaurant.Application.DTOs.Employee
+namespace Restaurant.Api.DTOs.Employee
 {
     [ModelMetadataType(typeof(Entity.Employee))]
-    public class EmployeePostDTO
+    public class EmployeePutDTO
     {
         public string Name { get; set; }
         public string Email { get; set; }

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
-using Restaurant.Application.DTOs.Department;
 using Restaurant.Application.Extensions;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
@@ -18,35 +16,31 @@ namespace Restaurant.Application.Services
         private readonly IRepository<Company> _companyRepository;
         private readonly IRepository<Employee> _employeeRepository;
         private readonly IServiceValidator _validator;
-        private readonly IMapper _mapper;
 
         public DepartmentService(IRepository<Department> departmentRepository,
             IRepository<Company> companyRepository, IRepository<Employee> employeeRepository,
-            IServiceValidator validator, IMapper mapper)
+            IServiceValidator validator)
         {
             _departmentRepository = departmentRepository;
             _companyRepository = companyRepository;
             _employeeRepository = employeeRepository;
             _validator = validator;
-            _mapper = mapper;
         }
 
-        public DepartmentResponseDTO Insert(DepartmentPostDTO dto)
+        public Department Insert(Department newDepartment)
         {
-            var company = _companyRepository.Get(dto.CompanyId.Value);
+            var existingCompany = _companyRepository.Get(newDepartment.CompanyId);
 
-            _validator.Found(company);
-            _validator.NotDeleted(company);
+            _validator.Found(existingCompany);
+            _validator.NotDeleted(existingCompany);
 
-            var newEntity = _mapper.Map<Department>(dto);
-
-            _departmentRepository.Insert(newEntity);
+            _departmentRepository.Insert(newDepartment);
             _departmentRepository.SaveChanges();
 
-            return _mapper.Map<DepartmentResponseDTO>(newEntity);
+            return newDepartment;
         }
 
-        public IEnumerable<DepartmentResponseDTO> GetAll(DepartmentQueryParams queryParams)
+        public IEnumerable<Department> GetAll(DepartmentQueryParams queryParams)
         {
             var query = _departmentRepository.GetAll(queryParams.IncludeInactive);
 
@@ -62,48 +56,47 @@ namespace Restaurant.Application.Services
                     entity.CompanyId == queryParams.CompanyId);
             }
 
-            var entities = query.ToList();
-
-            return _mapper.Map<IEnumerable<DepartmentResponseDTO>>(entities);
+            return query.ToList();
         }
 
-        public DepartmentResponseDTO Get(Guid id)
+        public Department Get(Guid id)
         {
-            var entity = _departmentRepository.Get(id);
+            var department = _departmentRepository.Get(id);
 
-            _validator.Found(entity);
+            _validator.Found(department);
 
-            return _mapper.Map<DepartmentResponseDTO>(entity);
+            return department;
         }
 
-        public DepartmentResponseDTO Update(Guid id, DepartmentPutDTO dto)
+        public Department Update(Guid id, Department newDepartment)
         {
-            var currentEntity = _departmentRepository.Get(id);
+            var currentDepartment = _departmentRepository.Get(id);
 
-            _validator.Found(currentEntity);
-            _validator.NotDeleted(currentEntity);
+            _validator.Found(currentDepartment);
+            _validator.NotDeleted(currentDepartment);
 
-            var updatedEntity = _mapper.Map(dto, currentEntity);
+            currentDepartment.Description = newDepartment.Description;
+            currentDepartment.Update(DateTime.UtcNow);
 
-            updatedEntity.Update(DateTime.UtcNow);
             _departmentRepository.SaveChanges();
 
-            return _mapper.Map<DepartmentResponseDTO>(updatedEntity);
+            return currentDepartment;
         }
 
         public void Delete(Guid id)
         {
-            var entity = _departmentRepository.Get(id);
+            var department = _departmentRepository.Get(id);
 
-            _validator.Found(entity);
-            _validator.NotDeleted(entity);
+            _validator.Found(department);
+            _validator.NotDeleted(department);
 
             var relatedEmployee = _employeeRepository.GetAll()
                 .FirstOrDefault(entity => entity.DepartmentId == id);
 
             _validator.NotRelated(relatedEmployee);
 
-            entity.Delete(DateTime.UtcNow);
+            department.Delete(DateTime.UtcNow);
+
             _departmentRepository.SaveChanges();
         }
     }

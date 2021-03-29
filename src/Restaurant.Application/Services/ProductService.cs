@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
-using Restaurant.Application.DTOs.Product;
 using Restaurant.Application.Extensions;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
@@ -15,26 +13,22 @@ namespace Restaurant.Application.Services
     {
         private readonly IRepository<Product> _repository;
         private readonly IServiceValidator _validator;
-        private readonly IMapper _mapper;
 
-        public ProductService(IRepository<Product> repository, IServiceValidator validator, IMapper mapper)
+        public ProductService(IRepository<Product> repository, IServiceValidator validator)
         {
             _repository = repository;
             _validator = validator;
-            _mapper = mapper;
         }
 
-        public ProductResponseDTO Insert(ProductPostDTO dto)
+        public Product Insert(Product newProduct)
         {
-            var newEntity = _mapper.Map<Product>(dto);
-
-            _repository.Insert(newEntity);
+            _repository.Insert(newProduct);
             _repository.SaveChanges();
 
-            return _mapper.Map<ProductResponseDTO>(newEntity);
+            return newProduct;
         }
 
-        public IEnumerable<ProductResponseDTO> GetAll(ProductQueryParams queryParams)
+        public IEnumerable<Product> GetAll(ProductQueryParams queryParams)
         {
             var query = _repository.GetAll(queryParams.IncludeInactive);
 
@@ -44,43 +38,42 @@ namespace Restaurant.Application.Services
                     entity.Description.ContainsResearch(queryParams.Description));
             }
 
-            var entities = query.ToList();
-
-            return _mapper.Map<IEnumerable<ProductResponseDTO>>(entities);
+            return query.ToList();
         }
 
-        public ProductResponseDTO Get(Guid id)
+        public Product Get(Guid id)
         {
-            var entity = _repository.Get(id);
+            var product = _repository.Get(id);
 
-            _validator.Found(entity);
+            _validator.Found(product);
 
-            return _mapper.Map<ProductResponseDTO>(entity);
+            return product;
         }
 
-        public ProductResponseDTO Update(Guid id, ProductPutDTO dto)
+        public Product Update(Guid id, Product newProduct)
         {
-            var currentEntity = _repository.Get(id);
+            var currentProduct = _repository.Get(id);
 
-            _validator.Found(currentEntity);
-            _validator.NotDeleted(currentEntity);
+            _validator.Found(currentProduct);
+            _validator.NotDeleted(currentProduct);
 
-            var updatedEntity = _mapper.Map(dto, currentEntity);
+            currentProduct.Description = newProduct.Description;
+            currentProduct.Update(DateTime.UtcNow);
 
-            updatedEntity.Update(DateTime.UtcNow);
             _repository.SaveChanges();
 
-            return _mapper.Map<ProductResponseDTO>(updatedEntity);
+            return currentProduct;
         }
 
         public void Delete(Guid id)
         {
-            var entity = _repository.Get(id);
+            var product = _repository.Get(id);
 
-            _validator.Found(entity);
-            _validator.NotDeleted(entity);
+            _validator.Found(product);
+            _validator.NotDeleted(product);
 
-            entity.Delete(DateTime.UtcNow);
+            product.Delete(DateTime.UtcNow);
+
             _repository.SaveChanges();
         }
     }

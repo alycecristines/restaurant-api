@@ -1,6 +1,6 @@
 using System;
 
-namespace Restaurant.Application.DTOs.Department
+namespace Restaurant.Api.DTOs.Department
 {
     public class DepartmentResponseDTO
     {

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Core.ValueObjects;
 
-namespace Restaurant.Application.DTOs.Common
+namespace Restaurant.Api.DTOs.Common
 {
     [ModelMetadataType(typeof(Address))]
     public class AddressDTO

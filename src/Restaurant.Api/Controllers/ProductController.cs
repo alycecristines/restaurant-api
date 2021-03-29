@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Restaurant.Application.DTOs.Product;
+using Restaurant.Api.DTOs.Product;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
 using Restaurant.Application.Wrappers;
+using Restaurant.Core.Entities;
 
 namespace Restaurant.Api.Controllers
 {
@@ -12,50 +15,62 @@ namespace Restaurant.Api.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService _service;
+        private readonly IMapper _mapper;
 
-        public ProductController(IProductService service)
+        public ProductController(IProductService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         [HttpPost]
         public IActionResult Post(ProductPostDTO dto)
         {
-            var insertedDto = _service.Insert(dto);
-            var response = new ApiResponse(insertedDto);
-            var param = new { insertedDto.Id };
+            var newProduct = _mapper.Map<Product>(dto);
+            var insertedProduct = _service.Insert(newProduct);
+
+            var insertedProductDto = _mapper.Map<ProductResponseDTO>(insertedProduct);
+            var apiResponse = new ApiResponse(insertedProductDto);
+            var getParams = new { insertedProductDto.Id };
 
             // TODO: Inform the get action when implemented
-            var actionName = nameof(Post);
+            var getActionName = nameof(Post);
 
-            return CreatedAtAction(actionName, param, response);
+            return CreatedAtAction(getActionName, getParams, apiResponse);
         }
 
         [HttpGet]
         public IActionResult Get([FromQuery] ProductQueryParams queryParams)
         {
-            var dtos = _service.GetAll(queryParams);
-            var response = new ApiResponse(dtos);
+            var products = _service.GetAll(queryParams);
 
-            return Ok(response);
+            var productsDto = _mapper.Map<IEnumerable<ProductResponseDTO>>(products);
+            var apiResponse = new ApiResponse(productsDto);
+
+            return Ok(apiResponse);
         }
 
         [HttpGet("{id:Guid}")]
         public IActionResult Get(Guid id)
         {
-            var dto = _service.Get(id);
-            var response = new ApiResponse(dto);
+            var product = _service.Get(id);
 
-            return Ok(response);
+            var productDto = _mapper.Map<ProductResponseDTO>(product);
+            var apiResponse = new ApiResponse(productDto);
+
+            return Ok(apiResponse);
         }
 
         [HttpPut("{id:Guid}")]
         public IActionResult Put(Guid id, ProductPutDTO dto)
         {
-            var updatedDto = _service.Update(id, dto);
-            var response = new ApiResponse(updatedDto);
+            var newProduct = _mapper.Map<Product>(dto);
+            var updatedProduct = _service.Update(id, newProduct);
 
-            return Ok(response);
+            var updatedProductDto = _mapper.Map<ProductResponseDTO>(updatedProduct);
+            var apiResponse = new ApiResponse(updatedProductDto);
+
+            return Ok(apiResponse);
         }
 
         [HttpDelete("{id:Guid}")]

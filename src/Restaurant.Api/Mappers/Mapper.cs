@@ -1,13 +1,13 @@
 using AutoMapper;
-using Restaurant.Application.DTOs.Common;
-using Restaurant.Application.DTOs.Company;
-using Restaurant.Application.DTOs.Department;
-using Restaurant.Application.DTOs.Employee;
-using Restaurant.Application.DTOs.Product;
+using Restaurant.Api.DTOs.Common;
+using Restaurant.Api.DTOs.Company;
+using Restaurant.Api.DTOs.Department;
+using Restaurant.Api.DTOs.Employee;
+using Restaurant.Api.DTOs.Product;
 using Restaurant.Core.Entities;
 using Restaurant.Core.ValueObjects;
 
-namespace Restaurant.Application.Mappers
+namespace Restaurant.Api.Mappers
 {
     public class Mapper : Profile
     {

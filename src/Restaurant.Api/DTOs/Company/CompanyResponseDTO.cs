@@ -1,6 +1,6 @@
-using Restaurant.Application.DTOs.Common;
+using Restaurant.Api.DTOs.Common;
 
-namespace Restaurant.Application.DTOs.Company
+namespace Restaurant.Api.DTOs.Company
 {
     public class CompanyResponseDTO
     {

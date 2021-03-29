@@ -1,6 +1,6 @@
 using System;
 
-namespace Restaurant.Application.DTOs.Product
+namespace Restaurant.Api.DTOs.Product
 {
     public class ProductResponseDTO
     {

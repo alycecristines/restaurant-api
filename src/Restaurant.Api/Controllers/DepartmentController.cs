@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Restaurant.Application.DTOs.Department;
+using Restaurant.Api.DTOs.Department;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
 using Restaurant.Application.Wrappers;
+using Restaurant.Core.Entities;
 
 namespace Restaurant.Api.Controllers
 {
@@ -12,50 +15,62 @@ namespace Restaurant.Api.Controllers
     public class DepartmentController : ControllerBase
     {
         private readonly IDepartmentService _service;
+        private readonly IMapper _mapper;
 
-        public DepartmentController(IDepartmentService service)
+        public DepartmentController(IDepartmentService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         [HttpPost]
         public IActionResult Post(DepartmentPostDTO dto)
         {
-            var insertedDto = _service.Insert(dto);
-            var response = new ApiResponse(insertedDto);
-            var param = new { insertedDto.Id };
+            var newDepartment = _mapper.Map<Department>(dto);
+            var insertedDepartment = _service.Insert(newDepartment);
+
+            var insertedDepartmentDto = _mapper.Map<DepartmentResponseDTO>(insertedDepartment);
+            var apiResponse = new ApiResponse(insertedDepartmentDto);
+            var getParams = new { insertedDepartmentDto.Id };
 
             // TODO: Inform the get action when implemented
-            var actionName = nameof(Post);
+            var getActionName = nameof(Post);
 
-            return CreatedAtAction(actionName, param, response);
+            return CreatedAtAction(getActionName, getParams, apiResponse);
         }
 
         [HttpGet]
         public IActionResult Get([FromQuery] DepartmentQueryParams queryParams)
         {
-            var dtos = _service.GetAll(queryParams);
-            var response = new ApiResponse(dtos);
+            var departments = _service.GetAll(queryParams);
 
-            return Ok(response);
+            var departmentsDto = _mapper.Map<IEnumerable<DepartmentResponseDTO>>(departments);
+            var apiResponse = new ApiResponse(departmentsDto);
+
+            return Ok(apiResponse);
         }
 
         [HttpGet("{id:Guid}")]
         public IActionResult Get(Guid id)
         {
-            var dto = _service.Get(id);
-            var response = new ApiResponse(dto);
+            var department = _service.Get(id);
 
-            return Ok(response);
+            var departmentDto = _mapper.Map<DepartmentResponseDTO>(department);
+            var apiResponse = new ApiResponse(departmentDto);
+
+            return Ok(apiResponse);
         }
 
         [HttpPut("{id:Guid}")]
         public IActionResult Put(Guid id, DepartmentPutDTO dto)
         {
-            var updatedDto = _service.Update(id, dto);
-            var response = new ApiResponse(updatedDto);
+            var newDepartment = _mapper.Map<Department>(dto);
+            var updatedDepartment = _service.Update(id, newDepartment);
 
-            return Ok(response);
+            var updatedDepartmentDto = _mapper.Map<DepartmentResponseDTO>(updatedDepartment);
+            var apiResponse = new ApiResponse(updatedDepartmentDto);
+
+            return Ok(apiResponse);
         }
 
         [HttpDelete("{id:Guid}")]

@@ -24,7 +24,7 @@ namespace Restaurant.Application.Validators
             throw new BusinessException(message);
         }
 
-        public void NotDuplicated<TEntity>(TEntity entity) where TEntity : Entity
+        public void NotExist<TEntity>(TEntity entity) where TEntity : Entity
         {
             if (entity == null) return;
 

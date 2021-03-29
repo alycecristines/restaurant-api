@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Restaurant.Application.DTOs.Company;
+using Restaurant.Api.DTOs.Company;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
 using Restaurant.Application.Wrappers;
+using Restaurant.Core.Entities;
 
 namespace Restaurant.Api.Controllers
 {
@@ -12,48 +15,60 @@ namespace Restaurant.Api.Controllers
     public class CompanyController : ControllerBase
     {
         private readonly ICompanyService _service;
+        private readonly IMapper _mapper;
 
-        public CompanyController(ICompanyService service)
+        public CompanyController(ICompanyService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         [HttpPost]
         public IActionResult Post(CompanyPostDTO dto)
         {
-            var insertedDto = _service.Insert(dto);
-            var response = new ApiResponse(insertedDto);
-            var param = new { insertedDto.Id };
-            var actionName = nameof(Get);
+            var newCompany = _mapper.Map<Company>(dto);
+            var insertedCompany = _service.Insert(newCompany);
 
-            return CreatedAtAction(actionName, param, response);
+            var insertedCompanyDto = _mapper.Map<CompanyResponseDTO>(insertedCompany);
+            var apiResponse = new ApiResponse(insertedCompanyDto);
+            var getParams = new { insertedCompanyDto.Id };
+            var getActionName = nameof(Get);
+
+            return CreatedAtAction(getActionName, getParams, apiResponse);
         }
 
         [HttpGet]
         public IActionResult Get([FromQuery] CompanyQueryParams queryParams)
         {
-            var dtos = _service.GetAll(queryParams);
-            var response = new ApiResponse(dtos);
+            var companies = _service.GetAll(queryParams);
 
-            return Ok(response);
+            var companiesDto = _mapper.Map<IEnumerable<CompanyResponseDTO>>(companies);
+            var apiResponse = new ApiResponse(companiesDto);
+
+            return Ok(apiResponse);
         }
 
         [HttpGet("{id:Guid}")]
         public IActionResult Get(Guid id)
         {
-            var dto = _service.Get(id);
-            var response = new ApiResponse(dto);
+            var company = _service.Get(id);
 
-            return Ok(response);
+            var companyDto = _mapper.Map<CompanyResponseDTO>(company);
+            var apiResponse = new ApiResponse(companyDto);
+
+            return Ok(apiResponse);
         }
 
         [HttpPut("{id:Guid}")]
         public IActionResult Put(Guid id, CompanyPutDTO dto)
         {
-            var updatedDto = _service.Update(id, dto);
-            var response = new ApiResponse(updatedDto);
+            var newCompany = _mapper.Map<Company>(dto);
+            var updatedCompany = _service.Update(id, newCompany);
 
-            return Ok(response);
+            var updatedCompanyDto = _mapper.Map<CompanyResponseDTO>(updatedCompany);
+            var apiResponse = new ApiResponse(updatedCompanyDto);
+
+            return Ok(apiResponse);
         }
 
         [HttpDelete("{id:Guid}")]
