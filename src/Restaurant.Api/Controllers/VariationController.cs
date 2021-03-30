@@ -1,7 +1,10 @@
+using System;
+using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Api.DTOs.Variation;
 using Restaurant.Application.Interfaces;
+using Restaurant.Application.QueryParams;
 using Restaurant.Application.Wrappers;
 using Restaurant.Core.Entities;
 
@@ -34,6 +37,28 @@ namespace Restaurant.Api.Controllers
             var getActionName = nameof(Post);
 
             return CreatedAtAction(getActionName, getParams, apiResponse);
+        }
+
+        [HttpGet]
+        public IActionResult Get([FromQuery] VariationQueryParams queryParams)
+        {
+            var variations = _service.GetAll(queryParams);
+
+            var variationsDto = _mapper.Map<IEnumerable<VariationResponseDTO>>(variations);
+            var apiResponse = new ApiResponse(variationsDto);
+
+            return Ok(apiResponse);
+        }
+
+        [HttpGet("{id:Guid}")]
+        public IActionResult Get(Guid id)
+        {
+            var variation = _service.Get(id);
+
+            var variationDto = _mapper.Map<VariationResponseDTO>(variation);
+            var apiResponse = new ApiResponse(variationDto);
+
+            return Ok(apiResponse);
         }
     }
 }
