@@ -11,26 +11,29 @@ namespace Restaurant.Application.Services
 {
     public class ProductService : IProductService
     {
-        private readonly IRepository<Product> _repository;
+        private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<Variation> _variationRepository;
         private readonly IServiceValidator _validator;
 
-        public ProductService(IRepository<Product> repository, IServiceValidator validator)
+        public ProductService(IRepository<Product> productRepository,
+            IRepository<Variation> variationRepository, IServiceValidator validator)
         {
-            _repository = repository;
+            _productRepository = productRepository;
+            _variationRepository = variationRepository;
             _validator = validator;
         }
 
         public Product Insert(Product newProduct)
         {
-            _repository.Insert(newProduct);
-            _repository.SaveChanges();
+            _productRepository.Insert(newProduct);
+            _productRepository.SaveChanges();
 
             return newProduct;
         }
 
         public IEnumerable<Product> GetAll(ProductQueryParams queryParams)
         {
-            var query = _repository.GetAll(queryParams.IncludeInactive);
+            var query = _productRepository.GetAll(queryParams.IncludeInactive);
 
             if (!string.IsNullOrWhiteSpace(queryParams.Description))
             {
@@ -43,7 +46,7 @@ namespace Restaurant.Application.Services
 
         public Product Get(Guid id)
         {
-            var product = _repository.Get(id);
+            var product = _productRepository.Get(id);
 
             _validator.Found(product);
 
@@ -52,7 +55,7 @@ namespace Restaurant.Application.Services
 
         public Product Update(Guid id, Product newProduct)
         {
-            var currentProduct = _repository.Get(id);
+            var currentProduct = _productRepository.Get(id);
 
             _validator.Found(currentProduct);
             _validator.NotDeleted(currentProduct);
@@ -60,21 +63,26 @@ namespace Restaurant.Application.Services
             currentProduct.Description = newProduct.Description;
             currentProduct.Update(DateTime.UtcNow);
 
-            _repository.SaveChanges();
+            _productRepository.SaveChanges();
 
             return currentProduct;
         }
 
         public void Delete(Guid id)
         {
-            var product = _repository.Get(id);
+            var product = _productRepository.Get(id);
 
             _validator.Found(product);
             _validator.NotDeleted(product);
 
+            var relatedVariation = _variationRepository.GetAll()
+                .FirstOrDefault(entity => entity.ProductId == id);
+
+            _validator.HasNoRelated(relatedVariation);
+
             product.Delete(DateTime.UtcNow);
 
-            _repository.SaveChanges();
+            _productRepository.SaveChanges();
         }
     }
 }
