@@ -10,5 +10,6 @@ namespace Restaurant.Application.Interfaces
         Variation Insert(Variation dto);
         IEnumerable<Variation> GetAll(VariationQueryParams queryParams);
         Variation Get(Guid id);
+        void Delete(Guid id);
     }
 }

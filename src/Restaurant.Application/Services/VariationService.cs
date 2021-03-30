@@ -55,11 +55,23 @@ namespace Restaurant.Application.Services
 
         public Variation Get(Guid id)
         {
-            var product = _variationRepository.Get(id);
+            var variation = _variationRepository.Get(id);
 
-            _validator.Found(product);
+            _validator.Found(variation);
 
-            return product;
+            return variation;
+        }
+
+        public void Delete(Guid id)
+        {
+            var variation = _variationRepository.Get(id);
+
+            _validator.Found(variation);
+            _validator.NotDeleted(variation);
+
+            variation.Delete(DateTime.UtcNow);
+
+            _variationRepository.SaveChanges();
         }
     }
 }
