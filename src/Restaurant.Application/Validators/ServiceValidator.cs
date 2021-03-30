@@ -33,7 +33,7 @@ namespace Restaurant.Application.Validators
             throw new BusinessException(message);
         }
 
-        public void NotRelated<TEntity>(TEntity entity) where TEntity : Entity
+        public void HasNoRelated<TEntity>(TEntity entity) where TEntity : Entity
         {
             if (entity == null) return;
 

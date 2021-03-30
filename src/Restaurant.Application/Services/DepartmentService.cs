@@ -93,7 +93,7 @@ namespace Restaurant.Application.Services
             var relatedEmployee = _employeeRepository.GetAll()
                 .FirstOrDefault(entity => entity.DepartmentId == id);
 
-            _validator.NotRelated(relatedEmployee);
+            _validator.HasNoRelated(relatedEmployee);
 
             department.Delete(DateTime.UtcNow);
 

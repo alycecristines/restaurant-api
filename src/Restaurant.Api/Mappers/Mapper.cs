@@ -4,6 +4,7 @@ using Restaurant.Api.DTOs.Company;
 using Restaurant.Api.DTOs.Department;
 using Restaurant.Api.DTOs.Employee;
 using Restaurant.Api.DTOs.Product;
+using Restaurant.Api.DTOs.Variation;
 using Restaurant.Core.Entities;
 using Restaurant.Core.ValueObjects;
 
@@ -28,6 +29,9 @@ namespace Restaurant.Api.Mappers
             CreateMap<ProductPostDTO, Product>();
             CreateMap<ProductPutDTO, Product>();
             CreateMap<Product, ProductResponseDTO>();
+
+            CreateMap<VariationPostDTO, Variation>();
+            CreateMap<Variation, VariationResponseDTO>();
 
             CreateMap<PhoneDTO, Phone>().ReverseMap();
             CreateMap<AddressDTO, Address>().ReverseMap();

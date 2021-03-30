@@ -7,6 +7,6 @@ namespace Restaurant.Application.Interfaces
         void Found<TEntity>(TEntity entity) where TEntity : Entity;
         void NotDeleted<TEntity>(TEntity entity) where TEntity : Entity;
         void NotExist<TEntity>(TEntity entity) where TEntity : Entity;
-        void NotRelated<TEntity>(TEntity entity) where TEntity : Entity;
+        void HasNoRelated<TEntity>(TEntity entity) where TEntity : Entity;
     }
 }

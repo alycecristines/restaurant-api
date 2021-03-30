@@ -26,8 +26,8 @@ namespace Restaurant.Application.Services
 
         public Company Insert(Company newCompany)
         {
-            var existingCompany = _companyRepository.GetAll()
-                .FirstOrDefault(entity => entity.RegistrationNumber == newCompany.RegistrationNumber);
+            var existingCompany = _companyRepository.GetAll().FirstOrDefault(entity =>
+                entity.RegistrationNumber == newCompany.RegistrationNumber);
 
             _validator.NotExist(existingCompany);
 
@@ -93,7 +93,7 @@ namespace Restaurant.Application.Services
             var relatedDepartment = _departmentRepository.GetAll()
                 .FirstOrDefault(entity => entity.CompanyId == id);
 
-            _validator.NotRelated(relatedDepartment);
+            _validator.HasNoRelated(relatedDepartment);
 
             company.Delete(DateTime.UtcNow);
 
