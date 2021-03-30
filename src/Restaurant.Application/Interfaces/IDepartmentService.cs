@@ -7,10 +7,10 @@ namespace Restaurant.Application.Interfaces
 {
     public interface IDepartmentService
     {
-        Department Insert(Department dto);
+        Department Insert(Department newDepartment);
         IEnumerable<Department> GetAll(DepartmentQueryParams queryParams);
         Department Get(Guid id);
-        Department Update(Guid id, Department dto);
+        Department Update(Guid id, Department newDepartment);
         void Delete(Guid id);
     }
 }

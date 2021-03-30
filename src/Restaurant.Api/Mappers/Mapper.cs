@@ -31,6 +31,7 @@ namespace Restaurant.Api.Mappers
             CreateMap<Product, ProductResponseDTO>();
 
             CreateMap<VariationPostDTO, Variation>();
+            CreateMap<VariationPutDTO, Variation>();
             CreateMap<Variation, VariationResponseDTO>();
 
             CreateMap<PhoneDTO, Phone>().ReverseMap();

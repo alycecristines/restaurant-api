@@ -61,6 +61,18 @@ namespace Restaurant.Api.Controllers
             return Ok(apiResponse);
         }
 
+        [HttpPut("{id:Guid}")]
+        public IActionResult Put(Guid id, VariationPutDTO dto)
+        {
+            var newVariation = _mapper.Map<Variation>(dto);
+            var updatedVariation = _service.Update(id, newVariation);
+
+            var updatedVariationDto = _mapper.Map<VariationResponseDTO>(updatedVariation);
+            var apiResponse = new ApiResponse(updatedVariationDto);
+
+            return Ok(apiResponse);
+        }
+
         [HttpDelete("{id:Guid}")]
         public IActionResult Delete(Guid id)
         {

@@ -7,9 +7,10 @@ namespace Restaurant.Application.Interfaces
 {
     public interface IVariationService
     {
-        Variation Insert(Variation dto);
+        Variation Insert(Variation newVariation);
         IEnumerable<Variation> GetAll(VariationQueryParams queryParams);
         Variation Get(Guid id);
+        Variation Update(Guid id, Variation newVariation);
         void Delete(Guid id);
     }
 }

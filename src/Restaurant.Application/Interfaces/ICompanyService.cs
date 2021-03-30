@@ -7,10 +7,10 @@ namespace Restaurant.Application.Interfaces
 {
     public interface ICompanyService
     {
-        Company Insert(Company company);
+        Company Insert(Company newCompany);
         IEnumerable<Company> GetAll(CompanyQueryParams queryParams);
         Company Get(Guid id);
-        Company Update(Guid id, Company company);
+        Company Update(Guid id, Company newCompany);
         void Delete(Guid id);
     }
 }

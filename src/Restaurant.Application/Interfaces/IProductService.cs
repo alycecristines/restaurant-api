@@ -7,10 +7,10 @@ namespace Restaurant.Application.Interfaces
 {
     public interface IProductService
     {
-        Product Insert(Product dto);
+        Product Insert(Product newProduct);
         IEnumerable<Product> GetAll(ProductQueryParams queryParams);
         Product Get(Guid id);
-        Product Update(Guid id, Product dto);
+        Product Update(Guid id, Product newProduct);
         void Delete(Guid id);
     }
 }
