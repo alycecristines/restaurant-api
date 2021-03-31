@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Restaurant.Api.DTOs.Department;
+using Restaurant.Application.DTOs.Department;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
 using Restaurant.Application.Wrappers;
@@ -30,7 +30,7 @@ namespace Restaurant.Api.Controllers
             var insertedDepartment = _service.Insert(newDepartment);
 
             var insertedDepartmentDto = _mapper.Map<DepartmentResponseDTO>(insertedDepartment);
-            var apiResponse = new ApiResponse(insertedDepartmentDto);
+            var apiResponse = new Response(insertedDepartmentDto);
             var getParams = new { insertedDepartmentDto.Id };
 
             // TODO: Inform the get action when implemented
@@ -45,7 +45,7 @@ namespace Restaurant.Api.Controllers
             var departments = _service.GetAll(queryParams);
 
             var departmentsDto = _mapper.Map<IEnumerable<DepartmentResponseDTO>>(departments);
-            var apiResponse = new ApiResponse(departmentsDto);
+            var apiResponse = new Response(departmentsDto);
 
             return Ok(apiResponse);
         }
@@ -56,7 +56,7 @@ namespace Restaurant.Api.Controllers
             var department = _service.Get(id);
 
             var departmentDto = _mapper.Map<DepartmentResponseDTO>(department);
-            var apiResponse = new ApiResponse(departmentDto);
+            var apiResponse = new Response(departmentDto);
 
             return Ok(apiResponse);
         }
@@ -68,7 +68,7 @@ namespace Restaurant.Api.Controllers
             var updatedDepartment = _service.Update(id, newDepartment);
 
             var updatedDepartmentDto = _mapper.Map<DepartmentResponseDTO>(updatedDepartment);
-            var apiResponse = new ApiResponse(updatedDepartmentDto);
+            var apiResponse = new Response(updatedDepartmentDto);
 
             return Ok(apiResponse);
         }

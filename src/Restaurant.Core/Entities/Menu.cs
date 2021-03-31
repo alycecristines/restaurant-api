@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Restaurant.Core.Common;
-using Restaurant.Core.Enums;
+using Restaurant.Core.Enumerators;
 
 namespace Restaurant.Core.Entities
 {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Restaurant.Api.DTOs.Company;
+using Restaurant.Application.DTOs.Company;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
 using Restaurant.Application.Wrappers;
@@ -30,7 +30,7 @@ namespace Restaurant.Api.Controllers
             var insertedCompany = _service.Insert(newCompany);
 
             var insertedCompanyDto = _mapper.Map<CompanyResponseDTO>(insertedCompany);
-            var apiResponse = new ApiResponse(insertedCompanyDto);
+            var apiResponse = new Response(insertedCompanyDto);
             var getParams = new { insertedCompanyDto.Id };
             var getActionName = nameof(Get);
 
@@ -43,7 +43,7 @@ namespace Restaurant.Api.Controllers
             var companies = _service.GetAll(queryParams);
 
             var companiesDto = _mapper.Map<IEnumerable<CompanyResponseDTO>>(companies);
-            var apiResponse = new ApiResponse(companiesDto);
+            var apiResponse = new Response(companiesDto);
 
             return Ok(apiResponse);
         }
@@ -54,7 +54,7 @@ namespace Restaurant.Api.Controllers
             var company = _service.Get(id);
 
             var companyDto = _mapper.Map<CompanyResponseDTO>(company);
-            var apiResponse = new ApiResponse(companyDto);
+            var apiResponse = new Response(companyDto);
 
             return Ok(apiResponse);
         }
@@ -66,7 +66,7 @@ namespace Restaurant.Api.Controllers
             var updatedCompany = _service.Update(id, newCompany);
 
             var updatedCompanyDto = _mapper.Map<CompanyResponseDTO>(updatedCompany);
-            var apiResponse = new ApiResponse(updatedCompanyDto);
+            var apiResponse = new Response(updatedCompanyDto);
 
             return Ok(apiResponse);
         }

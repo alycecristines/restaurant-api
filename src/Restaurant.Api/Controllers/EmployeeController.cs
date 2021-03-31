@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Restaurant.Api.DTOs.Employee;
+using Restaurant.Application.DTOs.Employee;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
 using Restaurant.Application.Wrappers;
@@ -30,7 +30,7 @@ namespace Restaurant.Api.Controllers
             var insertedEmployee = _service.Insert(newEmployee);
 
             var insertedEmployeeDto = _mapper.Map<EmployeeResponseDTO>(insertedEmployee);
-            var apiResponse = new ApiResponse(insertedEmployeeDto);
+            var apiResponse = new Response(insertedEmployeeDto);
             var getParams = new { insertedEmployeeDto.Id };
 
             // TODO: Inform the get action when implemented
@@ -45,7 +45,7 @@ namespace Restaurant.Api.Controllers
             var employees = _service.GetAll(queryParams);
 
             var employeesDto = _mapper.Map<IEnumerable<EmployeeResponseDTO>>(employees);
-            var apiResponse = new ApiResponse(employeesDto);
+            var apiResponse = new Response(employeesDto);
 
             return Ok(apiResponse);
         }
@@ -56,7 +56,7 @@ namespace Restaurant.Api.Controllers
             var employee = _service.Get(id);
 
             var employeeDto = _mapper.Map<EmployeeResponseDTO>(employee);
-            var apiResponse = new ApiResponse(employeeDto);
+            var apiResponse = new Response(employeeDto);
 
             return Ok(apiResponse);
         }
@@ -68,7 +68,7 @@ namespace Restaurant.Api.Controllers
             var updatedEmployee = _service.Update(id, newEmployee);
 
             var updatedEmployeeDto = _mapper.Map<EmployeeResponseDTO>(updatedEmployee);
-            var apiResponse = new ApiResponse(updatedEmployeeDto);
+            var apiResponse = new Response(updatedEmployeeDto);
 
             return Ok(apiResponse);
         }

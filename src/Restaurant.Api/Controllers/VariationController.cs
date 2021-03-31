@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Restaurant.Api.DTOs.Variation;
+using Restaurant.Application.DTOs.Variation;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
 using Restaurant.Application.Wrappers;
@@ -30,7 +30,7 @@ namespace Restaurant.Api.Controllers
             var insertedVariation = _service.Insert(newVariation);
 
             var insertedVariationtDto = _mapper.Map<VariationResponseDTO>(insertedVariation);
-            var apiResponse = new ApiResponse(insertedVariationtDto);
+            var apiResponse = new Response(insertedVariationtDto);
             var getParams = new { insertedVariationtDto.Id };
 
             // TODO: Inform the get action when implemented
@@ -45,7 +45,7 @@ namespace Restaurant.Api.Controllers
             var variations = _service.GetAll(queryParams);
 
             var variationsDto = _mapper.Map<IEnumerable<VariationResponseDTO>>(variations);
-            var apiResponse = new ApiResponse(variationsDto);
+            var apiResponse = new Response(variationsDto);
 
             return Ok(apiResponse);
         }
@@ -56,7 +56,7 @@ namespace Restaurant.Api.Controllers
             var variation = _service.Get(id);
 
             var variationDto = _mapper.Map<VariationResponseDTO>(variation);
-            var apiResponse = new ApiResponse(variationDto);
+            var apiResponse = new Response(variationDto);
 
             return Ok(apiResponse);
         }
@@ -68,7 +68,7 @@ namespace Restaurant.Api.Controllers
             var updatedVariation = _service.Update(id, newVariation);
 
             var updatedVariationDto = _mapper.Map<VariationResponseDTO>(updatedVariation);
-            var apiResponse = new ApiResponse(updatedVariationDto);
+            var apiResponse = new Response(updatedVariationDto);
 
             return Ok(apiResponse);
         }

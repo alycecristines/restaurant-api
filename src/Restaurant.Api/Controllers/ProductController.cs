@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Restaurant.Api.DTOs.Product;
+using Restaurant.Application.DTOs.Product;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
 using Restaurant.Application.Wrappers;
@@ -30,7 +30,7 @@ namespace Restaurant.Api.Controllers
             var insertedProduct = _service.Insert(newProduct);
 
             var insertedProductDto = _mapper.Map<ProductResponseDTO>(insertedProduct);
-            var apiResponse = new ApiResponse(insertedProductDto);
+            var apiResponse = new Response(insertedProductDto);
             var getParams = new { insertedProductDto.Id };
 
             // TODO: Inform the get action when implemented
@@ -45,7 +45,7 @@ namespace Restaurant.Api.Controllers
             var products = _service.GetAll(queryParams);
 
             var productsDto = _mapper.Map<IEnumerable<ProductResponseDTO>>(products);
-            var apiResponse = new ApiResponse(productsDto);
+            var apiResponse = new Response(productsDto);
 
             return Ok(apiResponse);
         }
@@ -56,7 +56,7 @@ namespace Restaurant.Api.Controllers
             var product = _service.Get(id);
 
             var productDto = _mapper.Map<ProductResponseDTO>(product);
-            var apiResponse = new ApiResponse(productDto);
+            var apiResponse = new Response(productDto);
 
             return Ok(apiResponse);
         }
@@ -68,7 +68,7 @@ namespace Restaurant.Api.Controllers
             var updatedProduct = _service.Update(id, newProduct);
 
             var updatedProductDto = _mapper.Map<ProductResponseDTO>(updatedProduct);
-            var apiResponse = new ApiResponse(updatedProductDto);
+            var apiResponse = new Response(updatedProductDto);
 
             return Ok(apiResponse);
         }

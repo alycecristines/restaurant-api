@@ -1,6 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Restaurant.Api.DTOs.Menu;
+using Restaurant.Application.DTOs.Menu;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.Wrappers;
 using Restaurant.Core.Entities;
@@ -27,7 +27,7 @@ namespace Restaurant.Api.Controllers
             var insertedMenu = _service.Insert(newMenu);
 
             var insertedMenuDto = _mapper.Map<MenuResponseDTO>(insertedMenu);
-            var apiResponse = new ApiResponse(insertedMenuDto);
+            var apiResponse = new Response(insertedMenuDto);
             var getParams = new { insertedMenuDto.Id };
 
             // TODO: Inform the get action when implemented
