@@ -60,5 +60,13 @@ namespace Restaurant.Api.Controllers
 
             return Ok(apiResponse);
         }
+
+        [HttpDelete("{id:Guid}")]
+        public IActionResult Delete(Guid id)
+        {
+            _service.Delete(id);
+
+            return NoContent();
+        }
     }
 }

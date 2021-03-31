@@ -10,5 +10,6 @@ namespace Restaurant.Application.Interfaces
         Menu Insert(Menu newMenu);
         IEnumerable<Menu> GetAll(MenuQueryParams queryParams);
         Menu Get(Guid id);
+        void Delete(Guid id);
     }
 }

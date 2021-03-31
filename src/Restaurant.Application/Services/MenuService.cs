@@ -66,5 +66,17 @@ namespace Restaurant.Application.Services
 
             return menu;
         }
+
+        public void Delete(Guid id)
+        {
+            var menu = _menuRepository.Get(id);
+
+            _validator.Found(menu);
+            _validator.NotDeleted(menu);
+
+            menu.Delete(DateTime.UtcNow);
+
+            _menuRepository.SaveChanges();
+        }
     }
 }
