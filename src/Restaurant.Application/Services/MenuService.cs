@@ -1,5 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using Restaurant.Application.Extensions;
 using Restaurant.Application.Interfaces;
+using Restaurant.Application.QueryParams;
 using Restaurant.Core.Entities;
 using Restaurant.Core.Interfaces;
 
@@ -39,6 +43,28 @@ namespace Restaurant.Application.Services
             _menuRepository.SaveChanges();
 
             return newMenu;
+        }
+
+        public IEnumerable<Menu> GetAll(MenuQueryParams queryParams)
+        {
+            var query = _menuRepository.GetAll(queryParams.IncludeInactive);
+
+            if (!string.IsNullOrWhiteSpace(queryParams.Description))
+            {
+                query = query.Where(entity =>
+                    entity.Description.ContainsResearch(queryParams.Description));
+            }
+
+            return query.ToList();
+        }
+
+        public Menu Get(Guid id)
+        {
+            var menu = _menuRepository.Get(id);
+
+            _validator.Found(menu);
+
+            return menu;
         }
     }
 }

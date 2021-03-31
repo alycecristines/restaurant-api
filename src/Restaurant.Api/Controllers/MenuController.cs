@@ -1,7 +1,10 @@
+using System;
+using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Application.DTOs.Menu;
 using Restaurant.Application.Interfaces;
+using Restaurant.Application.QueryParams;
 using Restaurant.Application.Wrappers;
 using Restaurant.Core.Entities;
 
@@ -34,6 +37,28 @@ namespace Restaurant.Api.Controllers
             var getActionName = nameof(Post);
 
             return CreatedAtAction(getActionName, getParams, apiResponse);
+        }
+
+        [HttpGet]
+        public IActionResult Get([FromQuery] MenuQueryParams queryParams)
+        {
+            var menus = _service.GetAll(queryParams);
+
+            var menusDto = _mapper.Map<IEnumerable<MenuResponseDTO>>(menus);
+            var apiResponse = new Response(menusDto);
+
+            return Ok(apiResponse);
+        }
+
+        [HttpGet("{id:Guid}")]
+        public IActionResult Get(Guid id)
+        {
+            var menu = _service.Get(id);
+
+            var menuDto = _mapper.Map<MenuResponseDTO>(menu);
+            var apiResponse = new Response(menuDto);
+
+            return Ok(apiResponse);
         }
     }
 }
