@@ -10,6 +10,7 @@ namespace Restaurant.Application.Interfaces
         Menu Insert(Menu newMenu);
         IEnumerable<Menu> GetAll(MenuQueryParams queryParams);
         Menu Get(Guid id);
+        Menu Update(Guid id, Menu newMenu);
         void Delete(Guid id);
     }
 }

@@ -61,6 +61,18 @@ namespace Restaurant.Api.Controllers
             return Ok(apiResponse);
         }
 
+        [HttpPut("{id:Guid}")]
+        public IActionResult Put(Guid id, MenuPutDTO dto)
+        {
+            var newMenu = _mapper.Map<Menu>(dto);
+            var updatedMenu = _service.Update(id, newMenu);
+
+            var updatedMenuDto = _mapper.Map<MenuResponseDTO>(updatedMenu);
+            var apiResponse = new Response(updatedMenuDto);
+
+            return Ok(apiResponse);
+        }
+
         [HttpDelete("{id:Guid}")]
         public IActionResult Delete(Guid id)
         {

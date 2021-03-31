@@ -67,6 +67,34 @@ namespace Restaurant.Application.Services
             return menu;
         }
 
+        public Menu Update(Guid id, Menu newMenu)
+        {
+            var currentMenu = _menuRepository.Get(id);
+
+            _validator.Found(currentMenu);
+            _validator.NotDeleted(currentMenu);
+
+            var existingProducts = new List<Product>();
+
+            foreach (var product in newMenu.Products)
+            {
+                var existingProduct = _productRepository.Get(product.Id);
+
+                _validator.Found(existingProduct);
+                _validator.NotDeleted(existingProduct);
+
+                existingProducts.Add(existingProduct);
+            }
+
+            currentMenu.Products = existingProducts;
+            currentMenu.Description = newMenu.Description;
+            currentMenu.Update(DateTime.UtcNow);
+
+            _menuRepository.SaveChanges();
+
+            return currentMenu;
+        }
+
         public void Delete(Guid id)
         {
             var menu = _menuRepository.Get(id);

@@ -36,6 +36,7 @@ namespace Restaurant.Infrastructure.Mappings
             CreateMap<Variation, VariationResponseDTO>();
 
             CreateMap<MenuPostDTO, Menu>();
+            CreateMap<MenuPutDTO, Menu>();
             CreateMap<MenuProductDTO, Product>();
             CreateMap<Menu, MenuResponseDTO>();
 
