@@ -13,13 +13,15 @@ namespace Restaurant.Application.Services
     {
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<Variation> _variationRepository;
+        private readonly IRepository<Menu> _menuRepository;
         private readonly IServiceValidator _validator;
 
-        public ProductService(IRepository<Product> productRepository,
-            IRepository<Variation> variationRepository, IServiceValidator validator)
+        public ProductService(IRepository<Product> productRepository, IRepository<Variation> variationRepository,
+            IRepository<Menu> menuRepository, IServiceValidator validator)
         {
             _productRepository = productRepository;
             _variationRepository = variationRepository;
+            _menuRepository = menuRepository;
             _validator = validator;
         }
 
@@ -62,7 +64,6 @@ namespace Restaurant.Application.Services
 
             currentProduct.Description = newProduct.Description;
             currentProduct.Update(DateTime.UtcNow);
-
             _productRepository.SaveChanges();
 
             return currentProduct;
@@ -74,15 +75,29 @@ namespace Restaurant.Application.Services
 
             _validator.Found(product);
             _validator.NotDeleted(product);
-
-            var relatedVariation = _variationRepository.GetAll()
-                .FirstOrDefault(entity => entity.ProductId == id);
-
-            _validator.HasNoRelated(relatedVariation);
+            ValidateRelatedVariations(id);
+            ValidateRelatedMenus(id);
 
             product.Delete(DateTime.UtcNow);
-
             _productRepository.SaveChanges();
+        }
+
+        private void ValidateRelatedVariations(Guid id)
+        {
+            var query = _variationRepository.GetAll();
+            var anyRelatedVariation = query.FirstOrDefault(variation =>
+                variation.ProductId == id);
+
+            _validator.HasNoRelated(anyRelatedVariation);
+        }
+
+        private void ValidateRelatedMenus(Guid id)
+        {
+            var query = _menuRepository.GetAll();
+            var anyRelatedMenu = query.FirstOrDefault(menu =>
+                menu.Products.Any(product => product.Id == id));
+
+            _validator.HasNoRelated(anyRelatedMenu);
         }
     }
 }
