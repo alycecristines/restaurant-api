@@ -28,6 +28,7 @@ namespace Restaurant.Application.Services
             var existingProduct = _productRepository.Get(newVariation.ProductId);
 
             _validator.Found(existingProduct);
+            _validator.NotDeleted(existingProduct);
 
             _variationRepository.Insert(newVariation);
             _variationRepository.SaveChanges();
