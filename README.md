@@ -1,6 +1,6 @@
 # About The Project
 
-This project is being developed to conclude the course of analysis and systems development. This API is dedicated to serving the solution's front-end and is not concerned with integrations with other applications.<br><br>
+This project is being developed to conclude the course of analysis and systems development. This API is dedicated to serving the [solution's front-end](https://github.com/alycecristines/restaurant-front) and is not concerned with integrations with other applications.<br><br>
 
 # Getting Started
 
@@ -24,4 +24,4 @@ dotnet run --no-launch-profile -p restaurant-api/src/Restaurant.Api
 ```
 
 ### 4. Usage
-The application can be used with any client api. The Swagger interface is also available at: `https://localhost:5001/swagger/index.html`.
+The application can be used with any client api. The Swagger interface is also available at: [`https://localhost:5001/swagger/index.html`](https://localhost:5001/swagger/index.html).
