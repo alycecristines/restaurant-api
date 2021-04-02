@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
-using Restaurant.Application.DTOs.Company;
 using Restaurant.Application.Extensions;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
 using Restaurant.Core.Entities;
-using Restaurant.Core.Exceptions;
 using Restaurant.Core.Interfaces;
 
 namespace Restaurant.Application.Services
@@ -17,39 +14,30 @@ namespace Restaurant.Application.Services
     {
         private readonly IRepository<Company> _companyRepository;
         private readonly IRepository<Department> _departmentRepository;
-        private readonly IMapper _mapper;
+        private readonly IServiceValidator _validator;
 
         public CompanyService(IRepository<Company> companyRepository,
-            IRepository<Department> departmentRepository, IMapper mapper)
+            IRepository<Department> departmentRepository, IServiceValidator validator)
         {
             _companyRepository = companyRepository;
             _departmentRepository = departmentRepository;
-            _mapper = mapper;
+            _validator = validator;
         }
 
-        public CompanyResponseDTO Insert(CompanyPostDTO dto)
+        public Company Insert(Company newCompany)
         {
-            var queryParams = new CompanyQueryParams
-            {
-                RegistrationNumber = dto.RegistrationNumber
-            };
+            var existingCompany = _companyRepository.GetAll().FirstOrDefault(entity =>
+                entity.RegistrationNumber == newCompany.RegistrationNumber);
 
-            var currentEntity = GetAll(queryParams);
+            _validator.NotExist(existingCompany);
 
-            if (currentEntity.Any())
-            {
-                throw new BusinessException($"There is already a {nameof(Company)} registered with {nameof(Company.RegistrationNumber)} '{dto.RegistrationNumber}'.");
-            }
-
-            var newEntity = _mapper.Map<Company>(dto);
-
-            _companyRepository.Insert(newEntity);
+            _companyRepository.Insert(newCompany);
             _companyRepository.SaveChanges();
 
-            return _mapper.Map<CompanyResponseDTO>(newEntity);
+            return newCompany;
         }
 
-        public IEnumerable<CompanyResponseDTO> GetAll(CompanyQueryParams queryParams)
+        public IEnumerable<Company> GetAll(CompanyQueryParams queryParams)
         {
             var query = _companyRepository.GetAll(queryParams.IncludeInactive);
 
@@ -65,68 +53,50 @@ namespace Restaurant.Application.Services
                 query = query.Where(entity => entity.RegistrationNumber.ContainsResearch(queryParams.RegistrationNumber));
             }
 
-            var entities = query.ToList();
-
-            return _mapper.Map<IEnumerable<CompanyResponseDTO>>(entities);
+            return query.ToList();
         }
 
-        public CompanyResponseDTO Get(Guid id)
+        public Company Get(Guid id)
         {
-            var entity = _companyRepository.Get(id);
+            var company = _companyRepository.Get(id);
 
-            if (entity == null)
-            {
-                throw new BusinessException($"{nameof(Company)} not found with {nameof(Company.Id)} '{id}'.");
-            }
+            _validator.Found(company);
 
-            return _mapper.Map<CompanyResponseDTO>(entity);
+            return company;
         }
 
-        public CompanyResponseDTO Update(Guid id, CompanyPutDTO dto)
+        public Company Update(Guid id, Company newCompany)
         {
-            var currentEntity = _companyRepository.Get(id);
+            var currentCompany = _companyRepository.Get(id);
 
-            if (currentEntity == null)
-            {
-                throw new BusinessException($"{nameof(Company)} not found with {nameof(Company.Id)} '{id}'.");
-            }
+            _validator.Found(currentCompany);
+            _validator.NotDeleted(currentCompany);
 
-            if (currentEntity.Deleted)
-            {
-                throw new BusinessException($"The {nameof(Company)} with the {nameof(Company.Id)} '{id}' has been deleted.");
-            }
+            currentCompany.CorporateName = newCompany.CorporateName;
+            currentCompany.BusinessName = newCompany.BusinessName;
+            currentCompany.Phone = newCompany.Phone;
+            currentCompany.Address = newCompany.Address;
+            currentCompany.Update(DateTime.UtcNow);
 
-            var updatedEntity = _mapper.Map(dto, currentEntity);
-
-            updatedEntity.Update(DateTime.UtcNow);
             _companyRepository.SaveChanges();
 
-            return _mapper.Map<CompanyResponseDTO>(updatedEntity);
+            return currentCompany;
         }
 
         public void Delete(Guid id)
         {
-            var entity = _companyRepository.Get(id);
+            var company = _companyRepository.Get(id);
 
-            if (entity == null)
-            {
-                throw new BusinessException($"{nameof(Company)} not found with {nameof(Company.Id)} '{id}'.");
-            }
+            _validator.Found(company);
+            _validator.NotDeleted(company);
 
-            if (entity.Deleted)
-            {
-                throw new BusinessException($"This {nameof(Company)} has already been deleted.");
-            }
+            var relatedDepartment = _departmentRepository.GetAll()
+                .FirstOrDefault(entity => entity.CompanyId == id);
 
-            var relatedDepartments = _departmentRepository.GetAll()
-                .Any(entity => entity.CompanyId == id);
+            _validator.HasNoRelated(relatedDepartment);
 
-            if (relatedDepartments)
-            {
-                throw new BusinessException($"There are related {nameof(Department)}s.");
-            }
+            company.Delete(DateTime.UtcNow);
 
-            entity.Delete(DateTime.UtcNow);
             _companyRepository.SaveChanges();
         }
     }

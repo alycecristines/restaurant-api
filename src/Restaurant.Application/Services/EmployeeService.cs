@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
-using Restaurant.Application.DTOs.Employee;
 using Restaurant.Application.Extensions;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
 using Restaurant.Core.Entities;
-using Restaurant.Core.Exceptions;
 using Restaurant.Core.Interfaces;
 
 namespace Restaurant.Application.Services
@@ -17,39 +14,30 @@ namespace Restaurant.Application.Services
     {
         private readonly IRepository<Employee> _employeeRepository;
         private readonly IRepository<Department> _departmentRepository;
-        private readonly IMapper _mapper;
+        private readonly IServiceValidator _validator;
 
         public EmployeeService(IRepository<Employee> employeeRepository,
-            IRepository<Department> departmentRepository, IMapper mapper)
+            IRepository<Department> departmentRepository, IServiceValidator validator)
         {
             _employeeRepository = employeeRepository;
             _departmentRepository = departmentRepository;
-            _mapper = mapper;
+            _validator = validator;
         }
 
-        public EmployeeResponseDTO Insert(EmployeePostDTO dto)
+        public Employee Insert(Employee newEmployee)
         {
-            var department = _departmentRepository.Get(dto.DepartmentId.Value);
+            var existingDepartment = _departmentRepository.Get(newEmployee.DepartmentId);
 
-            if (department == null)
-            {
-                throw new BusinessException($"{nameof(Department)} not found with {nameof(Department.Id)} '{dto.DepartmentId.Value}'.");
-            }
+            _validator.Found(existingDepartment);
+            _validator.NotDeleted(existingDepartment);
 
-            if (department.Deleted)
-            {
-                throw new BusinessException($"The {nameof(Department)} with the {nameof(Department.Id)} '{dto.DepartmentId.Value}' has been deleted.");
-            }
-
-            var newEntity = _mapper.Map<Employee>(dto);
-
-            _employeeRepository.Insert(newEntity);
+            _employeeRepository.Insert(newEmployee);
             _employeeRepository.SaveChanges();
 
-            return _mapper.Map<EmployeeResponseDTO>(newEntity);
+            return newEmployee;
         }
 
-        public IEnumerable<EmployeeResponseDTO> GetAll(EmployeeQueryParams queryParams)
+        public IEnumerable<Employee> GetAll(EmployeeQueryParams queryParams)
         {
             var query = _employeeRepository.GetAll(queryParams.IncludeInactive);
 
@@ -71,72 +59,49 @@ namespace Restaurant.Application.Services
                     entity.DepartmentId == queryParams.DepartmentId);
             }
 
-            var entities = query.ToList();
-
-            return _mapper.Map<IEnumerable<EmployeeResponseDTO>>(entities);
+            return query.ToList();
         }
 
-        public EmployeeResponseDTO Get(Guid id)
+        public Employee Get(Guid id)
         {
-            var entity = _employeeRepository.Get(id);
+            var employee = _employeeRepository.Get(id);
 
-            if (entity == null)
-            {
-                throw new BusinessException($"{nameof(Employee)} not found with {nameof(Employee.Id)} '{id}'.");
-            }
+            _validator.Found(employee);
 
-            return _mapper.Map<EmployeeResponseDTO>(entity);
+            return employee;
         }
 
-        public EmployeeResponseDTO Update(Guid id, EmployeePutDTO dto)
+        public Employee Update(Guid id, Employee newEmployee)
         {
-            var department = _departmentRepository.Get(dto.DepartmentId.Value);
+            var existingDepartment = _departmentRepository.Get(newEmployee.DepartmentId);
 
-            if (department == null)
-            {
-                throw new BusinessException($"{nameof(Department)} not found with {nameof(Department.Id)} '{dto.DepartmentId.Value}'.");
-            }
+            _validator.Found(existingDepartment);
+            _validator.NotDeleted(existingDepartment);
 
-            if (department.Deleted)
-            {
-                throw new BusinessException($"The {nameof(Department)} with the {nameof(Department.Id)} '{dto.DepartmentId.Value}' has been deleted.");
-            }
+            var currentEmployee = _employeeRepository.Get(id);
 
-            var currentEntity = _employeeRepository.Get(id);
+            _validator.Found(currentEmployee);
+            _validator.NotDeleted(currentEmployee);
 
-            if (currentEntity == null)
-            {
-                throw new BusinessException($"{nameof(Employee)} not found with {nameof(Employee.Id)} '{id}'.");
-            }
+            currentEmployee.Name = newEmployee.Name;
+            currentEmployee.Email = newEmployee.Email;
+            currentEmployee.DepartmentId = newEmployee.DepartmentId;
+            currentEmployee.Update(DateTime.UtcNow);
 
-            if (currentEntity.Deleted)
-            {
-                throw new BusinessException($"The {nameof(Employee)} with the {nameof(Employee.Id)} '{id}' has been deleted.");
-            }
-
-            var updatedEntity = _mapper.Map(dto, currentEntity);
-
-            updatedEntity.Update(DateTime.UtcNow);
             _employeeRepository.SaveChanges();
 
-            return _mapper.Map<EmployeeResponseDTO>(updatedEntity);
+            return currentEmployee;
         }
 
         public void Delete(Guid id)
         {
-            var entity = _employeeRepository.Get(id);
+            var employee = _employeeRepository.Get(id);
 
-            if (entity == null)
-            {
-                throw new BusinessException($"{nameof(Employee)} not found with {nameof(Employee.Id)} '{id}'.");
-            }
+            _validator.Found(employee);
+            _validator.NotDeleted(employee);
 
-            if (entity.Deleted)
-            {
-                throw new BusinessException($"This {nameof(Employee)} has already been deleted.");
-            }
+            employee.Delete(DateTime.UtcNow);
 
-            entity.Delete(DateTime.UtcNow);
             _employeeRepository.SaveChanges();
         }
     }

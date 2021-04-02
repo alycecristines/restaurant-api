@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Restaurant.Application.Wrappers;
 
-namespace Restaurant.Application.Filters
+namespace Restaurant.Infrastructure.Filters
 {
     public class ValidationFilterAttribute : ActionFilterAttribute
     {
@@ -17,7 +17,7 @@ namespace Restaurant.Application.Filters
         {
             var message = "One or more validation errors occurred.";
             var errors = new BadRequestObjectResult(context.ModelState).Value;
-            var response = new ApiErrorResponse(message, errors);
+            var response = new ErrorResponse(message, errors);
             return new BadRequestObjectResult(response);
         }
     }

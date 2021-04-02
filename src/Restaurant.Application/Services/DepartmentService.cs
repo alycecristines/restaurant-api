@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
-using Restaurant.Application.DTOs.Department;
 using Restaurant.Application.Extensions;
 using Restaurant.Application.Interfaces;
 using Restaurant.Application.QueryParams;
 using Restaurant.Core.Entities;
-using Restaurant.Core.Exceptions;
 using Restaurant.Core.Interfaces;
 
 namespace Restaurant.Application.Services
@@ -18,41 +15,32 @@ namespace Restaurant.Application.Services
         private readonly IRepository<Department> _departmentRepository;
         private readonly IRepository<Company> _companyRepository;
         private readonly IRepository<Employee> _employeeRepository;
-        private readonly IMapper _mapper;
+        private readonly IServiceValidator _validator;
 
         public DepartmentService(IRepository<Department> departmentRepository,
             IRepository<Company> companyRepository, IRepository<Employee> employeeRepository,
-            IMapper mapper)
+            IServiceValidator validator)
         {
             _departmentRepository = departmentRepository;
             _companyRepository = companyRepository;
             _employeeRepository = employeeRepository;
-            _mapper = mapper;
+            _validator = validator;
         }
 
-        public DepartmentResponseDTO Insert(DepartmentPostDTO dto)
+        public Department Insert(Department newDepartment)
         {
-            var company = _companyRepository.Get(dto.CompanyId.Value);
+            var existingCompany = _companyRepository.Get(newDepartment.CompanyId);
 
-            if (company == null)
-            {
-                throw new BusinessException($"{nameof(Company)} not found with {nameof(Company.Id)} '{dto.CompanyId.Value}'.");
-            }
+            _validator.Found(existingCompany);
+            _validator.NotDeleted(existingCompany);
 
-            if (company.Deleted)
-            {
-                throw new BusinessException($"The {nameof(Company)} with the {nameof(Company.Id)} '{dto.CompanyId.Value}' has been deleted.");
-            }
-
-            var newEntity = _mapper.Map<Department>(dto);
-
-            _departmentRepository.Insert(newEntity);
+            _departmentRepository.Insert(newDepartment);
             _departmentRepository.SaveChanges();
 
-            return _mapper.Map<DepartmentResponseDTO>(newEntity);
+            return newDepartment;
         }
 
-        public IEnumerable<DepartmentResponseDTO> GetAll(DepartmentQueryParams queryParams)
+        public IEnumerable<Department> GetAll(DepartmentQueryParams queryParams)
         {
             var query = _departmentRepository.GetAll(queryParams.IncludeInactive);
 
@@ -68,68 +56,47 @@ namespace Restaurant.Application.Services
                     entity.CompanyId == queryParams.CompanyId);
             }
 
-            var entities = query.ToList();
-
-            return _mapper.Map<IEnumerable<DepartmentResponseDTO>>(entities);
+            return query.ToList();
         }
 
-        public DepartmentResponseDTO Get(Guid id)
+        public Department Get(Guid id)
         {
-            var entity = _departmentRepository.Get(id);
+            var department = _departmentRepository.Get(id);
 
-            if (entity == null)
-            {
-                throw new BusinessException($"{nameof(Department)} not found with {nameof(Department.Id)} '{id}'.");
-            }
+            _validator.Found(department);
 
-            return _mapper.Map<DepartmentResponseDTO>(entity);
+            return department;
         }
 
-        public DepartmentResponseDTO Update(Guid id, DepartmentPutDTO dto)
+        public Department Update(Guid id, Department newDepartment)
         {
-            var currentEntity = _departmentRepository.Get(id);
+            var currentDepartment = _departmentRepository.Get(id);
 
-            if (currentEntity == null)
-            {
-                throw new BusinessException($"{nameof(Department)} not found with {nameof(Department.Id)} '{id}'.");
-            }
+            _validator.Found(currentDepartment);
+            _validator.NotDeleted(currentDepartment);
 
-            if (currentEntity.Deleted)
-            {
-                throw new BusinessException($"The {nameof(Department)} with the {nameof(Department.Id)} '{id}' has been deleted.");
-            }
+            currentDepartment.Description = newDepartment.Description;
+            currentDepartment.Update(DateTime.UtcNow);
 
-            var updatedEntity = _mapper.Map(dto, currentEntity);
-
-            updatedEntity.Update(DateTime.UtcNow);
             _departmentRepository.SaveChanges();
 
-            return _mapper.Map<DepartmentResponseDTO>(updatedEntity);
+            return currentDepartment;
         }
 
         public void Delete(Guid id)
         {
-            var entity = _departmentRepository.Get(id);
+            var department = _departmentRepository.Get(id);
 
-            if (entity == null)
-            {
-                throw new BusinessException($"{nameof(Department)} not found with {nameof(Department.Id)} '{id}'.");
-            }
+            _validator.Found(department);
+            _validator.NotDeleted(department);
 
-            if (entity.Deleted)
-            {
-                throw new BusinessException($"This {nameof(Department)} has already been deleted.");
-            }
+            var relatedEmployee = _employeeRepository.GetAll()
+                .FirstOrDefault(entity => entity.DepartmentId == id);
 
-            var relatedEmployees = _employeeRepository.GetAll()
-                .Any(entity => entity.DepartmentId == id);
+            _validator.HasNoRelated(relatedEmployee);
 
-            if (relatedEmployees)
-            {
-                throw new BusinessException($"There are related {nameof(Employee)}s.");
-            }
+            department.Delete(DateTime.UtcNow);
 
-            entity.Delete(DateTime.UtcNow);
             _departmentRepository.SaveChanges();
         }
     }

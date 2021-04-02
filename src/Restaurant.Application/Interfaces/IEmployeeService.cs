@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
-using Restaurant.Application.DTOs.Employee;
 using Restaurant.Application.QueryParams;
+using Restaurant.Core.Entities;
 
 namespace Restaurant.Application.Interfaces
 {
     public interface IEmployeeService
     {
-        EmployeeResponseDTO Insert(EmployeePostDTO dto);
-        IEnumerable<EmployeeResponseDTO> GetAll(EmployeeQueryParams queryParams);
-        EmployeeResponseDTO Get(Guid id);
-        EmployeeResponseDTO Update(Guid id, EmployeePutDTO dto);
+        Employee Insert(Employee newEmployee);
+        IEnumerable<Employee> GetAll(EmployeeQueryParams queryParams);
+        Employee Get(Guid id);
+        Employee Update(Guid id, Employee newEmployee);
         void Delete(Guid id);
     }
 }

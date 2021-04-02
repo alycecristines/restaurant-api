@@ -1,10 +1,10 @@
 namespace Restaurant.Application.Wrappers
 {
-    public class ApiResponse
+    public class Response
     {
         public object Data { get; private set; }
 
-        public ApiResponse(object data)
+        public Response(object data)
         {
             Data = data;
         }

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Restaurant.Core.Exceptions;
 using Restaurant.Application.Wrappers;
-using Restaurant.Application.Options;
+using Restaurant.Application.Configurations;
 
-namespace Restaurant.Application.Middlewares
+namespace Restaurant.Infrastructure.Middlewares
 {
     public class ErrorHandlerMiddleware
     {
@@ -48,8 +48,8 @@ namespace Restaurant.Application.Middlewares
 
         private string GetResponseJson(string message)
         {
-            var response = new ApiErrorResponse(message);
-            return JsonSerializer.Serialize(response, JsonOptions.Create());
+            var response = new ErrorResponse(message);
+            return JsonSerializer.Serialize(response, JsonConfigurations.Create());
         }
     }
 }
