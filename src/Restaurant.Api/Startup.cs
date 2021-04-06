@@ -29,7 +29,7 @@ namespace Restaurant.Api
         {
             application.UseErrorHandler(environment);
             application.UseSwagger();
-            application.UseHttpsRedirection();
+            //application.UseHttpsRedirection();
             application.UseRouting();
             application.UseAuthorization();
             application.UseEndpoints(endpoints => endpoints.MapControllers());
