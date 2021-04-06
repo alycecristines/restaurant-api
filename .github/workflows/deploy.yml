@@ -22,11 +22,19 @@ jobs:
     - name: Publish
       run: dotnet publish -c Release -o deploy --no-build
     - name: Copy via SSH
-      uses: appleboy/scp-action@master
+      uses: garygrossgarten/github-action-scp@release
       with:
+        local: "/home/runner/work/restaurant-api/restaurant-api/deploy/*"
+        remote: "/srv/www/restaurant-api/"
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
+        privateKey: ${{ secrets.SSH_KEY}}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
-        source: "/home/runner/work/restaurant-api/restaurant-api/deploy/*"
-        target: "/srv/"
+    - name: Restart service via SSH
+      uses: garygrossgarten/github-action-ssh@release
+      with:
+        command: service restaurant-api restart
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        privateKey: ${{ secrets.SSH_KEY}}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
