@@ -24,7 +24,7 @@ jobs:
     - name: Copy via SSH
       uses: garygrossgarten/github-action-scp@release
       with:
-        local: "/home/runner/work/restaurant-api/restaurant-api/deploy/*"
+        local: "/home/runner/work/restaurant-api/restaurant-api/deploy/"
         remote: "/srv/www/restaurant-api/"
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
