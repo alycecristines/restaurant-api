@@ -29,4 +29,4 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         source: "/home/runner/work/restaurant-api/restaurant-api/deploy/*"
-        target: "~/"
+        target: "/srv/"
