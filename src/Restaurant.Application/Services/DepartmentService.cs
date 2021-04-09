@@ -42,7 +42,7 @@ namespace Restaurant.Application.Services
 
         public IEnumerable<Department> GetAll(DepartmentQueryParams queryParams)
         {
-            var query = _departmentRepository.GetAll(queryParams.IncludeInactive);
+            var query = _departmentRepository.GetAll(queryParams.IncludeDeleted, queryParams.IncludeInactivated);
 
             if (!string.IsNullOrWhiteSpace(queryParams.Description))
             {
@@ -75,6 +75,7 @@ namespace Restaurant.Application.Services
             _validator.Found(currentDepartment);
             _validator.NotDeleted(currentDepartment);
 
+            currentDepartment.Inactivated = newDepartment.Inactivated;
             currentDepartment.Description = newDepartment.Description;
             currentDepartment.Update(DateTime.UtcNow);
 

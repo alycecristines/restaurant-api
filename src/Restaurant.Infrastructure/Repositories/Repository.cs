@@ -23,13 +23,18 @@ namespace Restaurant.Infrastructure.Repositories
             _dbEntities.Add(entity);
         }
 
-        public IQueryable<TEntity> GetAll(bool includeInactive = false)
+        public IQueryable<TEntity> GetAll(bool includeDeleted = false, bool includeInactivated = false)
         {
             var query = _dbEntities.AsQueryable();
 
-            if (!includeInactive)
+            if (!includeDeleted)
             {
                 query = query.Where(entity => !entity.DeletedAt.HasValue);
+            }
+
+            if (!includeInactivated)
+            {
+                query = query.Where(entity => !entity.Inactivated);
             }
 
             return query;

@@ -39,7 +39,7 @@ namespace Restaurant.Application.Services
 
         public IEnumerable<Employee> GetAll(EmployeeQueryParams queryParams)
         {
-            var query = _employeeRepository.GetAll(queryParams.IncludeInactive);
+            var query = _employeeRepository.GetAll(queryParams.IncludeDeleted, queryParams.IncludeInactivated);
 
             if (!string.IsNullOrWhiteSpace(queryParams.Name))
             {
@@ -83,6 +83,7 @@ namespace Restaurant.Application.Services
             _validator.Found(currentEmployee);
             _validator.NotDeleted(currentEmployee);
 
+            currentEmployee.Inactivated = newEmployee.Inactivated;
             currentEmployee.Name = newEmployee.Name;
             currentEmployee.Email = newEmployee.Email;
             currentEmployee.DepartmentId = newEmployee.DepartmentId;

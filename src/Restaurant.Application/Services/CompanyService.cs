@@ -39,7 +39,7 @@ namespace Restaurant.Application.Services
 
         public IEnumerable<Company> GetAll(CompanyQueryParams queryParams)
         {
-            var query = _companyRepository.GetAll(queryParams.IncludeInactive);
+            var query = _companyRepository.GetAll(queryParams.IncludeDeleted, queryParams.IncludeInactivated);
 
             if (!string.IsNullOrWhiteSpace(queryParams.Name))
             {
@@ -72,6 +72,7 @@ namespace Restaurant.Application.Services
             _validator.Found(currentCompany);
             _validator.NotDeleted(currentCompany);
 
+            currentCompany.Inactivated = newCompany.Inactivated;
             currentCompany.CorporateName = newCompany.CorporateName;
             currentCompany.BusinessName = newCompany.BusinessName;
             currentCompany.Phone = newCompany.Phone;

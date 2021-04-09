@@ -7,6 +7,7 @@ namespace Restaurant.Application.DTOs.Company
     [ModelMetadataType(typeof(Entity.Company))]
     public class CompanyPutDTO
     {
+        public bool Inactivated { get; set; }
         public string CorporateName { get; set; }
         public string BusinessName { get; set; }
         public PhoneDTO Phone { get; set; }

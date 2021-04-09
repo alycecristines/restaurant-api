@@ -38,7 +38,7 @@ namespace Restaurant.Application.Services
 
         public IEnumerable<Variation> GetAll(VariationQueryParams queryParams)
         {
-            var query = _variationRepository.GetAll(queryParams.IncludeInactive);
+            var query = _variationRepository.GetAll(queryParams.IncludeDeleted, queryParams.IncludeInactivated);
 
             if (!string.IsNullOrWhiteSpace(queryParams.Description))
             {
@@ -70,6 +70,7 @@ namespace Restaurant.Application.Services
             _validator.Found(currentVariation);
             _validator.NotDeleted(currentVariation);
 
+            currentVariation.Inactivated = newVariation.Inactivated;
             currentVariation.Description = newVariation.Description;
             currentVariation.Update(DateTime.UtcNow);
 

@@ -47,7 +47,7 @@ namespace Restaurant.Application.Services
 
         public IEnumerable<Menu> GetAll(MenuQueryParams queryParams)
         {
-            var query = _menuRepository.GetAll(queryParams.IncludeInactive);
+            var query = _menuRepository.GetAll(queryParams.IncludeDeleted, queryParams.IncludeInactivated);
 
             if (!string.IsNullOrWhiteSpace(queryParams.Description))
             {
@@ -86,6 +86,7 @@ namespace Restaurant.Application.Services
                 existingProducts.Add(existingProduct);
             }
 
+            currentMenu.Inactivated = newMenu.Inactivated;
             currentMenu.Products = existingProducts;
             currentMenu.Description = newMenu.Description;
             currentMenu.Update(DateTime.UtcNow);

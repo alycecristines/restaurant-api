@@ -9,6 +9,7 @@ namespace Restaurant.Core.Common
         public DateTime? UpdatedAt { get; private set; }
         public DateTime? DeletedAt { get; private set; }
         public bool Deleted => DeletedAt.HasValue;
+        public bool Inactivated { get; set; }
 
         public Entity()
         {

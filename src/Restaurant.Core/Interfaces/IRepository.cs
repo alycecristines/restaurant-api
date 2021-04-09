@@ -7,7 +7,7 @@ namespace Restaurant.Core.Interfaces
     public interface IRepository<TEntity> where TEntity : Entity
     {
         void Insert(TEntity entity);
-        IQueryable<TEntity> GetAll(bool includeInactive = false);
+        IQueryable<TEntity> GetAll(bool includeDeleted = false, bool includeInactivated = false);
         TEntity Get(Guid id);
         void SaveChanges();
     }

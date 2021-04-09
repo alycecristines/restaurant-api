@@ -35,7 +35,7 @@ namespace Restaurant.Application.Services
 
         public IEnumerable<Product> GetAll(ProductQueryParams queryParams)
         {
-            var query = _productRepository.GetAll(queryParams.IncludeInactive);
+            var query = _productRepository.GetAll(queryParams.IncludeDeleted, queryParams.IncludeInactivated);
 
             if (!string.IsNullOrWhiteSpace(queryParams.Description))
             {
@@ -62,6 +62,7 @@ namespace Restaurant.Application.Services
             _validator.Found(currentProduct);
             _validator.NotDeleted(currentProduct);
 
+            currentProduct.Inactivated = newProduct.Inactivated;
             currentProduct.Description = newProduct.Description;
             currentProduct.Update(DateTime.UtcNow);
             _productRepository.SaveChanges();
