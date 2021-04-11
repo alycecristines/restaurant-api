@@ -77,7 +77,14 @@ namespace Restaurant.Infrastructure.Extensions
 
         private static void ConfigureCorsPolicies(CorsOptions options)
         {
-            options.AddDefaultPolicy(builder => builder.AllowAnyOrigin());
+            options.AddDefaultPolicy(ConfigureDefaultCorsPolicy);
+        }
+
+        private static void ConfigureDefaultCorsPolicy(CorsPolicyBuilder builder)
+        {
+            builder.AllowAnyOrigin();
+            builder.AllowAnyMethod();
+            builder.AllowAnyHeader();
         }
     }
 }
