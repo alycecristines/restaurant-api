@@ -18,6 +18,7 @@ namespace Restaurant.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithOptions();
+            services.AddCorsPolicies();
             services.AddSwagger();
             services.AddContexts();
             services.AddServices();
@@ -31,6 +32,7 @@ namespace Restaurant.Api
             application.UseSwagger();
             //application.UseHttpsRedirection();
             application.UseRouting();
+            application.UseCors();
             application.UseAuthorization();
             application.UseEndpoints(endpoints => endpoints.MapControllers());
         }

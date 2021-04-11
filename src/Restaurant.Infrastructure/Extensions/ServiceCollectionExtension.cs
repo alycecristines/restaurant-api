@@ -1,4 +1,5 @@
 using System;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -67,6 +68,16 @@ namespace Restaurant.Infrastructure.Extensions
         public static void AddMappings(this IServiceCollection services)
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        }
+
+        public static void AddCorsPolicies(this IServiceCollection services)
+        {
+            services.AddCors(ConfigureCorsPolicies);
+        }
+
+        private static void ConfigureCorsPolicies(CorsOptions options)
+        {
+            options.AddDefaultPolicy(builder => builder.AllowAnyOrigin());
         }
     }
 }
