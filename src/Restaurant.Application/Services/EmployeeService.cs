@@ -53,6 +53,12 @@ namespace Restaurant.Application.Services
                     entity.Email.ContainsResearch(queryParams.Email));
             }
 
+            if (queryParams.CompanyId.HasValue)
+            {
+                query = query.Where(entity =>
+                    entity.Department.CompanyId == queryParams.CompanyId);
+            }
+
             if (queryParams.DepartmentId.HasValue)
             {
                 query = query.Where(entity =>
