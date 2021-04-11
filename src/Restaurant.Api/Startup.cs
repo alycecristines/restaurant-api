@@ -29,8 +29,8 @@ namespace Restaurant.Api
         public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)
         {
             application.UseErrorHandler(environment);
+            application.UseHttpsRedirection();
             application.UseSwagger();
-            //application.UseHttpsRedirection();
             application.UseRouting();
             application.UseCors();
             application.UseAuthorization();
