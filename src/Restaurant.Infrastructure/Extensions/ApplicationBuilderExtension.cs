@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Restaurant.Infrastructure.Middlewares;
+using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Restaurant.Infrastructure.Extensions
@@ -15,8 +16,14 @@ namespace Restaurant.Infrastructure.Extensions
 
         public static void UseSwagger(this IApplicationBuilder application)
         {
-            SwaggerBuilderExtensions.UseSwagger(application);
+            application.UseSwagger(ConfigureSwagger);
             application.UseSwaggerUI(ConfigureSwaggerUI);
+        }
+
+        private static void ConfigureSwagger(SwaggerOptions options)
+        {
+            // Clean up the servers in swagger.json because they get the wrong port when hosted behind reverse proxy
+            options.PreSerializeFilters.Add((swagger, request) => swagger.Servers.Clear());
         }
 
         private static void ConfigureSwaggerUI(SwaggerUIOptions options)
