@@ -1,4 +1,4 @@
-namespace Restaurant.Core.Common
+namespace Restaurant.Core.QueryObjects.Base
 {
     public class Query
     {

@@ -1,4 +1,4 @@
-using Restaurant.Core.Common;
+using Restaurant.Core.QueryObjects.Base;
 
 namespace Restaurant.Core.QueryObjects
 {
