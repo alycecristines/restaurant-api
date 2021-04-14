@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Restaurant.Application.Extensions;
 using Restaurant.Application.Interfaces;
-using Restaurant.Application.QueryParams;
+using Restaurant.Core.QueryObjects;
 using Restaurant.Core.Entities;
 using Restaurant.Core.Interfaces;
 
@@ -45,7 +45,7 @@ namespace Restaurant.Application.Services
             return newMenu;
         }
 
-        public IEnumerable<Menu> GetAll(MenuQueryParams queryParams)
+        public IEnumerable<Menu> GetAll(MenuQuery queryParams)
         {
             var query = _menuRepository.GetAll(queryParams.IncludeDeleted, queryParams.IncludeInactivated);
 

@@ -4,7 +4,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Application.DTOs.Menu;
 using Restaurant.Application.Interfaces;
-using Restaurant.Application.QueryParams;
+using Restaurant.Core.QueryObjects;
 using Restaurant.Application.Wrappers;
 using Restaurant.Core.Entities;
 
@@ -40,7 +40,7 @@ namespace Restaurant.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get([FromQuery] MenuQueryParams queryParams)
+        public IActionResult Get([FromQuery] MenuQuery queryParams)
         {
             var menus = _service.GetAll(queryParams);
 

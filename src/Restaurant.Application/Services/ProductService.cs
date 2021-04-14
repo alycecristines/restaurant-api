@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Restaurant.Application.Extensions;
 using Restaurant.Application.Interfaces;
-using Restaurant.Application.QueryParams;
+using Restaurant.Core.QueryObjects;
 using Restaurant.Core.Entities;
 using Restaurant.Core.Interfaces;
 
@@ -33,7 +33,7 @@ namespace Restaurant.Application.Services
             return newProduct;
         }
 
-        public IEnumerable<Product> GetAll(ProductQueryParams queryParams)
+        public IEnumerable<Product> GetAll(ProductQuery queryParams)
         {
             var query = _productRepository.GetAll(queryParams.IncludeDeleted, queryParams.IncludeInactivated);
 

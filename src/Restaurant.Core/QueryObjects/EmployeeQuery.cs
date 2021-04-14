@@ -1,11 +1,10 @@
 using System;
+using Restaurant.Core.Common;
 
-namespace Restaurant.Application.QueryParams
+namespace Restaurant.Core.QueryObjects
 {
-    public class EmployeeQueryParams
+    public class EmployeeQuery : Query
     {
-        public bool IncludeInactivated { get; set; }
-        public bool IncludeDeleted { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public Guid? CompanyId { get; set; }

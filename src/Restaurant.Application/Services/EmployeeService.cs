@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Restaurant.Application.Extensions;
 using Restaurant.Application.Interfaces;
-using Restaurant.Application.QueryParams;
+using Restaurant.Core.QueryObjects;
 using Restaurant.Core.Entities;
 using Restaurant.Core.Interfaces;
 
@@ -37,7 +37,7 @@ namespace Restaurant.Application.Services
             return newEmployee;
         }
 
-        public IEnumerable<Employee> GetAll(EmployeeQueryParams queryParams)
+        public IEnumerable<Employee> GetAll(EmployeeQuery queryParams)
         {
             var query = _employeeRepository.GetAll(queryParams.IncludeDeleted, queryParams.IncludeInactivated);
 
