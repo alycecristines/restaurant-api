@@ -29,7 +29,7 @@ namespace Restaurant.Core.Services
 
                 if (existingProduct == null)
                 {
-                    throw new BusinessException("Não encontrado");
+                    throw new CoreException("Não encontrado");
                 }
 
                 existingProducts.Add(existingProduct);
@@ -49,7 +49,7 @@ namespace Restaurant.Core.Services
 
             if (currentMenu == null)
             {
-                throw new BusinessException("Não encontrado");
+                throw new CoreException("Não encontrado");
             }
 
             var existingProducts = new List<Product>();
@@ -60,7 +60,7 @@ namespace Restaurant.Core.Services
 
                 if (existingProduct == null)
                 {
-                    throw new BusinessException("Não encontrado");
+                    throw new CoreException("Não encontrado");
                 }
 
                 existingProducts.Add(existingProduct);

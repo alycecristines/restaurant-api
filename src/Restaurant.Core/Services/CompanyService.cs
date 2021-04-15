@@ -24,7 +24,7 @@ namespace Restaurant.Core.Services
 
             if (existingCompany != null)
             {
-                throw new BusinessException("Já existe");
+                throw new CoreException("Já existe");
             }
 
             _repository.Add(newCompany);
@@ -39,7 +39,7 @@ namespace Restaurant.Core.Services
 
             if (currentCompany == null)
             {
-                throw new BusinessException("Não encontrado");
+                throw new CoreException("Não encontrado");
             }
 
             currentCompany.Inactivated = newCompany.Inactivated;

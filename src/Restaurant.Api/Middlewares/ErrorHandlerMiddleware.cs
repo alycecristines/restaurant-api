@@ -24,7 +24,7 @@ namespace Restaurant.Infrastructure.Middlewares
             {
                 await _next(httpContext);
             }
-            catch (BusinessException exception)
+            catch (CoreException exception)
             {
                 var json = GetResponseJson(exception.Message);
                 var statusCode = HttpStatusCode.BadRequest;

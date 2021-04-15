@@ -31,7 +31,7 @@ namespace Restaurant.Core.Services
 
             if (currentProduct == null)
             {
-                throw new BusinessException("Não encontrado");
+                throw new CoreException("Não encontrado");
             }
 
             currentProduct.Inactivated = newProduct.Inactivated;
