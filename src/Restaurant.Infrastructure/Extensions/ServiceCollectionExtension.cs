@@ -62,11 +62,6 @@ namespace Restaurant.Infrastructure.Extensions
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         }
 
-        public static void AddMappings(this IServiceCollection services)
-        {
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-        }
-
         public static void AddCorsPolicies(this IServiceCollection services)
         {
             services.AddCors(ConfigureCorsPolicies);
