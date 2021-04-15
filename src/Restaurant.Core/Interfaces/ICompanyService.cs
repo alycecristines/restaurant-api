@@ -1,5 +1,5 @@
 using Restaurant.Core.Entities;
-using Restaurant.Core.QueryObjects;
+using Restaurant.Core.QueryFilters;
 
 namespace Restaurant.Core.Interfaces
 {

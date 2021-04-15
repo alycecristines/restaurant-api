@@ -1,7 +1,7 @@
 using System;
 using Restaurant.Core.Common;
 
-namespace Restaurant.Core.QueryObjects
+namespace Restaurant.Core.QueryFilters
 {
     public class VariationQueryFilter : QueryFilter
     {

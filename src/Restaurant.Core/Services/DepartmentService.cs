@@ -4,7 +4,7 @@ using System.Linq;
 using Restaurant.Core.Entities;
 using Restaurant.Core.Exceptions;
 using Restaurant.Core.Interfaces;
-using Restaurant.Core.QueryObjects;
+using Restaurant.Core.QueryFilters;
 
 namespace Restaurant.Core.Services
 {

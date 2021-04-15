@@ -4,7 +4,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Api.DTOs.Employee;
 using Restaurant.Core.Interfaces;
-using Restaurant.Core.QueryObjects;
+using Restaurant.Core.QueryFilters;
 using Restaurant.Api.Wrappers;
 using Restaurant.Core.Entities;
 

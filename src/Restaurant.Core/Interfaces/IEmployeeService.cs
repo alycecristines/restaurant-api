@@ -1,4 +1,4 @@
-using Restaurant.Core.QueryObjects;
+using Restaurant.Core.QueryFilters;
 using Restaurant.Core.Entities;
 
 namespace Restaurant.Core.Interfaces

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Restaurant.Core.Interfaces;
-using Restaurant.Core.QueryObjects;
+using Restaurant.Core.QueryFilters;
 using Restaurant.Core.Entities;
 using Restaurant.Core.Exceptions;
 
