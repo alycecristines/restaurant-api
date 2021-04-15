@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace Restaurant.Application.Configurations
+namespace Restaurant.Core.Configurations
 {
     public static class JsonConfigurations
     {

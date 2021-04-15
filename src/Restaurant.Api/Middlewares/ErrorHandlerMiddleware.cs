@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Restaurant.Core.Exceptions;
 using Restaurant.Api.Wrappers;
-using Restaurant.Application.Configurations;
+using Restaurant.Core.Configurations;
 
 namespace Restaurant.Infrastructure.Middlewares
 {

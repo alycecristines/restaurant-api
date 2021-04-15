@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using Restaurant.Application.Configurations;
+using Restaurant.Core.Configurations;
 using Restaurant.Infrastructure.Filters;
 
 namespace Restaurant.Api.Extensions
