@@ -1,4 +1,4 @@
-namespace Restaurant.Application.Wrappers
+namespace Restaurant.Api.Wrappers
 {
     public class Response
     {

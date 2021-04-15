@@ -1,41 +1,14 @@
-using System;
 using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using Restaurant.Application.Configurations;
 using Restaurant.Core.Interfaces;
 using Restaurant.Core.Services;
 using Restaurant.Infrastructure.Data;
-using Restaurant.Infrastructure.Filters;
 using Restaurant.Infrastructure.Repositories;
 namespace Restaurant.Infrastructure.Extensions
 {
     public static class ServiceCollectionExtension
     {
-        public static void AddControllersWithOptions(this IServiceCollection services)
-        {
-            services.AddControllers(ConfigureController)
-                .ConfigureApiBehaviorOptions(ConfigureBehavior)
-                .AddJsonOptions(ConfigureJson);
-        }
-
-        private static void ConfigureController(MvcOptions options)
-        {
-            options.Filters.Add<ValidationFilterAttribute>();
-        }
-
-        private static void ConfigureBehavior(ApiBehaviorOptions options)
-        {
-            options.SuppressModelStateInvalidFilter = true;
-        }
-
-        private static void ConfigureJson(JsonOptions options)
-        {
-            options.JsonSerializerOptions.PropertyNamingPolicy = JsonConfigurations.NamingPolicy;
-            options.JsonSerializerOptions.IgnoreNullValues = JsonConfigurations.IgnoreNullValues;
-        }
-
         public static void AddSwagger(this IServiceCollection services)
         {
             var openApiInfo = new OpenApiInfo { Title = "Restaurant.Api", Version = "v1" };

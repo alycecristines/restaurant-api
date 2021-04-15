@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Restaurant.Api.DTOs.Product;
 using Restaurant.Core.Interfaces;
 using Restaurant.Core.QueryObjects;
-using Restaurant.Application.Wrappers;
+using Restaurant.Api.Wrappers;
 using Restaurant.Core.Entities;
 
 namespace Restaurant.Api.Controllers

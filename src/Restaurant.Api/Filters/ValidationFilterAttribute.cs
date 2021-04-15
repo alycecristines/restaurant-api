@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Restaurant.Application.Wrappers;
+using Restaurant.Api.Wrappers;
 
 namespace Restaurant.Infrastructure.Filters
 {

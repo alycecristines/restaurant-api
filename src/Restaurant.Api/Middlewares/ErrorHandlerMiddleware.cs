@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Restaurant.Core.Exceptions;
-using Restaurant.Application.Wrappers;
+using Restaurant.Api.Wrappers;
 using Restaurant.Application.Configurations;
 
 namespace Restaurant.Infrastructure.Middlewares
