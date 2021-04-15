@@ -21,21 +21,7 @@ namespace Restaurant.Core.Services
 
         public Menu Create(Menu newMenu)
         {
-            var existingProducts = new List<Product>();
-
-            foreach (var product in newMenu.Products)
-            {
-                var existingProduct = _productRepository.Find(product.Id);
-
-                if (existingProduct == null)
-                {
-                    throw new CoreException("The product was not found.");
-                }
-
-                existingProducts.Add(existingProduct);
-            }
-
-            newMenu.Products = existingProducts;
+            newMenu.Products = GetValidatedProducts(newMenu.Products);
 
             _menuRepository.Add(newMenu);
             _menuRepository.SaveChanges();
@@ -52,22 +38,8 @@ namespace Restaurant.Core.Services
                 throw new CoreException("The menu was not found.");
             }
 
-            var existingProducts = new List<Product>();
-
-            foreach (var product in newMenu.Products)
-            {
-                var existingProduct = _productRepository.Find(product.Id);
-
-                if (existingProduct == null)
-                {
-                    throw new CoreException("The product was not found.");
-                }
-
-                existingProducts.Add(existingProduct);
-            }
-
             currentMenu.Inactivated = newMenu.Inactivated;
-            currentMenu.Products = existingProducts;
+            currentMenu.Products = GetValidatedProducts(newMenu.Products);
             currentMenu.Description = newMenu.Description;
             currentMenu.UpdatedAt = DateTime.UtcNow;
 
@@ -97,6 +69,25 @@ namespace Restaurant.Core.Services
         public Menu Find(Guid id)
         {
             return _menuRepository.Find(id);
+        }
+
+        private IEnumerable<Product> GetValidatedProducts(IEnumerable<Product> products)
+        {
+            var validatedProducts = new List<Product>();
+
+            foreach (var product in products)
+            {
+                var existingProduct = _productRepository.Find(product.Id);
+
+                if (existingProduct == null)
+                {
+                    throw new CoreException("The product was not found.");
+                }
+
+                validatedProducts.Add(existingProduct);
+            }
+
+            return validatedProducts;
         }
     }
 }
