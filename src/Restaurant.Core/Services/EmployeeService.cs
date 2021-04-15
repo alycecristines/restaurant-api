@@ -25,7 +25,7 @@ namespace Restaurant.Core.Services
 
             if (existingDepartment == null)
             {
-                throw new CoreException("Não encontrado");
+                throw new CoreException("The department was not found.");
             }
 
             _employeeRepository.Add(newEmployee);
@@ -40,14 +40,14 @@ namespace Restaurant.Core.Services
 
             if (existingDepartment == null)
             {
-                throw new CoreException("Não encontrado");
+                throw new CoreException("The department was not found.");
             }
 
             var currentEmployee = _employeeRepository.Find(id);
 
             if (currentEmployee == null)
             {
-                throw new CoreException("Não encontrado");
+                throw new CoreException("The employee was not found.");
             }
 
             currentEmployee.Inactivated = newEmployee.Inactivated;

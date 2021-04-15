@@ -19,7 +19,7 @@ namespace Restaurant.Core.Services
 
             if (existingProduct == null)
             {
-                throw new CoreException("Não encontrado");
+                throw new CoreException("The product was not found.");
             }
 
             _variationRepository.Add(newVariation);
@@ -34,7 +34,7 @@ namespace Restaurant.Core.Services
 
             if (currentVariation == null)
             {
-                throw new CoreException("Não encontrado");
+                throw new CoreException("The variation was not found.");
             }
 
             currentVariation.Inactivated = newVariation.Inactivated;

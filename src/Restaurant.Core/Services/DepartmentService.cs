@@ -25,7 +25,7 @@ namespace Restaurant.Core.Services
 
             if (existingCompany == null)
             {
-                throw new CoreException("Não encontrado");
+                throw new CoreException("The company was not found.");
             }
 
             _departmentRepository.Add(newDepartment);
@@ -40,7 +40,7 @@ namespace Restaurant.Core.Services
 
             if (currentDepartment == null)
             {
-                throw new CoreException("Não encontrado");
+                throw new CoreException("The department was not found.");
             }
 
             currentDepartment.Inactivated = newDepartment.Inactivated;
