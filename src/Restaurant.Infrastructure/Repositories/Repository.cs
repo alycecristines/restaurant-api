@@ -18,31 +18,19 @@ namespace Restaurant.Infrastructure.Repositories
             _dbEntities = dbContext.Set<TEntity>();
         }
 
-        public void Insert(TEntity entity)
+        public void Add(TEntity entity)
         {
             _dbEntities.Add(entity);
         }
 
-        public IQueryable<TEntity> GetAll(bool includeDeleted = false, bool includeInactivated = false)
-        {
-            var query = _dbEntities.AsQueryable();
-
-            if (!includeDeleted)
-            {
-                query = query.Where(entity => !entity.DeletedAt.HasValue);
-            }
-
-            if (!includeInactivated)
-            {
-                query = query.Where(entity => !entity.Inactivated);
-            }
-
-            return query;
-        }
-
-        public TEntity Get(Guid id)
+        public TEntity Find(Guid id)
         {
             return _dbEntities.Find(id);
+        }
+
+        public IQueryable<TEntity> Queryable()
+        {
+            return _dbEntities.AsQueryable();
         }
 
         public void SaveChanges()

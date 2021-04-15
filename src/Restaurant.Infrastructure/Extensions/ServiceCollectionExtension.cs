@@ -4,10 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Restaurant.Application.Configurations;
-using Restaurant.Application.Interfaces;
-using Restaurant.Application.Services;
-using Restaurant.Application.Validators;
 using Restaurant.Core.Interfaces;
+using Restaurant.Core.Services;
 using Restaurant.Infrastructure.Data;
 using Restaurant.Infrastructure.Filters;
 using Restaurant.Infrastructure.Repositories;
@@ -51,7 +49,6 @@ namespace Restaurant.Infrastructure.Extensions
 
         public static void AddServices(this IServiceCollection services)
         {
-            services.AddScoped<IServiceValidator, ServiceValidator>();
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IEmployeeService, EmployeeService>();

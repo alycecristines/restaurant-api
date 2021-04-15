@@ -1,9 +1,9 @@
 using System;
-using Restaurant.Core.QueryObjects.Base;
+using Restaurant.Core.Common;
 
 namespace Restaurant.Core.QueryObjects
 {
-    public class VariationQuery : Query
+    public class VariationQueryFilter : QueryFilter
     {
         public string Description { get; set; }
         public Guid? ProductId { get; set; }

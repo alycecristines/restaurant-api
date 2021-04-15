@@ -1,9 +1,9 @@
 using System;
-using Restaurant.Core.QueryObjects.Base;
+using Restaurant.Core.Common;
 
 namespace Restaurant.Core.QueryObjects
 {
-    public class EmployeeQuery : Query
+    public class EmployeeQueryFilter : QueryFilter
     {
         public string Name { get; set; }
         public string Email { get; set; }

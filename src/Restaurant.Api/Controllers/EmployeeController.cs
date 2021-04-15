@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Application.DTOs.Employee;
-using Restaurant.Application.Interfaces;
+using Restaurant.Core.Interfaces;
 using Restaurant.Core.QueryObjects;
 using Restaurant.Application.Wrappers;
 using Restaurant.Core.Entities;
@@ -27,7 +27,7 @@ namespace Restaurant.Api.Controllers
         public IActionResult Post(EmployeePostDTO dto)
         {
             var newEmployee = _mapper.Map<Employee>(dto);
-            var insertedEmployee = _service.Insert(newEmployee);
+            var insertedEmployee = _service.Create(newEmployee);
 
             var insertedEmployeeDto = _mapper.Map<EmployeeResponseDTO>(insertedEmployee);
             var apiResponse = new Response(insertedEmployeeDto);
@@ -40,9 +40,9 @@ namespace Restaurant.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get([FromQuery] EmployeeQuery queryParams)
+        public IActionResult Get([FromQuery] EmployeeQueryFilter filters)
         {
-            var employees = _service.GetAll(queryParams);
+            var employees = _service.FindAll(filters);
 
             var employeesDto = _mapper.Map<IEnumerable<EmployeeResponseDTO>>(employees);
             var apiResponse = new Response(employeesDto);
@@ -53,7 +53,7 @@ namespace Restaurant.Api.Controllers
         [HttpGet("{id:Guid}")]
         public IActionResult Get(Guid id)
         {
-            var employee = _service.Get(id);
+            var employee = _service.Find(id);
 
             var employeeDto = _mapper.Map<EmployeeResponseDTO>(employee);
             var apiResponse = new Response(employeeDto);
@@ -71,14 +71,6 @@ namespace Restaurant.Api.Controllers
             var apiResponse = new Response(updatedEmployeeDto);
 
             return Ok(apiResponse);
-        }
-
-        [HttpDelete("{id:Guid}")]
-        public IActionResult Delete(Guid id)
-        {
-            _service.Delete(id);
-
-            return NoContent();
         }
     }
 }

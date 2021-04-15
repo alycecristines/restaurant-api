@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Application.DTOs.Menu;
-using Restaurant.Application.Interfaces;
+using Restaurant.Core.Interfaces;
 using Restaurant.Core.QueryObjects;
 using Restaurant.Application.Wrappers;
 using Restaurant.Core.Entities;
@@ -27,7 +27,7 @@ namespace Restaurant.Api.Controllers
         public IActionResult Post(MenuPostDTO dto)
         {
             var newMenu = _mapper.Map<Menu>(dto);
-            var insertedMenu = _service.Insert(newMenu);
+            var insertedMenu = _service.Create(newMenu);
 
             var insertedMenuDto = _mapper.Map<MenuResponseDTO>(insertedMenu);
             var apiResponse = new Response(insertedMenuDto);
@@ -40,9 +40,9 @@ namespace Restaurant.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get([FromQuery] MenuQuery queryParams)
+        public IActionResult Get([FromQuery] MenuQueryFilter filters)
         {
-            var menus = _service.GetAll(queryParams);
+            var menus = _service.FindAll(filters);
 
             var menusDto = _mapper.Map<IEnumerable<MenuResponseDTO>>(menus);
             var apiResponse = new Response(menusDto);
@@ -53,7 +53,7 @@ namespace Restaurant.Api.Controllers
         [HttpGet("{id:Guid}")]
         public IActionResult Get(Guid id)
         {
-            var menu = _service.Get(id);
+            var menu = _service.Find(id);
 
             var menuDto = _mapper.Map<MenuResponseDTO>(menu);
             var apiResponse = new Response(menuDto);
@@ -71,14 +71,6 @@ namespace Restaurant.Api.Controllers
             var apiResponse = new Response(updatedMenuDto);
 
             return Ok(apiResponse);
-        }
-
-        [HttpDelete("{id:Guid}")]
-        public IActionResult Delete(Guid id)
-        {
-            _service.Delete(id);
-
-            return NoContent();
         }
     }
 }

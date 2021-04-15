@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Application.DTOs.Variation;
-using Restaurant.Application.Interfaces;
+using Restaurant.Core.Interfaces;
 using Restaurant.Core.QueryObjects;
 using Restaurant.Application.Wrappers;
 using Restaurant.Core.Entities;
@@ -27,7 +27,7 @@ namespace Restaurant.Api.Controllers
         public IActionResult Post(VariationPostDTO dto)
         {
             var newVariation = _mapper.Map<Variation>(dto);
-            var insertedVariation = _service.Insert(newVariation);
+            var insertedVariation = _service.Create(newVariation);
 
             var insertedVariationtDto = _mapper.Map<VariationResponseDTO>(insertedVariation);
             var apiResponse = new Response(insertedVariationtDto);
@@ -40,9 +40,9 @@ namespace Restaurant.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get([FromQuery] VariationQuery queryParams)
+        public IActionResult Get([FromQuery] VariationQueryFilter filters)
         {
-            var variations = _service.GetAll(queryParams);
+            var variations = _service.FindAll(filters);
 
             var variationsDto = _mapper.Map<IEnumerable<VariationResponseDTO>>(variations);
             var apiResponse = new Response(variationsDto);
@@ -53,7 +53,7 @@ namespace Restaurant.Api.Controllers
         [HttpGet("{id:Guid}")]
         public IActionResult Get(Guid id)
         {
-            var variation = _service.Get(id);
+            var variation = _service.Find(id);
 
             var variationDto = _mapper.Map<VariationResponseDTO>(variation);
             var apiResponse = new Response(variationDto);
@@ -71,14 +71,6 @@ namespace Restaurant.Api.Controllers
             var apiResponse = new Response(updatedVariationDto);
 
             return Ok(apiResponse);
-        }
-
-        [HttpDelete("{id:Guid}")]
-        public IActionResult Delete(Guid id)
-        {
-            _service.Delete(id);
-
-            return NoContent();
         }
     }
 }

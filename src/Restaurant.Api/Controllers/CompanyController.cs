@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Application.DTOs.Company;
-using Restaurant.Application.Interfaces;
+using Restaurant.Core.Interfaces;
 using Restaurant.Core.QueryObjects;
 using Restaurant.Application.Wrappers;
 using Restaurant.Core.Entities;
@@ -27,7 +27,7 @@ namespace Restaurant.Api.Controllers
         public IActionResult Post(CompanyPostDTO dto)
         {
             var newCompany = _mapper.Map<Company>(dto);
-            var insertedCompany = _service.Insert(newCompany);
+            var insertedCompany = _service.Create(newCompany);
 
             var insertedCompanyDto = _mapper.Map<CompanyResponseDTO>(insertedCompany);
             var apiResponse = new Response(insertedCompanyDto);
@@ -38,9 +38,9 @@ namespace Restaurant.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get([FromQuery] CompanyQuery queryParams)
+        public IActionResult Get([FromQuery] CompanyQueryFilter filters)
         {
-            var companies = _service.GetAll(queryParams);
+            var companies = _service.FindAll(filters);
 
             var companiesDto = _mapper.Map<IEnumerable<CompanyResponseDTO>>(companies);
             var apiResponse = new Response(companiesDto);
@@ -51,7 +51,7 @@ namespace Restaurant.Api.Controllers
         [HttpGet("{id:Guid}")]
         public IActionResult Get(Guid id)
         {
-            var company = _service.Get(id);
+            var company = _service.Find(id);
 
             var companyDto = _mapper.Map<CompanyResponseDTO>(company);
             var apiResponse = new Response(companyDto);
@@ -69,14 +69,6 @@ namespace Restaurant.Api.Controllers
             var apiResponse = new Response(updatedCompanyDto);
 
             return Ok(apiResponse);
-        }
-
-        [HttpDelete("{id:Guid}")]
-        public IActionResult Delete(Guid id)
-        {
-            _service.Delete(id);
-
-            return NoContent();
         }
     }
 }

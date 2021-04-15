@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Application.DTOs.Department;
-using Restaurant.Application.Interfaces;
+using Restaurant.Core.Interfaces;
 using Restaurant.Core.QueryObjects;
 using Restaurant.Application.Wrappers;
 using Restaurant.Core.Entities;
@@ -27,7 +27,7 @@ namespace Restaurant.Api.Controllers
         public IActionResult Post(DepartmentPostDTO dto)
         {
             var newDepartment = _mapper.Map<Department>(dto);
-            var insertedDepartment = _service.Insert(newDepartment);
+            var insertedDepartment = _service.Create(newDepartment);
 
             var insertedDepartmentDto = _mapper.Map<DepartmentResponseDTO>(insertedDepartment);
             var apiResponse = new Response(insertedDepartmentDto);
@@ -40,9 +40,9 @@ namespace Restaurant.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get([FromQuery] DepartmentQuery queryParams)
+        public IActionResult Get([FromQuery] DepartmentQueryFilter filters)
         {
-            var departments = _service.GetAll(queryParams);
+            var departments = _service.FindAll(filters);
 
             var departmentsDto = _mapper.Map<IEnumerable<DepartmentResponseDTO>>(departments);
             var apiResponse = new Response(departmentsDto);
@@ -53,7 +53,7 @@ namespace Restaurant.Api.Controllers
         [HttpGet("{id:Guid}")]
         public IActionResult Get(Guid id)
         {
-            var department = _service.Get(id);
+            var department = _service.Find(id);
 
             var departmentDto = _mapper.Map<DepartmentResponseDTO>(department);
             var apiResponse = new Response(departmentDto);
@@ -71,14 +71,6 @@ namespace Restaurant.Api.Controllers
             var apiResponse = new Response(updatedDepartmentDto);
 
             return Ok(apiResponse);
-        }
-
-        [HttpDelete("{id:Guid}")]
-        public IActionResult Delete(Guid id)
-        {
-            _service.Delete(id);
-
-            return NoContent();
         }
     }
 }

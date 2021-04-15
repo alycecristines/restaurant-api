@@ -1,8 +1,8 @@
-using Restaurant.Core.QueryObjects.Base;
+using Restaurant.Core.Common;
 
 namespace Restaurant.Core.QueryObjects
 {
-    public class ProductQuery : Query
+    public class ProductQueryFilter : QueryFilter
     {
         public string Description { get; set; }
     }
