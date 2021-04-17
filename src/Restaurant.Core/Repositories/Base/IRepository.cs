@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Restaurant.Core.Entities.Base;
 
-namespace Restaurant.Core.Interfaces
+namespace Restaurant.Core.Repositories.Base
 {
     public interface IRepository<TEntity> where TEntity : Entity
     {

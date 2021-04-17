@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Restaurant.Api.DTOs.Base;
 using Restaurant.Api.Wrappers;
 using Restaurant.Core.Entities.Base;
-using Restaurant.Core.Interfaces;
+using Restaurant.Core.Services.Base;
 using Restaurant.Core.QueryFilters.Base;
 
 namespace Restaurant.Api.Controllers.Base

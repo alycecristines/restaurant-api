@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Restaurant.Core.Configurations;
-using Restaurant.Core.Interfaces;
+using Restaurant.Core.Services.Base;
 using Restaurant.Core.Services;
 using Restaurant.Infrastructure.Data;
 using Restaurant.Infrastructure.Filters;
 using Restaurant.Infrastructure.Repositories;
+using Restaurant.Core.Repositories.Base;
 
 namespace Restaurant.Api.Extensions
 {

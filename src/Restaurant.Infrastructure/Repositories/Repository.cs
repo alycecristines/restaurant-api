@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Restaurant.Core.Entities.Base;
-using Restaurant.Core.Interfaces;
+using Restaurant.Core.Repositories.Base;
 using Restaurant.Infrastructure.Data;
 
 namespace Restaurant.Infrastructure.Repositories

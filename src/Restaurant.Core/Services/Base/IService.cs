@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Restaurant.Core.Entities.Base;
 using Restaurant.Core.QueryFilters.Base;
 
-namespace Restaurant.Core.Interfaces
+namespace Restaurant.Core.Services.Base
 {
     public interface IService<TEntity, TQueryFilter>
         where TEntity : Entity

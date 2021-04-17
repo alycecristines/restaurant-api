@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Restaurant.Core.Entities;
 using Restaurant.Core.Exceptions;
-using Restaurant.Core.Interfaces;
+using Restaurant.Core.Services.Base;
 using Restaurant.Core.QueryFilters;
+using Restaurant.Core.Repositories.Base;
 
 namespace Restaurant.Core.Services
 {

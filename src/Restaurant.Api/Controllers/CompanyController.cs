@@ -1,7 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Api.DTOs.Company;
-using Restaurant.Core.Interfaces;
+using Restaurant.Core.Services.Base;
 using Restaurant.Core.QueryFilters;
 using Restaurant.Core.Entities;
 using Restaurant.Api.Controllers.Base;

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Restaurant.Api.Controllers.Base;
 using Restaurant.Api.DTOs.Department;
 using Restaurant.Core.Entities;
-using Restaurant.Core.Interfaces;
+using Restaurant.Core.Services.Base;
 using Restaurant.Core.QueryFilters;
 
 namespace Restaurant.Api.Controllers
