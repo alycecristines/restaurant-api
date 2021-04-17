@@ -11,16 +11,16 @@ namespace Restaurant.Core.Services
 {
     public class CompanyService : ICompanyService
     {
-        private readonly IRepository<Company> _repository;
+        private readonly IRepository<Company> _companyRepository;
 
         public CompanyService(IRepository<Company> repository)
         {
-            _repository = repository;
+            _companyRepository = repository;
         }
 
         public Company Create(Company newCompany)
         {
-            var existingCompany = _repository.Queryable().FirstOrDefault(entity =>
+            var existingCompany = _companyRepository.Queryable().FirstOrDefault(entity =>
                 entity.RegistrationNumber == newCompany.RegistrationNumber);
 
             if (existingCompany != null)
@@ -28,15 +28,15 @@ namespace Restaurant.Core.Services
                 throw new CoreException("There is already a company registered with this registration number.");
             }
 
-            _repository.Add(newCompany);
-            _repository.SaveChanges();
+            _companyRepository.Add(newCompany);
+            _companyRepository.SaveChanges();
 
             return newCompany;
         }
 
         public Company Update(Guid id, Company newCompany)
         {
-            var currentCompany = _repository.Find(id);
+            var currentCompany = _companyRepository.Find(id);
 
             if (currentCompany == null)
             {
@@ -50,14 +50,14 @@ namespace Restaurant.Core.Services
             currentCompany.Address = newCompany.Address;
             currentCompany.UpdatedAt = DateTime.UtcNow;
 
-            _repository.SaveChanges();
+            _companyRepository.SaveChanges();
 
             return currentCompany;
         }
 
         public IEnumerable<Company> FindAll(CompanyQueryFilter filters)
         {
-            var queryable = _repository.Queryable();
+            var queryable = _companyRepository.Queryable();
 
             if (!filters.IncludeInactivated)
             {
@@ -82,7 +82,7 @@ namespace Restaurant.Core.Services
 
         public Company Find(Guid id)
         {
-            return _repository.Find(id);
+            return _companyRepository.Find(id);
         }
     }
 }
