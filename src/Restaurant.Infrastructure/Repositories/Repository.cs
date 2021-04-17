@@ -1,13 +1,14 @@
 using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Restaurant.Core.Common;
+using Restaurant.Core.Entities.Base;
 using Restaurant.Core.Interfaces;
 using Restaurant.Infrastructure.Data;
 
 namespace Restaurant.Infrastructure.Repositories
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
+    public class Repository<TEntity> : IRepository<TEntity>
+        where TEntity : Entity
     {
         private readonly ApplicationDataContext _dbContext;
         private readonly DbSet<TEntity> _dbEntities;

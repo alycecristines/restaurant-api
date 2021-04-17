@@ -1,6 +1,6 @@
 using System;
 
-namespace Restaurant.Core.Common
+namespace Restaurant.Core.Entities.Base
 {
     public class Entity
     {

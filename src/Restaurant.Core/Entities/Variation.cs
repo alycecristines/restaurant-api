@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using Restaurant.Core.Common;
+using Restaurant.Core.Entities.Base;
 
 namespace Restaurant.Core.Entities
 {

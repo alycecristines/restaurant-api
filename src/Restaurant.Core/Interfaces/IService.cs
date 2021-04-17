@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Restaurant.Core.Common;
+using Restaurant.Core.Entities.Base;
 
 namespace Restaurant.Core.Interfaces
 {

@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using Restaurant.Core.Common;
+using Restaurant.Core.Entities.Base;
 
 namespace Restaurant.Core.Interfaces
 {
