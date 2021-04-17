@@ -22,7 +22,7 @@ namespace Restaurant.Core.Services
 
         public Department Create(Department newDepartment)
         {
-            var existingCompany = _departmentRepository.Find(newDepartment.CompanyId);
+            var existingCompany = _companyRepository.Find(newDepartment.CompanyId);
 
             if (existingCompany == null)
             {
