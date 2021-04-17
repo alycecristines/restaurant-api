@@ -1,4 +1,4 @@
-namespace Restaurant.Core.Common
+namespace Restaurant.Core.QueryFilters.Base
 {
     public class QueryFilter
     {

@@ -1,5 +1,5 @@
 using System;
-using Restaurant.Core.Common;
+using Restaurant.Core.QueryFilters.Base;
 
 namespace Restaurant.Core.QueryFilters
 {
