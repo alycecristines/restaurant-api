@@ -74,13 +74,13 @@ namespace Restaurant.Core.Services
             if (!string.IsNullOrWhiteSpace(filters.Name))
             {
                 queryable = queryable.Where(entity =>
-                    entity.Name.Contains(filters.Name));
+                    entity.Name.ToLower().Contains(filters.Name.ToLower()));
             }
 
             if (!string.IsNullOrWhiteSpace(filters.Email))
             {
                 queryable = queryable.Where(entity =>
-                    entity.Email.Contains(filters.Email));
+                    entity.Email.ToLower().Contains(filters.Email.ToLower()));
             }
 
             if (filters.CompanyId.HasValue)

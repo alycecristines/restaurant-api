@@ -65,7 +65,7 @@ namespace Restaurant.Core.Services
             if (!string.IsNullOrWhiteSpace(filters.Description))
             {
                 queryable = queryable.Where(entity =>
-                    entity.Description.Contains(filters.Description));
+                    entity.Description.ToLower().Contains(filters.Description.ToLower()));
             }
 
             if (filters.CompanyId.HasValue)
