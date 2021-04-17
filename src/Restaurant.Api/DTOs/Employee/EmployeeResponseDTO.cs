@@ -1,12 +1,10 @@
 using System;
+using Restaurant.Api.DTOs.Base;
 
 namespace Restaurant.Api.DTOs.Employee
 {
-    public class EmployeeResponseDTO
+    public class EmployeeResponseDTO : ResponseDTO
     {
-        public Guid Id { get; set; }
-        public bool Deleted { get; set; }
-        public bool Inactivated { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public Guid DepartmentId { get; set; }

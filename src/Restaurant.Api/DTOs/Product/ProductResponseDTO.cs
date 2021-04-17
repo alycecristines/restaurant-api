@@ -1,12 +1,10 @@
 using System;
+using Restaurant.Api.DTOs.Base;
 
 namespace Restaurant.Api.DTOs.Product
 {
-    public class ProductResponseDTO
+    public class ProductResponseDTO : ResponseDTO
     {
-        public Guid Id { get; set; }
-        public bool Deleted { get; set; }
-        public bool Inactivated { get; set; }
         public string Description { get; set; }
     }
 }
