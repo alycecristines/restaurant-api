@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Restaurant.Core.Common;
+using Restaurant.Core.Entities.Base;
 using Restaurant.Core.ValueObjects;
 
 namespace Restaurant.Core.Entities

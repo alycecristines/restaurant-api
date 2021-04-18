@@ -5,11 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Restaurant.Core\Restaurant.Core.csproj" />
-    <ProjectReference Include="..\Restaurant.Application\Restaurant.Application.csproj" />
     <ProjectReference Include="..\Restaurant.Infrastructure\Restaurant.Infrastructure.csproj" />
   </ItemGroup>
 
