@@ -14,6 +14,12 @@ namespace Restaurant.Core.Services
         private readonly IRepository<Variation> _variationRepository;
         private readonly IRepository<Product> _productRepository;
 
+        public VariationService(IRepository<Variation> variationRepository, IRepository<Product> productRepository)
+        {
+            _variationRepository = variationRepository;
+            _productRepository = productRepository;
+        }
+
         public Variation Create(Variation newVariation)
         {
             var existingProduct = _productRepository.Find(newVariation.ProductId);
