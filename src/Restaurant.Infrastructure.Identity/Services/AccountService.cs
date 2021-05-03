@@ -54,7 +54,7 @@ namespace Restaurant.Infrastructure.Identity.Services
 
         public async Task UpdateAsync(Employee employee)
         {
-            var currentUser = await FindAsync(employee.Email);
+            var currentUser = await _userManager.FindByIdAsync(employee.Id.ToString());
 
             _mapper.Map(employee, currentUser);
 

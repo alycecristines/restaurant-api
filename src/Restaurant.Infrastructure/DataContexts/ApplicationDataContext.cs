@@ -31,7 +31,7 @@ namespace Restaurant.Infrastructure.DataContexts
         {
             modelBuilder.ApplyConfiguration(new CompanyConfiguration());
             modelBuilder.ApplyConfiguration<Department>(new EntityConfiguration<Department>());
-            modelBuilder.ApplyConfiguration<Employee>(new EntityConfiguration<Employee>());
+            modelBuilder.ApplyConfiguration<Employee>(new EmployeeConfiguration());
             modelBuilder.ApplyConfiguration<Product>(new EntityConfiguration<Product>());
             modelBuilder.ApplyConfiguration<Variation>(new EntityConfiguration<Variation>());
             modelBuilder.ApplyConfiguration<Menu>(new EntityConfiguration<Menu>());

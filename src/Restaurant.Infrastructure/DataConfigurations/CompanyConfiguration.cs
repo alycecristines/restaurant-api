@@ -12,6 +12,8 @@ namespace Restaurant.Infrastructure.DataConfigurations
 
             builder.OwnsOne(x => x.Address);
             builder.OwnsOne(x => x.Phone);
+
+            builder.HasIndex(x => x.RegistrationNumber).IsUnique();
         }
     }
 }
