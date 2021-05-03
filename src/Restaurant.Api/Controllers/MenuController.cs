@@ -5,15 +5,16 @@ using Restaurant.Core.Services.Base;
 using Restaurant.Core.QueryFilters;
 using Restaurant.Core.Entities;
 using Restaurant.Api.Controllers.Base;
+using Microsoft.AspNetCore.Authorization;
+using Restaurant.Infrastructure.Identity.Constants;
 
 namespace Restaurant.Api.Controllers
 {
     [Route("api/menus")]
-    public class MenuController : ApiController<Menu, MenuPostDTO,
-        MenuPutDTO, MenuResponseDTO, MenuQueryFilter>
+    [Authorize(Roles = RoleConstants.Administrator)]
+    public class MenuController : ApiControllerBase<Menu, MenuPostDTO, MenuPutDTO, MenuResponseDTO, MenuQueryFilter>
     {
-        public MenuController(IMenuService service,
-            IMapper mapper) : base(service, mapper)
+        public MenuController(IMenuService service, IMapper mapper) : base(service, mapper)
         {
         }
     }

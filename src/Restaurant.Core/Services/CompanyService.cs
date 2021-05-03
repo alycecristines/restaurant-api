@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Restaurant.Core.Entities;
-using Restaurant.Core.Exceptions;
 using Restaurant.Core.Services.Base;
 using Restaurant.Core.QueryFilters;
 using Restaurant.Core.Repositories.Base;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Restaurant.Core.Services
 {
@@ -13,35 +14,23 @@ namespace Restaurant.Core.Services
     {
         private readonly IRepository<Company> _companyRepository;
 
-        public CompanyService(IRepository<Company> repository)
+        public CompanyService(IRepository<Company> companyRepository)
         {
-            _companyRepository = repository;
+            _companyRepository = companyRepository;
         }
 
-        public Company Create(Company newCompany)
+        public async Task<Company> CreateAsync(Company newCompany)
         {
-            var existingCompany = _companyRepository.Queryable().FirstOrDefault(entity =>
-                entity.RegistrationNumber == newCompany.RegistrationNumber);
-
-            if (existingCompany != null)
-            {
-                throw new CoreException("There is already a company registered with this registration number.");
-            }
-
             _companyRepository.Add(newCompany);
-            _companyRepository.SaveChanges();
+
+            await _companyRepository.SaveChangesAsync();
 
             return newCompany;
         }
 
-        public Company Update(Guid id, Company newCompany)
+        public async Task<Company> UpdateAsync(Guid id, Company newCompany)
         {
-            var currentCompany = _companyRepository.Find(id);
-
-            if (currentCompany == null)
-            {
-                throw new CoreException("The company was not found.");
-            }
+            var currentCompany = await _companyRepository.FindAsync(id);
 
             currentCompany.Inactivated = newCompany.Inactivated;
             currentCompany.CorporateName = newCompany.CorporateName;
@@ -50,25 +39,26 @@ namespace Restaurant.Core.Services
             currentCompany.Address = newCompany.Address;
             currentCompany.UpdatedAt = DateTime.UtcNow;
 
-            _companyRepository.SaveChanges();
+            await _companyRepository.SaveChangesAsync();
 
             return currentCompany;
         }
 
-        public IEnumerable<Company> FindAll(CompanyQueryFilter filters)
+        public async Task<IEnumerable<Company>> FindAllAsync(CompanyQueryFilter filters)
         {
             var queryable = _companyRepository.Queryable();
 
             if (!filters.IncludeInactivated)
             {
-                queryable = queryable.Where(company => !company.Inactivated);
+                queryable = queryable.Where(company =>
+                    !company.Inactivated);
             }
 
             if (!string.IsNullOrWhiteSpace(filters.Name))
             {
                 queryable = queryable.Where(company =>
-                    company.CorporateName.ToLower().Contains(filters.Name.ToLower()) ||
-                    company.BusinessName.ToLower().Contains(filters.Name.ToLower()));
+                    EF.Functions.Like(company.CorporateName, $"%{filters.Name}%") ||
+                    EF.Functions.Like(company.BusinessName, $"%{filters.Name}%"));
             }
 
             if (!string.IsNullOrWhiteSpace(filters.RegistrationNumber))
@@ -77,12 +67,12 @@ namespace Restaurant.Core.Services
                     company.RegistrationNumber.Contains(filters.RegistrationNumber));
             }
 
-            return queryable.ToList();
+            return await queryable.ToListAsync();
         }
 
-        public Company Find(Guid id)
+        public async Task<Company> FindAsync(Guid id)
         {
-            return _companyRepository.Find(id);
+            return await _companyRepository.FindAsync(id);
         }
     }
 }

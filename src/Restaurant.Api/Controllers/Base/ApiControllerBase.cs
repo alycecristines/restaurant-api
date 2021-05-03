@@ -7,12 +7,12 @@ using Restaurant.Api.Wrappers;
 using Restaurant.Core.Entities.Base;
 using Restaurant.Core.Services.Base;
 using Restaurant.Core.QueryFilters.Base;
+using System.Threading.Tasks;
 
 namespace Restaurant.Api.Controllers.Base
 {
     [ApiController]
-    public abstract class ApiController<TEntity, TPostDTO, TPutDTO,
-        TResponseDTO, TQueryFilter> : ControllerBase
+    public abstract class ApiControllerBase<TEntity, TPostDTO, TPutDTO, TResponseDTO, TQueryFilter> : ControllerBase
         where TEntity : Entity
         where TPutDTO : PutDTO
         where TResponseDTO : ResponseDTO
@@ -21,18 +21,17 @@ namespace Restaurant.Api.Controllers.Base
         private readonly IService<TEntity, TQueryFilter> _service;
         private readonly IMapper _mapper;
 
-        public ApiController(IService<TEntity, TQueryFilter> service, IMapper mapper)
+        public ApiControllerBase(IService<TEntity, TQueryFilter> service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;
         }
 
         [HttpPost]
-        public IActionResult Post(TPostDTO dto)
+        public async Task<IActionResult> Post(TPostDTO dto)
         {
             var newEntity = _mapper.Map<TEntity>(dto);
-            var insertedEntity = _service.Create(newEntity);
-
+            var insertedEntity = await _service.CreateAsync(newEntity);
             var insertedEntityDto = _mapper.Map<TResponseDTO>(insertedEntity);
             var response = new Response(insertedEntityDto);
             var getParams = new { insertedEntityDto.Id };
@@ -42,10 +41,9 @@ namespace Restaurant.Api.Controllers.Base
         }
 
         [HttpGet]
-        public IActionResult Get([FromQuery] TQueryFilter filters)
+        public async Task<IActionResult> Get([FromQuery] TQueryFilter filters)
         {
-            var entities = _service.FindAll(filters);
-
+            var entities = await _service.FindAllAsync(filters);
             var entitiesDto = _mapper.Map<IEnumerable<TResponseDTO>>(entities);
             var response = new Response(entitiesDto);
 
@@ -53,10 +51,9 @@ namespace Restaurant.Api.Controllers.Base
         }
 
         [HttpGet("{id:Guid}")]
-        public IActionResult Get(Guid id)
+        public async Task<IActionResult> Get(Guid id)
         {
-            var entity = _service.Find(id);
-
+            var entity = await _service.FindAsync(id);
             var entityDto = _mapper.Map<TResponseDTO>(entity);
             var response = new Response(entityDto);
 
@@ -64,11 +61,10 @@ namespace Restaurant.Api.Controllers.Base
         }
 
         [HttpPut("{id:Guid}")]
-        public IActionResult Put(Guid id, TPutDTO dto)
+        public async Task<IActionResult> Put(Guid id, TPutDTO dto)
         {
             var newEntity = _mapper.Map<TEntity>(dto);
-            var updatedEntity = _service.Update(id, newEntity);
-
+            var updatedEntity = await _service.UpdateAsync(id, newEntity);
             var updatedEntityDto = _mapper.Map<TResponseDTO>(updatedEntity);
             var response = new Response(updatedEntityDto);
 

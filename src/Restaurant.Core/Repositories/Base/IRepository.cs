@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Restaurant.Core.Entities.Base;
 
 namespace Restaurant.Core.Repositories.Base
@@ -8,7 +9,7 @@ namespace Restaurant.Core.Repositories.Base
     {
         void Add(TEntity entity);
         IQueryable<TEntity> Queryable();
-        TEntity Find(Guid id);
-        void SaveChanges();
+        Task<TEntity> FindAsync(Guid id);
+        Task SaveChangesAsync();
     }
 }

@@ -4,8 +4,9 @@ using System.Linq;
 using Restaurant.Core.Services.Base;
 using Restaurant.Core.QueryFilters;
 using Restaurant.Core.Entities;
-using Restaurant.Core.Exceptions;
 using Restaurant.Core.Repositories.Base;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Restaurant.Core.Services
 {
@@ -18,53 +19,50 @@ namespace Restaurant.Core.Services
             _productRepository = productRepository;
         }
 
-        public Product Create(Product newProduct)
+        public async Task<Product> CreateAsync(Product newProduct)
         {
             _productRepository.Add(newProduct);
-            _productRepository.SaveChanges();
+
+            await _productRepository.SaveChangesAsync();
 
             return newProduct;
         }
 
-        public Product Update(Guid id, Product newProduct)
+        public async Task<Product> UpdateAsync(Guid id, Product newProduct)
         {
-            var currentProduct = _productRepository.Find(id);
-
-            if (currentProduct == null)
-            {
-                throw new CoreException("The product was not found.");
-            }
+            var currentProduct = await _productRepository.FindAsync(id);
 
             currentProduct.Inactivated = newProduct.Inactivated;
             currentProduct.Description = newProduct.Description;
             currentProduct.UpdatedAt = DateTime.UtcNow;
 
-            _productRepository.SaveChanges();
+            await _productRepository.SaveChangesAsync();
 
             return currentProduct;
         }
 
-        public IEnumerable<Product> FindAll(ProductQueryFilter filters)
+        public async Task<IEnumerable<Product>> FindAllAsync(ProductQueryFilter filters)
         {
             var queryable = _productRepository.Queryable();
 
             if (!filters.IncludeInactivated)
             {
-                queryable = queryable.Where(company => !company.Inactivated);
+                queryable = queryable.Where(menu =>
+                    !menu.Inactivated);
             }
 
             if (!string.IsNullOrWhiteSpace(filters.Description))
             {
-                queryable = queryable.Where(entity =>
-                    entity.Description.ToLower().Contains(filters.Description.ToLower()));
+                queryable = queryable.Where(menu =>
+                    EF.Functions.Like(menu.Description, $"%{filters.Description}%"));
             }
 
-            return queryable.ToList();
+            return await queryable.ToListAsync();
         }
 
-        public Product Find(Guid id)
+        public async Task<Product> FindAsync(Guid id)
         {
-            return _productRepository.Find(id);
+            return await _productRepository.FindAsync(id);
         }
     }
 }

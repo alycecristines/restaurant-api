@@ -1,8 +1,8 @@
 using System.Text.Json;
 
-namespace Restaurant.Core.Configurations
+namespace Restaurant.Core.Options
 {
-    public static class JsonConfigurations
+    public static class JsonOptions
     {
         public static bool IgnoreNullValues => true;
         public static JsonNamingPolicy NamingPolicy => JsonNamingPolicy.CamelCase;

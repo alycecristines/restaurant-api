@@ -2,84 +2,73 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Restaurant.Core.Entities;
-using Restaurant.Core.Exceptions;
 using Restaurant.Core.Services.Base;
 using Restaurant.Core.QueryFilters;
 using Restaurant.Core.Repositories.Base;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Restaurant.Core.Services
 {
     public class DepartmentService : IDepartmentService
     {
         private readonly IRepository<Department> _departmentRepository;
-        private readonly IRepository<Company> _companyRepository;
 
-        public DepartmentService(IRepository<Department> departmentRepository, IRepository<Company> companyRepository)
+        public DepartmentService(IRepository<Department> departmentRepository)
         {
             _departmentRepository = departmentRepository;
-            _companyRepository = companyRepository;
         }
 
-        public Department Create(Department newDepartment)
+        public async Task<Department> CreateAsync(Department newDepartment)
         {
-            var existingCompany = _companyRepository.Find(newDepartment.CompanyId);
-
-            if (existingCompany == null)
-            {
-                throw new CoreException("The company was not found.");
-            }
-
             _departmentRepository.Add(newDepartment);
-            _departmentRepository.SaveChanges();
+
+            await _departmentRepository.SaveChangesAsync();
 
             return newDepartment;
         }
 
-        public Department Update(Guid id, Department newDepartment)
+        public async Task<Department> UpdateAsync(Guid id, Department newDepartment)
         {
-            var currentDepartment = _departmentRepository.Find(id);
-
-            if (currentDepartment == null)
-            {
-                throw new CoreException("The department was not found.");
-            }
+            var currentDepartment = await _departmentRepository.FindAsync(id);
 
             currentDepartment.Inactivated = newDepartment.Inactivated;
             currentDepartment.Description = newDepartment.Description;
             currentDepartment.UpdatedAt = DateTime.UtcNow;
 
-            _departmentRepository.SaveChanges();
+            await _departmentRepository.SaveChangesAsync();
 
             return currentDepartment;
         }
 
-        public IEnumerable<Department> FindAll(DepartmentQueryFilter filters)
+        public async Task<IEnumerable<Department>> FindAllAsync(DepartmentQueryFilter filters)
         {
             var queryable = _departmentRepository.Queryable();
 
             if (!filters.IncludeInactivated)
             {
-                queryable = queryable.Where(company => !company.Inactivated);
+                queryable = queryable.Where(department =>
+                    !department.Inactivated);
             }
 
             if (!string.IsNullOrWhiteSpace(filters.Description))
             {
-                queryable = queryable.Where(entity =>
-                    entity.Description.ToLower().Contains(filters.Description.ToLower()));
+                queryable = queryable.Where(department =>
+                    EF.Functions.Like(department.Description, $"%{filters.Description}%"));
             }
 
             if (filters.CompanyId.HasValue)
             {
-                queryable = queryable.Where(entity =>
-                    entity.CompanyId == filters.CompanyId);
+                queryable = queryable.Where(department =>
+                    department.CompanyId == filters.CompanyId);
             }
 
-            return queryable.ToList();
+            return await queryable.ToListAsync();
         }
 
-        public Department Find(Guid id)
+        public async Task<Department> FindAsync(Guid id)
         {
-            return _departmentRepository.Find(id);
+            return await _departmentRepository.FindAsync(id);
         }
     }
 }

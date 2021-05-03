@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Restaurant.Core.Exceptions;
 using Restaurant.Api.Wrappers;
-using Restaurant.Core.Configurations;
+using Restaurant.Core.Options;
+using Restaurant.Infrastructure.Exceptions;
 
 namespace Restaurant.Infrastructure.Middlewares
 {
@@ -23,6 +24,12 @@ namespace Restaurant.Infrastructure.Middlewares
             try
             {
                 await _next(httpContext);
+            }
+            catch (InfrastructureException exception)
+            {
+                var json = GetResponseJson(exception.Message, exception.Errors);
+                var statusCode = HttpStatusCode.BadRequest;
+                await WriteResponse(httpContext, json, statusCode);
             }
             catch (CoreException exception)
             {
@@ -46,10 +53,10 @@ namespace Restaurant.Infrastructure.Middlewares
             await response.WriteAsync(json);
         }
 
-        private string GetResponseJson(string message)
+        private string GetResponseJson(string message, object errors = null)
         {
-            var response = new ErrorResponse(message);
-            return JsonSerializer.Serialize(response, JsonConfigurations.Create());
+            var response = new ErrorResponse(message, errors);
+            return JsonSerializer.Serialize(response, JsonOptions.Create());
         }
     }
 }

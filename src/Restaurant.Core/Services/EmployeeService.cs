@@ -4,52 +4,36 @@ using System.Linq;
 using Restaurant.Core.Services.Base;
 using Restaurant.Core.QueryFilters;
 using Restaurant.Core.Entities;
-using Restaurant.Core.Exceptions;
 using Restaurant.Core.Repositories.Base;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Restaurant.Core.Services
 {
     public class EmployeeService : IEmployeeService
     {
         private readonly IRepository<Employee> _employeeRepository;
-        private readonly IRepository<Department> _departmentRepository;
+        private readonly IAccountService _accountService;
 
-        public EmployeeService(IRepository<Employee> employeeRepository, IRepository<Department> departmentRepository)
+        public EmployeeService(IRepository<Employee> employeeRepository, IAccountService accountService)
         {
             _employeeRepository = employeeRepository;
-            _departmentRepository = departmentRepository;
+            _accountService = accountService;
         }
 
-        public Employee Create(Employee newEmployee)
+        public async Task<Employee> CreateAsync(Employee newEmployee)
         {
-            var existingDepartment = _departmentRepository.Find(newEmployee.DepartmentId);
-
-            if (existingDepartment == null)
-            {
-                throw new CoreException("The department was not found.");
-            }
-
             _employeeRepository.Add(newEmployee);
-            _employeeRepository.SaveChanges();
+
+            await _employeeRepository.SaveChangesAsync();
+            await _accountService.CreateAsync(newEmployee);
 
             return newEmployee;
         }
 
-        public Employee Update(Guid id, Employee newEmployee)
+        public async Task<Employee> UpdateAsync(Guid id, Employee newEmployee)
         {
-            var existingDepartment = _departmentRepository.Find(newEmployee.DepartmentId);
-
-            if (existingDepartment == null)
-            {
-                throw new CoreException("The department was not found.");
-            }
-
-            var currentEmployee = _employeeRepository.Find(id);
-
-            if (currentEmployee == null)
-            {
-                throw new CoreException("The employee was not found.");
-            }
+            var currentEmployee = await _employeeRepository.FindAsync(id);
 
             currentEmployee.Inactivated = newEmployee.Inactivated;
             currentEmployee.Name = newEmployee.Name;
@@ -57,50 +41,60 @@ namespace Restaurant.Core.Services
             currentEmployee.DepartmentId = newEmployee.DepartmentId;
             currentEmployee.UpdatedAt = DateTime.UtcNow;
 
-            _employeeRepository.SaveChanges();
+            await _employeeRepository.SaveChangesAsync();
+
+            if (currentEmployee.Inactivated)
+            {
+                await _accountService.DeleteAsync(currentEmployee);
+            }
+            else
+            {
+                await _accountService.UpdateAsync(currentEmployee);
+            }
 
             return currentEmployee;
         }
 
-        public IEnumerable<Employee> FindAll(EmployeeQueryFilter filters)
+        public async Task<IEnumerable<Employee>> FindAllAsync(EmployeeQueryFilter filters)
         {
             var queryable = _employeeRepository.Queryable();
 
             if (!filters.IncludeInactivated)
             {
-                queryable = queryable.Where(company => !company.Inactivated);
+                queryable = queryable.Where(employee =>
+                    !employee.Inactivated);
             }
 
             if (!string.IsNullOrWhiteSpace(filters.Name))
             {
-                queryable = queryable.Where(entity =>
-                    entity.Name.ToLower().Contains(filters.Name.ToLower()));
+                queryable = queryable.Where(employee =>
+                    EF.Functions.Like(employee.Name, $"%{filters.Name}%"));
             }
 
             if (!string.IsNullOrWhiteSpace(filters.Email))
             {
-                queryable = queryable.Where(entity =>
-                    entity.Email.ToLower().Contains(filters.Email.ToLower()));
+                queryable = queryable.Where(employee =>
+                    EF.Functions.Like(employee.Email, $"%{filters.Email}%"));
             }
 
             if (filters.CompanyId.HasValue)
             {
-                queryable = queryable.Where(entity =>
-                    entity.Department.CompanyId == filters.CompanyId);
+                queryable = queryable.Where(employee =>
+                    employee.Department.CompanyId == filters.CompanyId);
             }
 
             if (filters.DepartmentId.HasValue)
             {
-                queryable = queryable.Where(entity =>
-                    entity.DepartmentId == filters.DepartmentId);
+                queryable = queryable.Where(employee =>
+                    employee.DepartmentId == filters.DepartmentId);
             }
 
-            return queryable.ToList();
+            return await queryable.ToListAsync();
         }
 
-        public Employee Find(Guid id)
+        public async Task<Employee> FindAsync(Guid id)
         {
-            return _employeeRepository.Find(id);
+            return await _employeeRepository.FindAsync(id);
         }
     }
 }

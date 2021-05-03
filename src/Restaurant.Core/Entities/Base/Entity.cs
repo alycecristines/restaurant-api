@@ -2,7 +2,7 @@ using System;
 
 namespace Restaurant.Core.Entities.Base
 {
-    public class Entity
+    public abstract class Entity
     {
         public Guid Id { get; private set; }
         public DateTime CreatedAt { get; private set; }

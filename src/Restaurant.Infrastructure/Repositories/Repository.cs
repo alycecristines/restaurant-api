@@ -1,9 +1,10 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Restaurant.Core.Entities.Base;
 using Restaurant.Core.Repositories.Base;
-using Restaurant.Infrastructure.Data;
+using Restaurant.Infrastructure.DataContexts;
 
 namespace Restaurant.Infrastructure.Repositories
 {
@@ -24,9 +25,9 @@ namespace Restaurant.Infrastructure.Repositories
             _dbEntities.Add(entity);
         }
 
-        public TEntity Find(Guid id)
+        public async Task<TEntity> FindAsync(Guid id)
         {
-            return _dbEntities.Find(id);
+            return await _dbEntities.FindAsync(id);
         }
 
         public IQueryable<TEntity> Queryable()
@@ -34,9 +35,9 @@ namespace Restaurant.Infrastructure.Repositories
             return _dbEntities.AsQueryable();
         }
 
-        public void SaveChanges()
+        public async Task SaveChangesAsync()
         {
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
