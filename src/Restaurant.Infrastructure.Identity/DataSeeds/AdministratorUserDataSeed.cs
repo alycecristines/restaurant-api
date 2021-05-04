@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Restaurant.Infrastructure.Exceptions;
 using Restaurant.Infrastructure.Identity.Constants;
 using Restaurant.Infrastructure.Identity.Mappers.Base;
 using Restaurant.Infrastructure.Identity.Models;
@@ -53,7 +54,13 @@ namespace Restaurant.Infrastructure.Identity.DataSeeds
 
             await _userManager.UpdateAsync(existingUser);
             await _userManager.RemovePasswordAsync(existingUser);
-            await _userManager.AddPasswordAsync(existingUser, options.Password);
+            var result = await _userManager.AddPasswordAsync(existingUser, options.Password);
+
+            if (!result.Succeeded)
+            {
+                var message = "Uma condição inesperada foi encontrada ao alterar a senha do usuário.";
+                throw new InfrastructureException(message, result.Errors);
+            }
         }
 
         private async Task CreateUser(AdministratorOptions options)
