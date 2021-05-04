@@ -47,14 +47,20 @@ namespace Restaurant.Core.Services
 
             if (!filters.IncludeInactivated)
             {
-                queryable = queryable.Where(menu =>
-                    !menu.Inactivated);
+                queryable = queryable.Where(product =>
+                    !product.Inactivated);
             }
 
             if (!string.IsNullOrWhiteSpace(filters.Description))
             {
-                queryable = queryable.Where(menu =>
-                    EF.Functions.Like(menu.Description, $"%{filters.Description}%"));
+                queryable = queryable.Where(product =>
+                    EF.Functions.Like(product.Description, $"%{filters.Description}%"));
+            }
+
+            if (filters.MenuId.HasValue)
+            {
+                queryable = queryable.Where(product =>
+                    product.Menus.Any(menu => menu.Id == filters.MenuId));
             }
 
             return await queryable.ToListAsync();
