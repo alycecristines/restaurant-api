@@ -18,11 +18,10 @@ namespace Restaurant.Api.Extensions.ServiceCollection
 
         private static void ConfigureIdentity(IdentityOptions options)
         {
-            // TODO: Check which will be password options.
-            options.Password.RequireDigit = false;
-            options.Password.RequireLowercase = false;
+            options.Password.RequireDigit = true;
+            options.Password.RequireLowercase = true;
             options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequireUppercase = false;
+            options.Password.RequireUppercase = true;
             options.Password.RequiredLength = 6;
         }
     }
