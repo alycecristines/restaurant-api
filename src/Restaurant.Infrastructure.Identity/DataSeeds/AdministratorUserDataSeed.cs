@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +13,7 @@ namespace Restaurant.Infrastructure.Identity.DataSeeds
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
-        private readonly IConfiguration _configuration;
+        private readonly AdministratorOptions _options;
         private readonly IUserMapper _mapper;
 
         public AdministratorUserDataSeed(UserManager<ApplicationUser> userManager,
@@ -23,57 +22,45 @@ namespace Restaurant.Infrastructure.Identity.DataSeeds
         {
             _userManager = userManager;
             _roleManager = roleManager;
-            _configuration = configuration;
             _mapper = mapper;
+
+            _options = new AdministratorOptions();
+            configuration.GetSection(AdministratorOptions.SectionName).Bind(_options);
         }
 
         public async Task Seed()
         {
-            var options = GetAdministratorOptions();
-            var existingUser = await _userManager.FindByNameAsync(options.UserName);
+            var existingUser = await _userManager.FindByNameAsync(_options.UserName);
 
             if (existingUser != null)
             {
-                await UpdateUser(existingUser, options);
+                await UpdateUser(existingUser);
                 return;
             }
 
-            await CreateUser(options);
+            var createdUser = await CreateUser();
+            await CreateRole(RoleConstants.Administrator);
+            await _userManager.AddToRoleAsync(createdUser, RoleConstants.Administrator);
         }
 
-        private AdministratorOptions GetAdministratorOptions()
+        private async Task UpdateUser(ApplicationUser existingUser)
         {
-            var options = new AdministratorOptions();
-            _configuration.GetSection(AdministratorOptions.SectionName).Bind(options);
-            return options;
-        }
-
-        private async Task UpdateUser(ApplicationUser existingUser, AdministratorOptions options)
-        {
-            _mapper.Map(options, existingUser);
-
+            _mapper.Map(_options, existingUser);
             await _userManager.UpdateAsync(existingUser);
-            await _userManager.RemovePasswordAsync(existingUser);
-            var result = await _userManager.AddPasswordAsync(existingUser, options.Password);
+        }
+
+        private async Task<ApplicationUser> CreateUser()
+        {
+            var newUser = _mapper.Map(_options);
+            var result = await _userManager.CreateAsync(newUser, _options.InitialPassword);
 
             if (!result.Succeeded)
             {
-                var message = "Uma condição inesperada foi encontrada ao alterar a senha do usuário.";
+                var message = "Uma condição inesperada foi encontrada ao criar o usuário.";
                 throw new InfrastructureException(message, result.Errors);
             }
-        }
 
-        private async Task CreateUser(AdministratorOptions options)
-        {
-            var roleName = RoleConstants.Administrator;
-            var newUser = _mapper.Map(options);
-            var tasks = new List<Task>();
-
-            tasks.Add(_userManager.CreateAsync(newUser, options.Password));
-            tasks.Add(CreateRole(roleName));
-
-            await Task.WhenAll(tasks);
-            await _userManager.AddToRoleAsync(newUser, roleName);
+            return newUser;
         }
 
         private async Task CreateRole(string roleName)

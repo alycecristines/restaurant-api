@@ -31,7 +31,7 @@ namespace Restaurant.Infrastructure.Identity.Services
 
             if (!result.Succeeded)
             {
-                var message = "Uma condição inesperada foi encontrada ao criar um usuário.";
+                var message = "Uma condição inesperada foi encontrada ao criar o usuário.";
                 throw new InfrastructureException(message, result.Errors);
             }
 

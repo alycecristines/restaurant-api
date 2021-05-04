@@ -6,6 +6,6 @@ namespace Restaurant.Infrastructure.Identity.Options
         public string UserName => "Administrator";
         public string Name { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
+        public string InitialPassword { get; set; }
     }
 }
