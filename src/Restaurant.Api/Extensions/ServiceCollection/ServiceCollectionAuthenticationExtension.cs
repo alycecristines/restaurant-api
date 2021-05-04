@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Restaurant.Infrastructure.Identity.Options;
 
 namespace Restaurant.Api.Extensions.ServiceCollection
 {
@@ -30,8 +31,10 @@ namespace Restaurant.Api.Extensions.ServiceCollection
 
         private static TokenValidationParameters GetTokenValidationParameters(IConfiguration configuration)
         {
-            var key = configuration["Token:Key"];
-            var bytesKey = Encoding.UTF8.GetBytes(key);
+            var tokenOptions = new JwtTokenOptions();
+            configuration.GetSection(JwtTokenOptions.SectionName).Bind(tokenOptions);
+
+            var bytesKey = Encoding.UTF8.GetBytes(tokenOptions.Key);
             var symmetricKey = new SymmetricSecurityKey(bytesKey);
 
             return new TokenValidationParameters

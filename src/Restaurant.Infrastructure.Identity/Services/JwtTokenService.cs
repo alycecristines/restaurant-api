@@ -10,20 +10,23 @@ using Microsoft.IdentityModel.Tokens;
 using Restaurant.Core.Services.Base;
 using Restaurant.Infrastructure.Exceptions;
 using Restaurant.Infrastructure.Identity.Models;
+using Restaurant.Infrastructure.Identity.Options;
 
 namespace Restaurant.Infrastructure.Identity.Services
 {
     public class JwtTokenService : IJwtTokenService
     {
-        private readonly IConfiguration _configuration;
+        private readonly JwtTokenOptions _options;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public JwtTokenService(IConfiguration configuration, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public JwtTokenService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration configuration)
         {
-            _configuration = configuration;
             _userManager = userManager;
             _signInManager = signInManager;
+
+            _options = new JwtTokenOptions();
+            configuration.GetSection(JwtTokenOptions.SectionName).Bind(_options);
         }
 
         public async Task<object> GenerateAsync(string email, string password)
@@ -60,7 +63,7 @@ namespace Restaurant.Infrastructure.Identity.Services
         {
             return new SecurityTokenDescriptor
             {
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = DateTime.UtcNow.AddHours(_options.Duration),
                 SigningCredentials = GenerateCredentials(),
                 Subject = GenerateClaimsIdentity(user, roles)
             };
@@ -68,8 +71,7 @@ namespace Restaurant.Infrastructure.Identity.Services
 
         private SigningCredentials GenerateCredentials()
         {
-            var key = _configuration["Token:Key"];
-            var bytesKey = Encoding.UTF8.GetBytes(key);
+            var bytesKey = Encoding.UTF8.GetBytes(_options.Key);
             var symmetricKey = new SymmetricSecurityKey(bytesKey);
             var algorithm = SecurityAlgorithms.HmacSha256Signature;
             return new SigningCredentials(symmetricKey, algorithm);

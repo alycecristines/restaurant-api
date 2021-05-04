@@ -43,9 +43,7 @@ namespace Restaurant.Infrastructure.Identity.DataSeeds
         private AdministratorOptions GetAdministratorOptions()
         {
             var options = new AdministratorOptions();
-
-            _configuration.GetSection("Administrator").Bind(options);
-
+            _configuration.GetSection(AdministratorOptions.SectionName).Bind(options);
             return options;
         }
 
