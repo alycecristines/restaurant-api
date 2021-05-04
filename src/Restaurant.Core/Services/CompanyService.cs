@@ -7,6 +7,7 @@ using Restaurant.Core.QueryFilters;
 using Restaurant.Core.Repositories.Base;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Restaurant.Core.Exceptions;
 
 namespace Restaurant.Core.Services
 {
@@ -21,6 +22,14 @@ namespace Restaurant.Core.Services
 
         public async Task<Company> CreateAsync(Company newCompany)
         {
+            var registrationNumberIsAlreadyBeingUsed = await _companyRepository.Queryable()
+                .AnyAsync(company => company.RegistrationNumber == newCompany.RegistrationNumber);
+
+            if (registrationNumberIsAlreadyBeingUsed)
+            {
+                throw new CoreException($"Já existe uma empresa cadastrada com o CNPJ '{newCompany.RegistrationNumber}'.");
+            }
+
             _companyRepository.Add(newCompany);
 
             await _companyRepository.SaveChangesAsync();

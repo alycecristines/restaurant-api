@@ -31,7 +31,7 @@ namespace Restaurant.Infrastructure.Identity.Services
 
             if (!result.Succeeded)
             {
-                var message = "An unexpected condition was encountered when creating the user.";
+                var message = "Uma condição inesperada foi encontrada ao criar um usuário.";
                 throw new InfrastructureException(message, result.Errors);
             }
 
@@ -71,10 +71,7 @@ namespace Restaurant.Infrastructure.Identity.Services
         {
             var user = await FindAsync(userName);
 
-            if (user == null)
-            {
-                throw new InfrastructureException("The user was not found.");
-            }
+            ValidateUser(user);
 
             return await _userManager.GeneratePasswordResetTokenAsync(user);
         }
@@ -83,10 +80,7 @@ namespace Restaurant.Infrastructure.Identity.Services
         {
             var user = await FindAsync(userName);
 
-            if (user == null)
-            {
-                throw new InfrastructureException("The user was not found.");
-            }
+            ValidateUser(user);
 
             var provider = _userManager.Options.Tokens.PasswordResetTokenProvider;
             var purpose = UserManager<ApplicationUser>.ResetPasswordTokenPurpose;
@@ -94,7 +88,7 @@ namespace Restaurant.Infrastructure.Identity.Services
 
             if (!isValid)
             {
-                throw new InfrastructureException("The token is not valid.");
+                throw new InfrastructureException("O token não é válido.");
             }
         }
 
@@ -102,16 +96,13 @@ namespace Restaurant.Infrastructure.Identity.Services
         {
             var user = await FindAsync(userName);
 
-            if (user == null)
-            {
-                throw new InfrastructureException("The user was not found.");
-            }
+            ValidateUser(user);
 
             var result = await _userManager.ResetPasswordAsync(user, token, password);
 
             if (!result.Succeeded)
             {
-                var message = "An unexpected condition was encountered when changing the password.";
+                var message = "Uma condição inesperada foi encontrada ao alterar a senha do usuário.";
                 throw new InfrastructureException(message, result.Errors);
             }
         }
@@ -119,6 +110,12 @@ namespace Restaurant.Infrastructure.Identity.Services
         private async Task<ApplicationUser> FindAsync(string userName)
         {
             return await _userManager.FindByNameAsync(userName);
+        }
+
+        private void ValidateUser(ApplicationUser user)
+        {
+            if (user != null) return;
+            throw new InfrastructureException("O usuário não foi encontrado.");
         }
     }
 }

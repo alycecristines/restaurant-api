@@ -1,40 +1,41 @@
 using System.ComponentModel.DataAnnotations;
+using Restaurant.Core.Localization;
 
 namespace Restaurant.Core.ValueObjects
 {
     public class Address
     {
-        [Required]
-        [MaxLength(100)]
+        [Required(ErrorMessage = PortugueseDataAnnotationErrorDescriber.Required)]
+        [StringLength(100, ErrorMessage = PortugueseDataAnnotationErrorDescriber.MaxLength)]
         public string Street { get; set; }
 
-        [Required]
-        [MaxLength(100)]
+        [Required(ErrorMessage = PortugueseDataAnnotationErrorDescriber.Required)]
+        [StringLength(100, ErrorMessage = PortugueseDataAnnotationErrorDescriber.MaxLength)]
         public string Secondary { get; set; }
 
-        [Required]
-        [StringLength(4, MinimumLength = 1)]
+        [Required(ErrorMessage = PortugueseDataAnnotationErrorDescriber.Required)]
+        [StringLength(4, MinimumLength = 1, ErrorMessage = PortugueseDataAnnotationErrorDescriber.MinMaxLength)]
         public string BuildingNumber { get; set; }
 
-        [Required]
-        [MaxLength(50)]
+        [Required(ErrorMessage = PortugueseDataAnnotationErrorDescriber.Required)]
+        [StringLength(50, ErrorMessage = PortugueseDataAnnotationErrorDescriber.MaxLength)]
         public string District { get; set; }
 
-        [Required]
-        [MaxLength(50)]
+        [Required(ErrorMessage = PortugueseDataAnnotationErrorDescriber.Required)]
+        [StringLength(50, ErrorMessage = PortugueseDataAnnotationErrorDescriber.MaxLength)]
         public string City { get; set; }
 
-        [Required]
-        [MaxLength(50)]
+        [Required(ErrorMessage = PortugueseDataAnnotationErrorDescriber.Required)]
+        [StringLength(50, ErrorMessage = PortugueseDataAnnotationErrorDescriber.MaxLength)]
         public string State { get; set; }
 
-        [Required]
-        [MaxLength(50)]
+        [Required(ErrorMessage = PortugueseDataAnnotationErrorDescriber.Required)]
+        [StringLength(50, ErrorMessage = PortugueseDataAnnotationErrorDescriber.MaxLength)]
         public string Country { get; set; }
 
-        [Required]
-        [StringLength(8, MinimumLength = 8)]
-        [RegularExpression(@"^\d*$")]
+        [Required(ErrorMessage = PortugueseDataAnnotationErrorDescriber.Required)]
+        [StringLength(8, MinimumLength = 8, ErrorMessage = PortugueseDataAnnotationErrorDescriber.FixedLength)]
+        [RegularExpression(@"^\d*$", ErrorMessage = PortugueseDataAnnotationErrorDescriber.Numeric)]
         public string ZipCode { get; set; }
     }
 }

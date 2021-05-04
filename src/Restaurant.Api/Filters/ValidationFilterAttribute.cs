@@ -9,13 +9,12 @@ namespace Restaurant.Infrastructure.Filters
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             if (context.ModelState.IsValid) return;
-
             context.Result = GetResponse(context);
         }
 
         private ActionResult GetResponse(ActionExecutingContext context)
         {
-            var message = "One or more validation errors occurred.";
+            var message = "Ocorreu um ou mais erros de validação.";
             var errors = new BadRequestObjectResult(context.ModelState).Value;
             var response = new ErrorResponse(message, errors);
             return new BadRequestObjectResult(response);

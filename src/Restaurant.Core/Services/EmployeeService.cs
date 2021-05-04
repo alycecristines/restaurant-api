@@ -7,6 +7,7 @@ using Restaurant.Core.Entities;
 using Restaurant.Core.Repositories.Base;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Restaurant.Core.Exceptions;
 
 namespace Restaurant.Core.Services
 {
@@ -23,6 +24,14 @@ namespace Restaurant.Core.Services
 
         public async Task<Employee> CreateAsync(Employee newEmployee)
         {
+            var emailIsAlreadyBeingUsed = await _employeeRepository.Queryable()
+                .AnyAsync(company => company.Email == newEmployee.Email);
+
+            if (emailIsAlreadyBeingUsed)
+            {
+                throw new CoreException($"Já existe um funcionário cadastrado com o e-mail '{newEmployee.Email}'.");
+            }
+
             _employeeRepository.Add(newEmployee);
 
             await _employeeRepository.SaveChangesAsync();

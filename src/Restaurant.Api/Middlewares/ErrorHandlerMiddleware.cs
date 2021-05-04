@@ -39,7 +39,7 @@ namespace Restaurant.Infrastructure.Middlewares
             }
             catch (Exception)
             {
-                var json = GetResponseJson("An unexpected condition was encountered on the server.");
+                var json = GetResponseJson("Uma condição inesperada foi encontrada no servidor.");
                 var statusCode = HttpStatusCode.InternalServerError;
                 await WriteResponse(httpContext, json, statusCode);
             }

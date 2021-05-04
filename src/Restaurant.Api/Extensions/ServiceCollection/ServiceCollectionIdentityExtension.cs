@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Restaurant.Infrastructure.Identity.DataContexts;
+using Restaurant.Infrastructure.Identity.Localization;
 using Restaurant.Infrastructure.Identity.Models;
 
 namespace Restaurant.Api.Extensions.ServiceCollection
@@ -10,6 +11,7 @@ namespace Restaurant.Api.Extensions.ServiceCollection
         public static void RegisterIdentity(this IServiceCollection services)
         {
             services.AddIdentity<ApplicationUser, ApplicationRole>(ConfigureIdentity)
+                .AddErrorDescriber<PortugueseIdentityErrorDescriber>()
                 .AddEntityFrameworkStores<AuthenticationDataContext>()
                 .AddDefaultTokenProviders();
         }

@@ -32,7 +32,7 @@ namespace Restaurant.Infrastructure.Identity.Services
 
             if (user == null)
             {
-                throw new InfrastructureException("The user was not found.");
+                throw new InfrastructureException("O usuário não foi encontrado.");
             }
 
             var roles = await _userManager.GetRolesAsync(user);
@@ -40,7 +40,7 @@ namespace Restaurant.Infrastructure.Identity.Services
 
             if (!result.Succeeded)
             {
-                throw new InfrastructureException("The informed user data are not valid.");
+                throw new InfrastructureException("Os dados do usuário não correspondem.");
             }
 
             return GenerateToken(user, roles);
