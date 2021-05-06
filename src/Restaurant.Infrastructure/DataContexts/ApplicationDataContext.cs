@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Restaurant.Core.Entities;
+using Restaurant.Core.ValueObjects;
 using Restaurant.Infrastructure.DataConfigurations;
 using Restaurant.Infrastructure.DataConfigurations.Base;
 
@@ -14,6 +15,7 @@ namespace Restaurant.Infrastructure.DataContexts
         public DbSet<Product> Products { get; set; }
         public DbSet<Variation> Variations { get; set; }
         public DbSet<Menu> Menus { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         private IConfiguration _configuration;
 
@@ -35,6 +37,8 @@ namespace Restaurant.Infrastructure.DataContexts
             modelBuilder.ApplyConfiguration<Product>(new EntityConfiguration<Product>());
             modelBuilder.ApplyConfiguration<Variation>(new EntityConfiguration<Variation>());
             modelBuilder.ApplyConfiguration<Menu>(new EntityConfiguration<Menu>());
+            modelBuilder.ApplyConfiguration<Order>(new EntityConfiguration<Order>());
+            modelBuilder.ApplyConfiguration<OrderItem>(new OrderItemConfiguration());
         }
     }
 }

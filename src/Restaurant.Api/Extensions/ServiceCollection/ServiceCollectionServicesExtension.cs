@@ -15,6 +15,7 @@ namespace Restaurant.Api.Extensions.ServiceCollection
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IVariationService, VariationService>();
             services.AddScoped<IMenuService, MenuService>();
+            services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IJwtTokenService, JwtTokenService>();
             services.AddScoped<IAccountService, AccountService>();
         }

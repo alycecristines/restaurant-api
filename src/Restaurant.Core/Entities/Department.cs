@@ -9,7 +9,7 @@ namespace Restaurant.Core.Entities
     public class Department : Entity
     {
         [Required(ErrorMessage = PortugueseDataAnnotationErrorDescriber.Required)]
-        [StringLength(50, ErrorMessage = PortugueseDataAnnotationErrorDescriber.MaxLength)]
+        [StringLength(50, ErrorMessage = PortugueseDataAnnotationErrorDescriber.MaxStringLength)]
         public string Description { get; set; }
 
         [Required(ErrorMessage = PortugueseDataAnnotationErrorDescriber.Required)]

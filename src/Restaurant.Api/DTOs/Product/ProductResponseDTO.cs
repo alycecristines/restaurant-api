@@ -1,4 +1,3 @@
-using System;
 using Restaurant.Api.DTOs.Base;
 
 namespace Restaurant.Api.DTOs.Product

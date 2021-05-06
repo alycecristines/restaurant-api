@@ -9,15 +9,15 @@ namespace Restaurant.Core.Entities
     public class Company : Entity
     {
         [Required(ErrorMessage = PortugueseDataAnnotationErrorDescriber.Required)]
-        [StringLength(150, ErrorMessage = PortugueseDataAnnotationErrorDescriber.MaxLength)]
+        [StringLength(150, ErrorMessage = PortugueseDataAnnotationErrorDescriber.MaxStringLength)]
         public string CorporateName { get; set; }
 
         [Required(ErrorMessage = PortugueseDataAnnotationErrorDescriber.Required)]
-        [StringLength(150, ErrorMessage = PortugueseDataAnnotationErrorDescriber.MaxLength)]
+        [StringLength(150, ErrorMessage = PortugueseDataAnnotationErrorDescriber.MaxStringLength)]
         public string BusinessName { get; set; }
 
         [Required(ErrorMessage = PortugueseDataAnnotationErrorDescriber.Required)]
-        [StringLength(14, MinimumLength = 14, ErrorMessage = PortugueseDataAnnotationErrorDescriber.FixedLength)]
+        [StringLength(14, MinimumLength = 14, ErrorMessage = PortugueseDataAnnotationErrorDescriber.FixedStringLength)]
         [RegularExpression(@"^\d*$", ErrorMessage = PortugueseDataAnnotationErrorDescriber.Numeric)]
         public string RegistrationNumber { get; set; }
 

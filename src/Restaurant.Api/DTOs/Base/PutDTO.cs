@@ -1,8 +1,7 @@
 namespace Restaurant.Api.DTOs.Base
 {
-    public abstract class ResponseDTO
+    public abstract class PutDTO
     {
-        public string Id { get; set; }
         public bool Inactivated { get; set; }
     }
 }

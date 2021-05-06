@@ -1,5 +1,5 @@
-using System;
 using Restaurant.Api.DTOs.Base;
+using Restaurant.Api.DTOs.Department;
 
 namespace Restaurant.Api.DTOs.Employee
 {
@@ -7,6 +7,6 @@ namespace Restaurant.Api.DTOs.Employee
     {
         public string Name { get; set; }
         public string Email { get; set; }
-        public Guid DepartmentId { get; set; }
+        public DepartmentResponseDTO Department { get; set; }
     }
 }
