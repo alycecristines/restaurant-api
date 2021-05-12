@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Restaurant.Api.DTOs.Authentication;
+using Restaurant.Application.Models.Authentication;
 using Restaurant.Api.Wrappers;
-using Restaurant.Core.Services.Base;
+using Restaurant.Application.Interfaces;
 
 namespace Restaurant.Api.Controllers
 {
@@ -12,48 +12,43 @@ namespace Restaurant.Api.Controllers
     [Route("api/accounts")]
     public class AccountController : ControllerBase
     {
-        private readonly IJwtTokenService _jwtTokenService;
-        private readonly IAccountService _accountService;
+        private readonly IAccountApplicationService _accountService;
 
-        public AccountController(IJwtTokenService jwtTokenService,
-            IAccountService accountService)
+        public AccountController(IAccountApplicationService accountService)
         {
-            _jwtTokenService = jwtTokenService;
             _accountService = accountService;
         }
 
         [HttpPost("sign-in")]
-        public async Task<IActionResult> SignIn(SignInDTO dto)
+        public async Task<IActionResult> SignIn(SignInModel model)
         {
-            var token = await _jwtTokenService.GenerateAsync(dto.UserName, dto.Password);
-            var response = new Response(token);
-
+            var userToken = await _accountService.SignIn(model);
+            var response = new Response(userToken);
             return Ok(response);
         }
 
         [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO dto)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordModel model)
         {
-            var token = await _accountService.GeneratePasswordResetTokenAsync(dto.UserName);
-
-            // TODO: Send token by email.
-            return Ok(token);
+            var token = await _accountService.ForgotPassword(model);
+            var response = new Response(token);
+            return Ok(response);
         }
 
         [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword(ResetPasswordDTO dto)
+        public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
         {
-            await _accountService.ResetPasswordAsync(dto.UserName, dto.Token, dto.Password);
-
-            return Ok();
+            await _accountService.ResetPassword(model);
+            var response = new Response();
+            return Ok(response);
         }
 
         [HttpPost("verify-token")]
-        public async Task<IActionResult> VerifyToken(VerifyTokenDTO dto)
+        public async Task<IActionResult> VerifyToken(VerifyTokenModel model)
         {
-            await _accountService.VerifyTokenAsync(dto.UserName, dto.Token);
-
-            return Ok();
+            await _accountService.VerifyToken(model);
+            var response = new Response();
+            return Ok(response);
         }
     }
 }

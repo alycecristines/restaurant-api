@@ -1,21 +1,58 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Restaurant.Api.DTOs.Variation;
-using Restaurant.Core.Services.Base;
-using Restaurant.Core.QueryFilters;
-using Restaurant.Core.Entities;
-using Restaurant.Api.Controllers.Base;
+using Restaurant.Domain.QueryFilters;
 using Microsoft.AspNetCore.Authorization;
 using Restaurant.Infrastructure.Identity.Constants;
+using Restaurant.Application.Interfaces;
+using Restaurant.Application.Models.Variation;
+using System.Threading.Tasks;
+using Restaurant.Api.Wrappers;
+using System;
 
 namespace Restaurant.Api.Controllers
 {
+    [ApiController]
     [Route("api/variations")]
     [Authorize(Roles = RoleConstants.Administrator)]
-    public class VariationController : ApiControllerBase<Variation, VariationPostDTO, VariationPutDTO, VariationResponseDTO, VariationQueryFilter>
+    public class VariationController : ControllerBase
     {
-        public VariationController(IVariationService service, IMapper mapper) : base(service, mapper)
+        private readonly IVariationApplicationService _variationService;
+
+        public VariationController(IVariationApplicationService variationService)
         {
+            _variationService = variationService;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post(VariationCreateModel model)
+        {
+            var createdVariation = await _variationService.CreateAsync(model);
+            var response = new Response(createdVariation);
+            var getParams = new { createdVariation.Id };
+            return CreatedAtAction(nameof(Get), getParams, response);
+        }
+
+        [HttpPut("{id:Guid}")]
+        public async Task<IActionResult> Put(Guid id, VariationUpdateModel model)
+        {
+            var updatedVariation = await _variationService.UpdateAsync(id, model);
+            var response = new Response(updatedVariation);
+            return Ok(response);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] VariationQueryFilter filters)
+        {
+            var variations = await _variationService.FindAllAsync(filters);
+            var response = new Response(variations);
+            return Ok(response);
+        }
+
+        [HttpGet("{id:Guid}")]
+        public async Task<IActionResult> Get(Guid id)
+        {
+            var variation = await _variationService.FindAsync(id);
+            var response = new Response(variation);
+            return Ok(response);
         }
     }
 }

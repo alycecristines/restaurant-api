@@ -1,4 +1,5 @@
 using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -7,7 +8,6 @@ using Microsoft.Extensions.Hosting;
 using Restaurant.Infrastructure.DataContexts;
 using Restaurant.Infrastructure.Identity.DataContexts;
 using Restaurant.Infrastructure.Identity.DataSeeds;
-using Restaurant.Infrastructure.Identity.Mappers.Base;
 using Restaurant.Infrastructure.Identity.Models;
 
 namespace Restaurant.Api.Extensions
@@ -28,7 +28,7 @@ namespace Restaurant.Api.Extensions
         private static void MigrateDatabases(IServiceProvider serviceProvider)
         {
             var applicationDataContext = serviceProvider.GetService<ApplicationDataContext>();
-            var authenticationDataContext = serviceProvider.GetService<AuthenticationDataContext>();
+            var authenticationDataContext = serviceProvider.GetService<IdentityDataContext>();
 
             applicationDataContext.Database.Migrate();
             authenticationDataContext.Database.Migrate();
@@ -39,7 +39,7 @@ namespace Restaurant.Api.Extensions
             var userManager = serviceProvider.GetService<UserManager<ApplicationUser>>();
             var roleManager = serviceProvider.GetService<RoleManager<ApplicationRole>>();
             var configuration = serviceProvider.GetService<IConfiguration>();
-            var userMapper = serviceProvider.GetService<IUserMapper>();
+            var userMapper = serviceProvider.GetService<IMapper>();
 
             new AdministratorUserDataSeed(userManager, roleManager, userMapper, configuration).Seed().Wait();
         }

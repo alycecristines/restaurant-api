@@ -1,7 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
-using Restaurant.Core.Services;
-using Restaurant.Core.Services.Base;
 using Restaurant.Infrastructure.Identity.Services;
+using Restaurant.Application.Interfaces;
+using Restaurant.Application.Services;
+using Restaurant.Domain.Interfaces;
+using Restaurant.Domain.Services;
 
 namespace Restaurant.Api.Extensions.ServiceCollection
 {
@@ -9,15 +11,25 @@ namespace Restaurant.Api.Extensions.ServiceCollection
     {
         public static void RegisterServices(this IServiceCollection services)
         {
-            services.AddScoped<ICompanyService, CompanyService>();
-            services.AddScoped<IDepartmentService, DepartmentService>();
-            services.AddScoped<IEmployeeService, EmployeeService>();
-            services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<IVariationService, VariationService>();
-            services.AddScoped<IMenuService, MenuService>();
-            services.AddScoped<IOrderService, OrderService>();
-            services.AddScoped<IJwtTokenService, JwtTokenService>();
-            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ICompanyApplicationService, CompanyApplicationService>();
+            services.AddScoped<IDepartmentApplicationService, DepartmentApplicationService>();
+            services.AddScoped<IEmployeeApplicationService, EmployeeApplicationService>();
+            services.AddScoped<IProductApplicationService, ProductApplicationService>();
+            services.AddScoped<IVariationApplicationService, VariationApplicationService>();
+            services.AddScoped<IMenuApplicationService, MenuApplicationService>();
+            services.AddScoped<IOrderApplicationService, OrderApplicationService>();
+            services.AddScoped<IAccountApplicationService, AccountApplicationService>();
+
+            services.AddScoped<ICompanyDomainService, CompanyDomainService>();
+            services.AddScoped<IDepartmentDomainService, DepartmentDomainService>();
+            services.AddScoped<IEmployeeDomainService, EmployeeDomainService>();
+            services.AddScoped<IProductDomainService, ProductDomainService>();
+            services.AddScoped<IVariationDomainService, VariationDomainService>();
+            services.AddScoped<IMenuDomainService, MenuDomainService>();
+            services.AddScoped<IOrderDomainService, OrderDomainService>();
+
+            services.AddScoped<IJwtTokenDomainService, JwtTokenIdentityService>();
+            services.AddScoped<IAccountDomainService, AccountIdentityService>();
         }
     }
 }

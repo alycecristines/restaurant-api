@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Restaurant.Core.Entities.Base;
+using Restaurant.Domain.Entities.Base;
 
 namespace Restaurant.Infrastructure.DataConfigurations.Base
 {

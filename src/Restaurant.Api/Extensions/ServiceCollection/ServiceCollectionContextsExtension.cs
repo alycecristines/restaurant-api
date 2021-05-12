@@ -9,7 +9,7 @@ namespace Restaurant.Api.Extensions.ServiceCollection
         public static void RegisterContexts(this IServiceCollection services)
         {
             services.AddDbContext<ApplicationDataContext>();
-            services.AddDbContext<AuthenticationDataContext>();
+            services.AddDbContext<IdentityDataContext>();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Restaurant.Api.Extensions.ServiceCollection
         {
             services.AddIdentity<ApplicationUser, ApplicationRole>(ConfigureIdentity)
                 .AddErrorDescriber<PortugueseIdentityErrorDescriber>()
-                .AddEntityFrameworkStores<AuthenticationDataContext>()
+                .AddEntityFrameworkStores<IdentityDataContext>()
                 .AddDefaultTokenProviders();
         }
 

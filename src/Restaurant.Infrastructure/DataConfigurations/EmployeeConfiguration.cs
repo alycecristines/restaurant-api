@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Restaurant.Core.Entities;
+using Restaurant.Domain.Entities;
 using Restaurant.Infrastructure.DataConfigurations.Base;
 
 namespace Restaurant.Infrastructure.DataConfigurations
@@ -9,7 +9,6 @@ namespace Restaurant.Infrastructure.DataConfigurations
         public override void Configure(EntityTypeBuilder<Employee> builder)
         {
             base.Configure(builder);
-
             builder.HasIndex(x => x.Email).IsUnique();
         }
     }

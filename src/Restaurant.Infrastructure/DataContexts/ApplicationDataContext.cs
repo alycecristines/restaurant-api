@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Restaurant.Core.Entities;
-using Restaurant.Core.ValueObjects;
+using Restaurant.Domain.Entities;
+using Restaurant.Domain.ValueObjects;
 using Restaurant.Infrastructure.DataConfigurations;
 using Restaurant.Infrastructure.DataConfigurations.Base;
 

@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using Restaurant.Core.Repositories.Base;
+using Restaurant.Domain.Repositories.Base;
 using Restaurant.Infrastructure.Repositories;
 
 namespace Restaurant.Api.Extensions.ServiceCollection

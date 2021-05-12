@@ -6,13 +6,9 @@ namespace Restaurant.Infrastructure.Exceptions
     {
         public object Errors { get; set; }
 
-        public InfrastructureException(string message, object errors) : base(message)
+        public InfrastructureException(string message, object errors = null) : base(message)
         {
             Errors = errors;
-        }
-
-        public InfrastructureException(string message) : base(message)
-        {
         }
     }
 }

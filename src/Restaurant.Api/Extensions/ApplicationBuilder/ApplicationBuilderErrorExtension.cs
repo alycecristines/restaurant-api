@@ -8,8 +8,13 @@ namespace Restaurant.Api.Extensions.ApplicationBuilder
     {
         public static void UseErrorHandler(this IApplicationBuilder application, IHostEnvironment environment)
         {
-            if (environment.IsDevelopment()) application.UseDeveloperExceptionPage();
-            else application.UseMiddleware<ErrorHandlerMiddleware>();
+            if (environment.IsDevelopment())
+            {
+                application.UseDeveloperExceptionPage();
+                return;
+            }
+
+            application.UseMiddleware<ErrorHandlerMiddleware>();
         }
     }
 }

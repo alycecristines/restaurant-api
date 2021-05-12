@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Restaurant.Infrastructure.Exceptions;
 using Restaurant.Infrastructure.Identity.Constants;
-using Restaurant.Infrastructure.Identity.Mappers.Base;
 using Restaurant.Infrastructure.Identity.Models;
 using Restaurant.Infrastructure.Identity.Options;
 
@@ -14,10 +14,10 @@ namespace Restaurant.Infrastructure.Identity.DataSeeds
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly AdministratorOptions _options;
-        private readonly IUserMapper _mapper;
+        private readonly IMapper _mapper;
 
         public AdministratorUserDataSeed(UserManager<ApplicationUser> userManager,
-            RoleManager<ApplicationRole> roleManager, IUserMapper mapper,
+            RoleManager<ApplicationRole> roleManager, IMapper mapper,
             IConfiguration configuration)
         {
             _userManager = userManager;
@@ -51,7 +51,7 @@ namespace Restaurant.Infrastructure.Identity.DataSeeds
 
         private async Task<ApplicationUser> CreateUser()
         {
-            var newUser = _mapper.Map(_options);
+            var newUser = _mapper.Map<ApplicationUser>(_options);
             var result = await _userManager.CreateAsync(newUser, _options.InitialPassword);
 
             if (!result.Succeeded)

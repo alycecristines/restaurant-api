@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Restaurant.Core.Entities.Base;
-using Restaurant.Core.Repositories.Base;
+using Restaurant.Domain.Entities.Base;
+using Restaurant.Domain.Repositories.Base;
 using Restaurant.Infrastructure.DataContexts;
 
 namespace Restaurant.Infrastructure.Repositories

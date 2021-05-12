@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Restaurant.Infrastructure.Filters;
+using static Restaurant.Api.Options.JsonOptions;
 
 namespace Restaurant.Api.Extensions.ServiceCollection
 {
@@ -10,7 +11,7 @@ namespace Restaurant.Api.Extensions.ServiceCollection
         {
             services.AddControllers(ConfigureController)
                 .ConfigureApiBehaviorOptions(ConfigureBehavior)
-                .AddJsonOptions(ConfigureJson);
+                .AddNewtonsoftJson(ConfigureJson);
         }
 
         private static void ConfigureController(MvcOptions options)
@@ -23,10 +24,11 @@ namespace Restaurant.Api.Extensions.ServiceCollection
             options.SuppressModelStateInvalidFilter = true;
         }
 
-        private static void ConfigureJson(Microsoft.AspNetCore.Mvc.JsonOptions options)
+        private static void ConfigureJson(MvcNewtonsoftJsonOptions options)
         {
-            options.JsonSerializerOptions.PropertyNamingPolicy = Core.Options.JsonOptions.NamingPolicy;
-            options.JsonSerializerOptions.IgnoreNullValues = Core.Options.JsonOptions.IgnoreNullValues;
+            options.SerializerSettings.ContractResolver = ContractResolver;
+            options.SerializerSettings.NullValueHandling = NullValueHandling;
+            options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling;
         }
     }
 }

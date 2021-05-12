@@ -1,55 +1,42 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Restaurant.Api.DTOs.Order;
-using Restaurant.Api.Extensions;
+using Restaurant.Application.Models.Order;
 using Restaurant.Api.Wrappers;
-using Restaurant.Core.Entities;
-using Restaurant.Core.QueryFilters;
-using Restaurant.Core.Services.Base;
+using Restaurant.Domain.QueryFilters;
 using Restaurant.Infrastructure.Identity.Constants;
+using Restaurant.Application.Interfaces;
+using Restaurant.Api.Extensions;
 
 namespace Restaurant.Api.Controllers
 {
     [ApiController]
     [Route("api/orders")]
-    [Authorize(Roles = RoleConstants.Employee)]
     public class OrderController : ControllerBase
     {
-        private readonly IOrderService _orderService;
-        private readonly IEmployeeService _employeeService;
-        private readonly IMapper _mapper;
+        private readonly IOrderApplicationService _orderService;
 
-        public OrderController(IOrderService orderService, IEmployeeService employeeService, IMapper mapper)
+        public OrderController(IOrderApplicationService orderService)
         {
             _orderService = orderService;
-            _employeeService = employeeService;
-            _mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(OrderPostDTO dto)
+        [Authorize(Roles = RoleConstants.Employee)]
+        public async Task<IActionResult> Post(OrderCreateModel model)
         {
-            var newEntity = _mapper.Map<Order>(dto);
-            newEntity.Employee = await _employeeService.FindAsync(User.GetId());
-            var insertedEntity = await _orderService.CreateAsync(newEntity);
-            var insertedEntityDto = _mapper.Map<OrderResponseDTO>(insertedEntity);
-            var response = new Response(insertedEntityDto);
-            var getParams = new { insertedEntityDto.Id };
-            var getActionName = nameof(Get);
-
-            return CreatedAtAction(getActionName, getParams, response);
+            var createdOrder = await _orderService.CreateAsync(User.GetId(), model);
+            var response = new Response(createdOrder);
+            var getParams = new { createdOrder.Id };
+            return CreatedAtAction(nameof(Get), getParams, response);
         }
 
         [HttpGet]
+        [Authorize(Roles = RoleConstants.Administrator)]
         public async Task<IActionResult> Get([FromQuery] OrderQueryFilter filters)
         {
-            var entities = await _orderService.FindAllAsync(filters);
-            var entitiesDto = _mapper.Map<IEnumerable<OrderResponseDTO>>(entities);
-            var response = new Response(entitiesDto);
-
+            var orders = await _orderService.FindAllAsync(filters);
+            var response = new Response(orders);
             return Ok(response);
         }
     }
