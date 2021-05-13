@@ -43,10 +43,11 @@ namespace Restaurant.Infrastructure.Identity.Services
 
         private async Task CreateRoleAsync(string roleName)
         {
-            if (await _roleManager.RoleExistsAsync(roleName)) return;
-
-            var newRole = new ApplicationRole(roleName);
-            await _roleManager.CreateAsync(newRole);
+            if (!await _roleManager.RoleExistsAsync(roleName))
+            {
+                var newRole = new ApplicationRole(roleName);
+                await _roleManager.CreateAsync(newRole);
+            }
         }
 
         private async Task AssignRoleAsync(ApplicationUser newUser, string roleName)
@@ -98,6 +99,7 @@ namespace Restaurant.Infrastructure.Identity.Services
         {
             var user = await FindAsync(userName);
             ValidateUser(user);
+            user.EmailConfirmed = true;
             var result = await _userManager.ResetPasswordAsync(user, token, password);
 
             if (!result.Succeeded)
@@ -119,8 +121,10 @@ namespace Restaurant.Infrastructure.Identity.Services
 
         private void ValidateUser(ApplicationUser user)
         {
-            if (user != null) return;
-            throw new InfrastructureException("O usuário não foi encontrado.");
+            if (user == null)
+            {
+                throw new InfrastructureException("O usuário não foi encontrado.");
+            }
         }
     }
 }

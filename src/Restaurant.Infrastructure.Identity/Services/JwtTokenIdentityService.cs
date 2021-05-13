@@ -45,7 +45,11 @@ namespace Restaurant.Infrastructure.Identity.Services
                 throw new InfrastructureException("O usuário não foi encontrado.");
             }
 
-            var roles = await _userManager.GetRolesAsync(user);
+            if (!user.EmailConfirmed)
+            {
+                throw new InfrastructureException("O e-mail de usuário ainda não foi confirmado.");
+            }
+
             var result = await _signInManager.PasswordSignInAsync(user, password, isPersistent: false, lockoutOnFailure: false);
 
             if (!result.Succeeded)
@@ -53,6 +57,7 @@ namespace Restaurant.Infrastructure.Identity.Services
                 throw new InfrastructureException("Os dados do usuário não correspondem.");
             }
 
+            var roles = await _userManager.GetRolesAsync(user);
             return GenerateToken(user, roles);
         }
 

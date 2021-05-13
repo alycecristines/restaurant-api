@@ -30,16 +30,16 @@ namespace Restaurant.Domain.Services
 
         private async Task ValidateCreationAsync(Employee newEmployee)
         {
-            if (!await Exists(newEmployee.Email)) return;
-
-            var message = $"Já existe um funcionário cadastrado com o e-mail '{newEmployee.Email}'.";
-            throw new DomainException(message);
+            if (await Exists(newEmployee.Email))
+            {
+                var message = $"Já existe um funcionário cadastrado com o e-mail '{newEmployee.Email}'.";
+                throw new DomainException(message);
+            }
         }
 
         private async Task<bool> Exists(string email)
         {
-            return await _employeeRepository.Queryable()
-                .AnyAsync(employee => employee.Email == email);
+            return await _employeeRepository.Queryable().AnyAsync(employee => employee.Email == email);
         }
 
         public async Task<Employee> UpdateAsync(Guid id, Employee newEmployee)

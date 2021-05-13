@@ -18,6 +18,7 @@ namespace Restaurant.Api.Extensions.ServiceCollection
 
         private static void ConfigureIdentity(IdentityOptions options)
         {
+            options.SignIn.RequireConfirmedEmail = true;
             options.Password.RequireDigit = true;
             options.Password.RequireLowercase = true;
             options.Password.RequireNonAlphanumeric = false;

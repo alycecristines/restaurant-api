@@ -37,9 +37,21 @@ namespace Restaurant.Application.Services
             var newEmployee = _mapper.Map<Employee>(model);
             var updatedEmployee = await _employeeService.UpdateAsync(id, newEmployee);
 
-            if (!updatedEmployee.CanAccessTheSystem()) await _accountService.DeleteAsync(updatedEmployee.Id);
-            else if (await _accountService.Exists(updatedEmployee.Id)) await _accountService.UpdateAsync(updatedEmployee);
-            else await _accountService.CreateAsync(updatedEmployee);
+            if (updatedEmployee.CanAccessTheSystem())
+            {
+                if (await _accountService.Exists(updatedEmployee.Id))
+                {
+                    await _accountService.UpdateAsync(updatedEmployee);
+                }
+                else
+                {
+                    await _accountService.CreateAsync(updatedEmployee);
+                }
+            }
+            else
+            {
+                await _accountService.DeleteAsync(updatedEmployee.Id);
+            }
 
             return _mapper.Map<EmployeeResponseModel>(updatedEmployee);
         }

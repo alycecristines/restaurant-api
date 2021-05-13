@@ -7,5 +7,6 @@ namespace Restaurant.Infrastructure.Identity.Options
         public string Name { get; set; }
         public string Email { get; set; }
         public string InitialPassword { get; set; }
+        public bool EmailConfirmed => !string.IsNullOrWhiteSpace(Email);
     }
 }

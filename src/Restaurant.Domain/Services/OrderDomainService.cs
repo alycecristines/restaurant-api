@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Restaurant.Domain.Entities;
+using Restaurant.Domain.Exceptions;
 using Restaurant.Domain.Extensions;
 using Restaurant.Domain.Interfaces;
 using Restaurant.Domain.QueryFilters;
@@ -26,10 +28,25 @@ namespace Restaurant.Domain.Services
 
         public async Task<Order> CreateAsync(Order newOrder)
         {
+            await ValidateCreationAsync(newOrder);
             newOrder.Items = await GetItems(newOrder.Items);
             _orderRepository.Add(newOrder);
             await _orderRepository.SaveChangesAsync();
             return newOrder;
+        }
+
+        private async Task ValidateCreationAsync(Order newOrder)
+        {
+            if (await ExistsForTheDay(newOrder.CreatedAt))
+            {
+                var message = $"Já existe um pedidos realizado para o dia '{newOrder.CreatedAt.Date}'.";
+                throw new DomainException(message);
+            }
+        }
+
+        private async Task<bool> ExistsForTheDay(DateTime date)
+        {
+            return await _orderRepository.Queryable().AnyAsync(order => order.CreatedAt.Date == date.Date);
         }
 
         private async Task<IEnumerable<OrderItem>> GetItems(IEnumerable<OrderItem> orderItems)

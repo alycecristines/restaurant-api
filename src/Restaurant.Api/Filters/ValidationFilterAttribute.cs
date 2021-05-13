@@ -8,8 +8,10 @@ namespace Restaurant.Infrastructure.Filters
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            if (context.ModelState.IsValid) return;
-            context.Result = GetResponse(context);
+            if (!context.ModelState.IsValid)
+            {
+                context.Result = GetResponse(context);
+            }
         }
 
         private ActionResult GetResponse(ActionExecutingContext context)

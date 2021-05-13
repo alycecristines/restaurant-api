@@ -30,16 +30,17 @@ namespace Restaurant.Domain.Services
 
         private async Task ValidateCreationAsync(Company newCompany)
         {
-            if (!await Exists(newCompany.RegistrationNumber)) return;
-
-            var message = $"Já existe uma empresa cadastrada com o CNPJ '{newCompany.RegistrationNumber}'.";
-            throw new DomainException(message);
+            if (await Exists(newCompany.RegistrationNumber))
+            {
+                var message = $"Já existe uma empresa cadastrada com o CNPJ '{newCompany.RegistrationNumber}'.";
+                throw new DomainException(message);
+            }
         }
 
         private async Task<bool> Exists(string registrationNumber)
         {
-            return await _companyRepository.Queryable()
-                .AnyAsync(company => company.RegistrationNumber == registrationNumber);
+            return await _companyRepository.Queryable().AnyAsync(company =>
+                company.RegistrationNumber == registrationNumber);
         }
 
         public async Task<Company> UpdateAsync(Guid id, Company newCompany)

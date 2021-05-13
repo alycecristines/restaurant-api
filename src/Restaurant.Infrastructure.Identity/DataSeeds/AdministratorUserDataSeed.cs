@@ -53,22 +53,16 @@ namespace Restaurant.Infrastructure.Identity.DataSeeds
         {
             var newUser = _mapper.Map<ApplicationUser>(_options);
             var result = await _userManager.CreateAsync(newUser, _options.InitialPassword);
-
-            if (!result.Succeeded)
-            {
-                var message = "Uma condição inesperada foi encontrada ao criar o usuário.";
-                throw new InfrastructureException(message, result.Errors);
-            }
-
             return newUser;
         }
 
         private async Task CreateRole(string roleName)
         {
-            if (await _roleManager.RoleExistsAsync(roleName)) return;
-
-            var roleManager = new ApplicationRole(roleName);
-            await _roleManager.CreateAsync(roleManager);
+            if (!await _roleManager.RoleExistsAsync(roleName))
+            {
+                var roleManager = new ApplicationRole(roleName);
+                await _roleManager.CreateAsync(roleManager);
+            }
         }
     }
 }
