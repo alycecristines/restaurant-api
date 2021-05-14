@@ -5,7 +5,7 @@ using Restaurant.Domain.Entities.Base;
 
 namespace Restaurant.Domain.Entities
 {
-    public class Product : Entity
+    public class Product : ActivableEntity
     {
         [Required(ErrorMessage = PortugueseErrorDescriber.Required)]
         [StringLength(50, ErrorMessage = PortugueseErrorDescriber.MaxStringLength)]

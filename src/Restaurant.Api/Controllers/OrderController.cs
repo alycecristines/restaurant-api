@@ -39,5 +39,14 @@ namespace Restaurant.Api.Controllers
             var response = new Response(orders);
             return Ok(response);
         }
+
+        [HttpGet("print")]
+        [Authorize(Roles = RoleConstants.Administrator)]
+        public async Task<IActionResult> GetAndPrint([FromQuery] OrderQueryFilter filters)
+        {
+            var orders = await _orderService.PrintAllAsync(filters);
+            var response = new Response(orders);
+            return Ok(response);
+        }
     }
 }

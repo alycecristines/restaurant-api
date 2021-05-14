@@ -36,5 +36,11 @@ namespace Restaurant.Application.Services
             var orders = await _orderService.FindAllAsync(filters);
             return _mapper.Map<OrderQueryResultModel>(orders);
         }
+
+        public async Task<OrderQueryResultModel> PrintAllAsync(OrderQueryFilter filters)
+        {
+            var orders = await _orderService.PrintAllAsync(filters);
+            return _mapper.Map<OrderQueryResultModel>(orders);
+        }
     }
 }

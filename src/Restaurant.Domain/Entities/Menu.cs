@@ -6,7 +6,7 @@ using Restaurant.Domain.Enumerators;
 
 namespace Restaurant.Domain.Entities
 {
-    public class Menu : Entity
+    public class Menu : ActivableEntity
     {
         [Required(ErrorMessage = PortugueseErrorDescriber.Required)]
         [StringLength(50, ErrorMessage = PortugueseErrorDescriber.MaxStringLength)]

@@ -9,6 +9,8 @@ namespace Restaurant.Domain.Entities
 {
     public class Order : Entity
     {
+        public bool Printed { get; set; }
+
         [Required(ErrorMessage = PortugueseErrorDescriber.Required)]
         public Guid EmployeeId { get; set; }
 

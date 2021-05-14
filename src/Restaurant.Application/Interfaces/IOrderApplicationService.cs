@@ -9,5 +9,6 @@ namespace Restaurant.Application.Interfaces
     {
         Task<OrderResponseModel> CreateAsync(Guid employeeId, OrderCreateModel model);
         Task<OrderQueryResultModel> FindAllAsync(OrderQueryFilter filters);
+        Task<OrderQueryResultModel> PrintAllAsync(OrderQueryFilter filters);
     }
 }

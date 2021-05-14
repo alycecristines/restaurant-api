@@ -9,5 +9,6 @@ namespace Restaurant.Domain.Interfaces
     {
         Task<Order> CreateAsync(Order newOrder);
         Task<OrderQueryResult> FindAllAsync(OrderQueryFilter filters);
+        Task<OrderQueryResult> PrintAllAsync(OrderQueryFilter filters);
     }
 }

@@ -3,7 +3,7 @@ using Restaurant.Domain.Localization;
 
 namespace Restaurant.Domain.Entities.Base
 {
-    public class User : Entity
+    public class User : ActivableEntity
     {
         public string UserName => Email;
 

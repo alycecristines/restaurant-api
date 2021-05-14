@@ -68,18 +68,41 @@ namespace Restaurant.Domain.Services
 
         public async Task<OrderQueryResult> FindAllAsync(OrderQueryFilter filters)
         {
-            var orders = await _orderRepository.Queryable()
+            var orders = await GetOrders(filters);
+            return GetQueryResult(filters.CreatedAt, orders);
+        }
+
+        public async Task<OrderQueryResult> PrintAllAsync(OrderQueryFilter filters)
+        {
+            var orders = await GetOrders(filters);
+
+            foreach (var order in orders)
+            {
+                order.Printed = true;
+            }
+
+            await _orderRepository.SaveChangesAsync();
+            return GetQueryResult(filters.CreatedAt, orders);
+        }
+
+        private async Task<IEnumerable<Order>> GetOrders(OrderQueryFilter filters)
+        {
+            return await _orderRepository.Queryable()
                 .Where(order => order.CreatedAt.Date == filters.CreatedAt.Date)
+                .WhereFor(!filters.IncludePrinted, menu => !menu.Printed)
                 .WhereFor(filters.CompanyId, order => order.Employee.Department.Company.Id == filters.CompanyId)
                 .Include(order => order.Employee).ThenInclude(employee => employee.Department)
                     .ThenInclude(department => department.Company)
                 .Include(order => order.Items).ThenInclude(item => item.Product)
                 .Include(order => order.Items).ThenInclude(item => item.Variation)
                 .ToListAsync();
+        }
 
+        private OrderQueryResult GetQueryResult(DateTime createdAd, IEnumerable<Order> orders)
+        {
             return new OrderQueryResult
             {
-                CreatedAt = filters.CreatedAt,
+                CreatedAt = createdAd,
                 Companies = orders.GroupBy(order => order.Employee.Department.CompanyId)
                     .Select(order => order.First().Employee.Department.Company)
                     .ToList()

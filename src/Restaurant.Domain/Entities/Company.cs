@@ -6,7 +6,7 @@ using Restaurant.Domain.ValueObjects;
 
 namespace Restaurant.Domain.Entities
 {
-    public class Company : Entity
+    public class Company : ActivableEntity
     {
         [Required(ErrorMessage = PortugueseErrorDescriber.Required)]
         [StringLength(150, ErrorMessage = PortugueseErrorDescriber.MaxStringLength)]
