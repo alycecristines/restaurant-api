@@ -30,8 +30,8 @@ namespace Restaurant.Api.Controllers
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordModel model)
         {
-            var token = await _accountService.ForgotPassword(model);
-            var response = new Response(token);
+            await _accountService.ForgotPassword(model);
+            var response = new Response();
             return Ok(response);
         }
 

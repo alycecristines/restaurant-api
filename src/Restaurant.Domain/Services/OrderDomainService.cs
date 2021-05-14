@@ -39,7 +39,7 @@ namespace Restaurant.Domain.Services
         {
             if (await ExistsForTheDay(newOrder.CreatedAt))
             {
-                var message = $"Já existe um pedidos realizado para o dia '{newOrder.CreatedAt.Date}'.";
+                var message = $"Já existe um pedido realizado para esta data.";
                 throw new DomainException(message);
             }
         }

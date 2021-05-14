@@ -4,6 +4,7 @@ using Restaurant.Application.Interfaces;
 using Restaurant.Application.Services;
 using Restaurant.Domain.Interfaces;
 using Restaurant.Domain.Services;
+using Restaurant.Infrastructure.Services;
 
 namespace Restaurant.Api.Extensions.ServiceCollection
 {
@@ -30,6 +31,7 @@ namespace Restaurant.Api.Extensions.ServiceCollection
 
             services.AddScoped<IJwtTokenDomainService, JwtTokenIdentityService>();
             services.AddScoped<IAccountDomainService, AccountIdentityService>();
+            services.AddScoped<IEmailDomainService, EmailInfrastructureService>();
         }
     }
 }

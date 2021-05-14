@@ -11,13 +11,15 @@ namespace Restaurant.Application.Services
     {
         private readonly IAccountDomainService _accountService;
         private readonly IJwtTokenDomainService _jwtTokenService;
+        private readonly IEmailDomainService _emailService;
         private readonly IMapper _mapper;
 
         public AccountApplicationService(IAccountDomainService accountService,
-            IJwtTokenDomainService jwtTokenService, IMapper mapper)
+            IJwtTokenDomainService jwtTokenService, IEmailDomainService emailService, IMapper mapper)
         {
             _accountService = accountService;
             _jwtTokenService = jwtTokenService;
+            _emailService = emailService;
             _mapper = mapper;
         }
 
@@ -27,10 +29,10 @@ namespace Restaurant.Application.Services
             return _mapper.Map<UserTokenResponseModel>(userToken);
         }
 
-        public async Task<string> ForgotPassword(ForgotPasswordModel model)
+        public async Task ForgotPassword(ForgotPasswordModel model)
         {
-            // TODO: Send token by email.
-            return await _accountService.GeneratePasswordResetTokenAsync(model.UserName);
+            var token = await _accountService.GeneratePasswordResetTokenAsync(model.UserName);
+            _emailService.Send(model.UserName, "Recuperação de senha", $"Código de recuperação de senha: {token}");
         }
 
         public async Task ResetPassword(ResetPasswordModel model)
