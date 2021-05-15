@@ -1,11 +1,12 @@
 using System;
 using System.Net;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Restaurant.Core.Exceptions;
+using Restaurant.Domain.Exceptions;
 using Restaurant.Api.Wrappers;
-using Restaurant.Core.Configurations;
+using Restaurant.Infrastructure.Exceptions;
+using Newtonsoft.Json;
+using Restaurant.Api.Options;
 
 namespace Restaurant.Infrastructure.Middlewares
 {
@@ -24,7 +25,13 @@ namespace Restaurant.Infrastructure.Middlewares
             {
                 await _next(httpContext);
             }
-            catch (CoreException exception)
+            catch (InfrastructureException exception)
+            {
+                var json = GetResponseJson(exception.Message, exception.Errors);
+                var statusCode = HttpStatusCode.BadRequest;
+                await WriteResponse(httpContext, json, statusCode);
+            }
+            catch (DomainException exception)
             {
                 var json = GetResponseJson(exception.Message);
                 var statusCode = HttpStatusCode.BadRequest;
@@ -32,7 +39,7 @@ namespace Restaurant.Infrastructure.Middlewares
             }
             catch (Exception)
             {
-                var json = GetResponseJson("An unexpected condition was encountered on the server.");
+                var json = GetResponseJson("Uma condição inesperada foi encontrada no servidor.");
                 var statusCode = HttpStatusCode.InternalServerError;
                 await WriteResponse(httpContext, json, statusCode);
             }
@@ -46,10 +53,10 @@ namespace Restaurant.Infrastructure.Middlewares
             await response.WriteAsync(json);
         }
 
-        private string GetResponseJson(string message)
+        private string GetResponseJson(string message, object errors = null)
         {
-            var response = new ErrorResponse(message);
-            return JsonSerializer.Serialize(response, JsonConfigurations.Create());
+            var response = new ErrorResponse(message, errors);
+            return JsonConvert.SerializeObject(response, JsonOptions.Create());
         }
     }
 }

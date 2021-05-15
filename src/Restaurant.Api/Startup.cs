@@ -2,37 +2,40 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Restaurant.Api.Extensions;
+using Restaurant.Api.Extensions.ApplicationBuilder;
+using Restaurant.Api.Extensions.ServiceCollection;
 
 namespace Restaurant.Api
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
+        private IConfiguration _configuration { get; }
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithOptions();
-            services.AddCorsPolicies();
-            services.AddSwagger();
-            services.AddContexts();
-            services.AddServices();
-            services.AddRepositories();
-            services.AddMappings();
+            services.RegisterIdentity();
+            services.RegisterAuthentication(_configuration);
+            services.RegisterControllers();
+            services.RegisterCorsPolicies();
+            services.RegisterSwagger();
+            services.RegisterContexts();
+            services.RegisterServices();
+            services.RegisterRepositories();
+            services.RegisterMappers();
         }
 
         public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)
         {
             application.UseErrorHandler(environment);
-            //application.UseHttpsRedirection();
             application.UseSwagger();
             application.UseRouting();
             application.UseCors();
+            application.UseAuthentication();
             application.UseAuthorization();
             application.UseEndpoints(endpoints => endpoints.MapControllers());
         }
