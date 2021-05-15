@@ -5,7 +5,7 @@ using Entity = Restaurant.Domain.Entities;
 namespace Restaurant.Application.Models.Product
 {
     [ModelMetadataType(typeof(Entity.Product))]
-    public class ProductUpdateModel : UpdateModel
+    public class ProductUpdateModel : ActivableUpdateModel
     {
         public string Description { get; set; }
     }

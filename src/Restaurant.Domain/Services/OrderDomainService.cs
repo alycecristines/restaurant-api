@@ -37,16 +37,17 @@ namespace Restaurant.Domain.Services
 
         private async Task ValidateCreationAsync(Order newOrder)
         {
-            if (await ExistsForTheDay(newOrder.CreatedAt))
+            if (await ExistsForTheDay(newOrder.CreatedAt, newOrder.Employee.Id))
             {
                 var message = $"Já existe um pedido realizado para esta data.";
                 throw new DomainException(message);
             }
         }
 
-        private async Task<bool> ExistsForTheDay(DateTime date)
+        private async Task<bool> ExistsForTheDay(DateTime date, Guid employeeId)
         {
-            return await _orderRepository.Queryable().AnyAsync(order => order.CreatedAt.Date == date.Date);
+            return await _orderRepository.Queryable().AnyAsync(order =>
+                order.CreatedAt.Date == date.Date && order.Employee.Id == employeeId);
         }
 
         private async Task<IEnumerable<OrderItem>> GetItems(IEnumerable<OrderItem> orderItems)
@@ -107,6 +108,18 @@ namespace Restaurant.Domain.Services
                     .Select(order => order.First().Employee.Department.Company)
                     .ToList()
             };
+        }
+
+        public async Task<int> Count(DateTime createdAt)
+        {
+            return await _orderRepository.Queryable()
+                .CountAsync(order => order.CreatedAt.Date == createdAt.Date);
+        }
+
+        public async Task<int> CountPrinted(DateTime createdAt)
+        {
+            return await _orderRepository.Queryable()
+                .CountAsync(order => order.Printed && order.CreatedAt.Date == createdAt.Date);
         }
     }
 }

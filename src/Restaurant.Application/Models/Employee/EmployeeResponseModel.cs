@@ -6,7 +6,7 @@ using Restaurant.Application.Models.Order;
 
 namespace Restaurant.Application.Models.Employee
 {
-    public class EmployeeResponseModel : ResponseModel
+    public class EmployeeResponseModel : ActivableResponseModel
     {
         public string Name { get; set; }
         public string Email { get; set; }

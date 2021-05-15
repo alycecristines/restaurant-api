@@ -7,7 +7,7 @@ using Entity = Restaurant.Domain.Entities;
 namespace Restaurant.Application.Models.Menu
 {
     [ModelMetadataType(typeof(Entity.Menu))]
-    public class MenuUpdateModel : UpdateModel
+    public class MenuUpdateModel : ActivableUpdateModel
     {
         public string Description { get; set; }
         public IEnumerable<MenuProductModel> Products { get; set; }

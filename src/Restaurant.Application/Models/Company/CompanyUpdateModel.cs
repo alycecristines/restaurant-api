@@ -6,7 +6,7 @@ using Entity = Restaurant.Domain.Entities;
 namespace Restaurant.Application.Models.Company
 {
     [ModelMetadataType(typeof(Entity.Company))]
-    public class CompanyUpdateModel : UpdateModel
+    public class CompanyUpdateModel : ActivableUpdateModel
     {
         public string CorporateName { get; set; }
         public string BusinessName { get; set; }

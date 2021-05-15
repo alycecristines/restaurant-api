@@ -5,7 +5,7 @@ using Entity = Restaurant.Domain.Entities;
 namespace Restaurant.Application.Models.Variation
 {
     [ModelMetadataType(typeof(Entity.Variation))]
-    public class VariationUpdateModel : UpdateModel
+    public class VariationUpdateModel : ActivableUpdateModel
     {
         public string Description { get; set; }
     }

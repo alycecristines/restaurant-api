@@ -6,7 +6,7 @@ using Restaurant.Application.Models.Employee;
 
 namespace Restaurant.Application.Models.Department
 {
-    public class DepartmentResponseModel : ResponseModel
+    public class DepartmentResponseModel : ActivableResponseModel
     {
         public string Description { get; set; }
         public Guid CompanyId { get; set; }

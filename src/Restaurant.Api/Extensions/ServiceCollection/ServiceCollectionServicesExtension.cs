@@ -20,6 +20,7 @@ namespace Restaurant.Api.Extensions.ServiceCollection
             services.AddScoped<IMenuApplicationService, MenuApplicationService>();
             services.AddScoped<IOrderApplicationService, OrderApplicationService>();
             services.AddScoped<IAccountApplicationService, AccountApplicationService>();
+            services.AddScoped<IDashboardApplicationService, DashboardApplicationService>();
 
             services.AddScoped<ICompanyDomainService, CompanyDomainService>();
             services.AddScoped<IDepartmentDomainService, DepartmentDomainService>();

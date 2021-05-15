@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Restaurant.Domain.Entities;
 using Restaurant.Domain.QueryFilters;
@@ -10,5 +11,7 @@ namespace Restaurant.Domain.Interfaces
         Task<Order> CreateAsync(Order newOrder);
         Task<OrderQueryResult> FindAllAsync(OrderQueryFilter filters);
         Task<OrderQueryResult> PrintAllAsync(OrderQueryFilter filters);
+        Task<int> Count(DateTime createdAt);
+        Task<int> CountPrinted(DateTime createdAt);
     }
 }
