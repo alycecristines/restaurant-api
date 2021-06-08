@@ -13,7 +13,8 @@ namespace Restaurant.Api
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(ConfigureWebHost);
+            return Host.CreateDefaultBuilder(args).UseSystemd()
+                .ConfigureWebHostDefaults(ConfigureWebHost);
         }
 
         private static void ConfigureWebHost(IWebHostBuilder builder)

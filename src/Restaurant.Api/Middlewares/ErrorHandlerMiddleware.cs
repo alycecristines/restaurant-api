@@ -7,16 +7,19 @@ using Restaurant.Api.Wrappers;
 using Restaurant.Infrastructure.Exceptions;
 using Newtonsoft.Json;
 using Restaurant.Api.Options;
+using Microsoft.Extensions.Logging;
 
 namespace Restaurant.Infrastructure.Middlewares
 {
     public class ErrorHandlerMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger<ErrorHandlerMiddleware> _logger;
 
-        public ErrorHandlerMiddleware(RequestDelegate next)
+        public ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task Invoke(HttpContext httpContext)
@@ -30,18 +33,21 @@ namespace Restaurant.Infrastructure.Middlewares
                 var json = GetResponseJson(exception.Message, exception.Errors);
                 var statusCode = HttpStatusCode.BadRequest;
                 await WriteResponse(httpContext, json, statusCode);
+                WriteLog(LogLevel.Information, exception);
             }
             catch (DomainException exception)
             {
                 var json = GetResponseJson(exception.Message);
                 var statusCode = HttpStatusCode.BadRequest;
                 await WriteResponse(httpContext, json, statusCode);
+                WriteLog(LogLevel.Information, exception);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
                 var json = GetResponseJson("Uma condição inesperada foi encontrada no servidor.");
                 var statusCode = HttpStatusCode.InternalServerError;
                 await WriteResponse(httpContext, json, statusCode);
+                WriteLog(LogLevel.Error, exception);
             }
         }
 
@@ -57,6 +63,11 @@ namespace Restaurant.Infrastructure.Middlewares
         {
             var response = new ErrorResponse(message, errors);
             return JsonConvert.SerializeObject(response, JsonOptions.Create());
+        }
+
+        private void WriteLog(LogLevel logLevel, Exception exception)
+        {
+            _logger.Log(logLevel, exception, exception.Message);
         }
     }
 }
