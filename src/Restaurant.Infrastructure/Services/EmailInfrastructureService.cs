@@ -28,6 +28,7 @@ namespace Restaurant.Infrastructure.Services
             var smtpClient = new SmtpClient();
             smtpClient.Host = _smtpOptions.Host;
             smtpClient.Port = _smtpOptions.Port;
+            smtpClient.UseDefaultCredentials = _smtpOptions.UseDefaultCredentials;
             smtpClient.EnableSsl = _smtpOptions.EnableSSL;
             smtpClient.Credentials = CreateNetworkCredential();
             return smtpClient;
