@@ -31,6 +31,7 @@ namespace Restaurant.Api
 
         public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)
         {
+            application.UseForwardedHeaders();
             application.UseErrorHandler(environment);
             application.UseSwagger();
             application.UseRouting();
