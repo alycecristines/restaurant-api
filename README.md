@@ -23,7 +23,7 @@ git clone https://github.com/alycecristines/restaurant-api.git
 
 ### 4. Configure the application
 
-Configure the necessary settings in the `appsettings.Production.json` file.
+Create an `appsettings.Production.json` file with the necessary settings following the same structure as the `appsettings.Development.json` file.
 
 ### 5. Run the application
 
