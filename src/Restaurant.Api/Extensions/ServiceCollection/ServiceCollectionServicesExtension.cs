@@ -17,7 +17,6 @@ namespace Restaurant.Api.Extensions.ServiceCollection
             services.AddScoped<IEmployeeApplicationService, EmployeeApplicationService>();
             services.AddScoped<IProductApplicationService, ProductApplicationService>();
             services.AddScoped<IVariationApplicationService, VariationApplicationService>();
-            services.AddScoped<IMenuApplicationService, MenuApplicationService>();
             services.AddScoped<IOrderApplicationService, OrderApplicationService>();
             services.AddScoped<IAccountApplicationService, AccountApplicationService>();
             services.AddScoped<IDashboardApplicationService, DashboardApplicationService>();
@@ -27,7 +26,6 @@ namespace Restaurant.Api.Extensions.ServiceCollection
             services.AddScoped<IEmployeeDomainService, EmployeeDomainService>();
             services.AddScoped<IProductDomainService, ProductDomainService>();
             services.AddScoped<IVariationDomainService, VariationDomainService>();
-            services.AddScoped<IMenuDomainService, MenuDomainService>();
             services.AddScoped<IOrderDomainService, OrderDomainService>();
 
             services.AddScoped<IJwtTokenDomainService, JwtTokenIdentityService>();
