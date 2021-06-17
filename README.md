@@ -12,16 +12,24 @@ Make sure that .NET 5.0 is installed. If necessary, [download](https://dotnet.mi
 dotnet --list-sdks
 ```
 
-### 2. Clone the repository
+### 2. Install and configure MySQL Server
+
+If necessary, visit the [official documentation](https://dev.mysql.com/doc/mysql-getting-started/en/) for help.
+
+### 3. Clone the repository
 ```sh
 git clone https://github.com/alycecristines/restaurant-api.git
 ```
 
-### 3. Run the application
+### 4. Configure the application
+
+Configure the necessary settings in the `appsettings.Production.json` file.
+
+### 5. Run the application
+
 ```sh
-setx ASPNETCORE_ENVIRONMENT "Production"
-dotnet run --no-launch-profile -p restaurant-api/src/Restaurant.Api
+sudo dotnet run -p src/Restaurant.Api --launch-profile Production
 ```
 
-### 4. Usage
-The application can be used with any client api. The Swagger interface is also available at: [`https://localhost:5001/swagger/index.html`](https://localhost:5001/swagger/index.html).
+### 6. Usage
+The application can be used with any client api. The Swagger interface is also available at: [`https://localhost/swagger`](https://localhost/swagger).
