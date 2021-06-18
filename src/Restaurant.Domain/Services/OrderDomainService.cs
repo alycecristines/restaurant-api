@@ -90,7 +90,7 @@ namespace Restaurant.Domain.Services
         {
             return await _orderRepository.Queryable()
                 .Where(order => order.CreatedAt.Date == filters.CreatedAt.Date)
-                .WhereFor(!filters.IncludePrinted, menu => !menu.Printed)
+                .WhereFor(!filters.IncludePrinted, order => !order.Printed)
                 .WhereFor(filters.CompanyId, order => order.Employee.Department.Company.Id == filters.CompanyId)
                 .Include(order => order.Employee).ThenInclude(employee => employee.Department)
                     .ThenInclude(department => department.Company)

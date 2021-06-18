@@ -14,7 +14,6 @@ namespace Restaurant.Infrastructure.DataContexts
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Variation> Variations { get; set; }
-        public DbSet<Menu> Menus { get; set; }
         public DbSet<Order> Orders { get; set; }
 
         private IConfiguration _configuration;
@@ -36,7 +35,6 @@ namespace Restaurant.Infrastructure.DataContexts
             modelBuilder.ApplyConfiguration<Employee>(new EmployeeConfiguration());
             modelBuilder.ApplyConfiguration<Product>(new EntityConfiguration<Product>());
             modelBuilder.ApplyConfiguration<Variation>(new EntityConfiguration<Variation>());
-            modelBuilder.ApplyConfiguration<Menu>(new EntityConfiguration<Menu>());
             modelBuilder.ApplyConfiguration<Order>(new EntityConfiguration<Order>());
             modelBuilder.ApplyConfiguration<OrderItem>(new OrderItemConfiguration());
         }

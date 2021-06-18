@@ -12,7 +12,5 @@ namespace Restaurant.Domain.Entities
         public string Description { get; set; }
 
         public IEnumerable<Variation> Variations { get; set; }
-
-        public IEnumerable<Menu> Menus { get; set; }
     }
 }

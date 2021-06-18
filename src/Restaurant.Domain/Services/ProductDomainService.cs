@@ -44,7 +44,6 @@ namespace Restaurant.Domain.Services
             return await _productRepository.Queryable()
                 .WhereFor(!filters.IncludeInactivated, product => !product.Inactivated)
                 .WhereFor(filters.Description, product => EF.Functions.Like(product.Description, $"%{filters.Description}%"))
-                .WhereFor(filters.MenuId, product => product.Menus.Any(menu => menu.Id == filters.MenuId))
                 .ToListAsync();
         }
 

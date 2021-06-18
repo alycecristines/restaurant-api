@@ -4,7 +4,6 @@ using Restaurant.Application.Models.Common;
 using Restaurant.Application.Models.Company;
 using Restaurant.Application.Models.Department;
 using Restaurant.Application.Models.Employee;
-using Restaurant.Application.Models.Menu;
 using Restaurant.Application.Models.Order;
 using Restaurant.Application.Models.Product;
 using Restaurant.Application.Models.Variation;
@@ -38,11 +37,6 @@ namespace Restaurant.Application.Mappers
             CreateMap<VariationCreateModel, Variation>();
             CreateMap<VariationUpdateModel, Variation>();
             CreateMap<Variation, VariationResponseModel>();
-
-            CreateMap<MenuCreateModel, Menu>();
-            CreateMap<MenuUpdateModel, Menu>();
-            CreateMap<MenuProductModel, Product>();
-            CreateMap<Menu, MenuResponseModel>();
 
             CreateMap<OrderCreateModel, Order>();
             CreateMap<Order, OrderResponseModel>();
