@@ -12,7 +12,6 @@ namespace Restaurant.Api.Controllers
 {
     [ApiController]
     [Route("api/products")]
-    [Authorize(Roles = RoleConstants.Administrator)]
     public class ProductController : ControllerBase
     {
         private readonly IProductApplicationService _productService;
@@ -23,6 +22,7 @@ namespace Restaurant.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = RoleConstants.Administrator)]
         public async Task<IActionResult> Post(ProductCreateModel model)
         {
             var createdProduct = await _productService.CreateAsync(model);
@@ -32,6 +32,7 @@ namespace Restaurant.Api.Controllers
         }
 
         [HttpPut("{id:Guid}")]
+        [Authorize(Roles = RoleConstants.Administrator)]
         public async Task<IActionResult> Put(Guid id, ProductUpdateModel model)
         {
             var updatedProduct = await _productService.UpdateAsync(id, model);
@@ -40,6 +41,7 @@ namespace Restaurant.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Get([FromQuery] ProductQueryFilter filters)
         {
             var products = await _productService.FindAllAsync(filters);
@@ -48,6 +50,7 @@ namespace Restaurant.Api.Controllers
         }
 
         [HttpGet("{id:Guid}")]
+        [Authorize]
         public async Task<IActionResult> Get(Guid id)
         {
             var product = await _productService.FindAsync(id);
